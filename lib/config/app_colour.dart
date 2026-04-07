@@ -8,4 +8,5 @@ class AppColour {
 
   static const Color vividOrange = Color.fromRGBO(202, 53, 0, 1.0);
   static const Color vividTeal = Color.fromRGBO(1, 106, 180, 1.0);
+  static const Color veryLightVividRed = Color.fromRGBO(254, 242, 242, 1.0);
 }

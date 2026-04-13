@@ -42,6 +42,7 @@ dependencies:
   intl: ^0.20.2
   flutter_hooks: 0.20.5
   flutter_screenutil: ^5.9.3
+  flutter_lucide: ^1.8.2
 
 dev_dependencies:
   flutter_test:
@@ -84,15 +85,19 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: FiraSans
+    - family: inter
       fonts:
-        - asset: assets/fonts/FiraSans-Regular.ttf
+        - asset: assets/fonts/inter_28pt-Regular.ttf
           weight: 400
-        - asset: assets/fonts/FiraSans-Light.ttf
+        - asset: assets/fonts/inter_18pt-Light.ttf
           weight: 300
-        - asset: assets/fonts/FiraSans-Medium.ttf
+        - asset: assets/fonts/inter_18pt-Black.ttf
+          weight: 900
+        - asset: assets/fonts/inter_28pt-Medium.ttf
           weight: 500
-        - asset: assets/fonts/FiraSans-ExtraBold.ttf
+        - asset: assets/fonts/inter_28pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter_28pt-ExtraBold.ttf
           weight: 800
   
   #

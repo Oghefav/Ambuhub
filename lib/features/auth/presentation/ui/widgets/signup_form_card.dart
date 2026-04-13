@@ -1,0 +1,94 @@
+import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/features/auth/presentation/ui/widgets/submit_button.dart';
+import 'package:ambuhub/features/auth/presentation/ui/widgets/text_field_builder.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class SignupFormCard extends StatelessWidget {
+  final fullNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final countryController = TextEditingController();
+  final passwordController = TextEditingController();
+  final String role;
+  final _formKey = GlobalKey<FormState>();
+  SignupFormCard({super.key, required this.role});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.all(15.w),
+      color: AppColours.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+        side: BorderSide(color: AppColours.veryLightVividTeal),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(15.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Text(
+                'Back to role choice',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall!.copyWith(color: AppColours.teal),
+              ),
+            ),
+            SizedBox(height: 15.h),
+            Text(
+              'Sign up as $role',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium!.copyWith(fontSize: 23.sp),
+            ),
+            SizedBox(height: 15.h),
+            Text(
+              'Email verification with a one-time code will be added soon. For now you can use your account right after signing up.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            SizedBox(height: 20.h),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFieldBuilder(
+                    label: 'Full name',
+                    hintText: 'Jane Doe',
+                    controller: fullNameController,
+                  ),
+                  TextFieldBuilder(
+                    label: 'Email',
+                    hintText: 'you@Example.com',
+                    controller: emailController,
+                  ),
+                  TextFieldBuilder(
+                    label: 'Phone number',
+                    hintText: '+1 555 000 0000',
+                    controller: phoneNumberController,
+                  ),
+                  TextFieldBuilder(
+                    label: 'Country',
+                    hintText: 'Country or region',
+                    controller: countryController,
+                  ),
+                  TextFieldBuilder(
+                    label: 'Password',
+                    hintText: 'At least 8 characters',
+                    controller: passwordController,
+                    isObsure: true,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 15.h),
+            SubmitButton(buttonText: 'Create account'),
+          ],
+        ),
+      ),
+    );
+  }
+}

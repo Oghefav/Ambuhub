@@ -3,7 +3,6 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/gradient_background.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/navigation_text.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -16,6 +15,7 @@ class RoleScreen extends HookWidget {
   Widget build(BuildContext context) {
     final roleSelected = useState<String>('');
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           GradientBackground(),
@@ -79,6 +79,7 @@ class RoleScreen extends HookWidget {
                 'patient',
                 'Book standby and transport, browse listings, and keep your bookings organized.',
                 LucideIcons.user,
+
               ),
             ),
             GestureDetector(

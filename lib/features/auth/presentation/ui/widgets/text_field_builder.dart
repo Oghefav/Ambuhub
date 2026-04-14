@@ -7,13 +7,17 @@ class TextFieldBuilder extends HookWidget {
   final String hintText;
   final TextEditingController controller;
   final bool isObsure;
+  final TextInputType inputType;
+  final FormFieldValidator<String> validator;
 
   const TextFieldBuilder({
     super.key,
     required this.label,
     required this.hintText,
     required this.controller,
+    required this.validator,
     this.isObsure = false,
+    required this.inputType
   });
 
   @override
@@ -32,7 +36,9 @@ class TextFieldBuilder extends HookWidget {
           SizedBox(height: 5.h),
           TextFormField(
             controller: controller,
-            obscureText: isObsure,
+            obscureText: isTextObsure.value,
+            validator: validator,
+            keyboardType: inputType,
             decoration: InputDecoration(
               hintText: hintText,
               suffixIcon: controller.text.isNotEmpty && isObsure

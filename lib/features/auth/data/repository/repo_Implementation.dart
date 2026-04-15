@@ -1,4 +1,5 @@
 import 'package:ambuhub/core/resources/data_state.dart';
+import 'package:ambuhub/core/resources/error_handler.dart';
 import 'package:ambuhub/features/auth/data/data_source/remote/auth_api_service.dart';
 import 'package:ambuhub/features/auth/data/model/login.dart';
 import 'package:ambuhub/features/auth/data/model/sign_up.dart';
@@ -28,18 +29,19 @@ class AuthRepoImplementation implements AuthRepository {
         return DataSuccess(data: user);
       } else {
         print(' the error ${httpResponse.data['message']}');
+        final dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
         return DataFailed(
-          error: DioException(
-            requestOptions: httpResponse.requestOptions,
-            error: httpResponse.statusMessage,
-            response: httpResponse,
-            type: DioExceptionType.badResponse,
-          ),
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
         );
       }
     } on DioException catch (e) {
-      print( 'the erroe $e');
-      return DataFailed(error: e);
+      print('the erroe $e');
+      return DataFailed(ErrorHandler.getErrorMessage(e));
     }
   }
 
@@ -57,17 +59,20 @@ class AuthRepoImplementation implements AuthRepository {
         return DataSuccess(data: user);
       } else {
         print(httpResponse.data['message']);
+
+        final dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
         return DataFailed(
-          error: DioException(
-            requestOptions: httpResponse.requestOptions,
-            error: httpResponse.statusMessage,
-            type: DioExceptionType.badResponse,
-          ),
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
         );
       }
     } on DioException catch (e) {
       print(e);
-      return DataFailed(error: e);
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 }

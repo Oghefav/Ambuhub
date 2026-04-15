@@ -6,11 +6,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginScreen extends HookWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // These remain here if you need them for a "Sign In" button logic
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
 

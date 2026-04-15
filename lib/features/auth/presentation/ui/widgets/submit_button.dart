@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SubmitButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
-  // Todo: add onPressed function
   const SubmitButton({super.key, required this.buttonText, required this.onPressed});
 
   @override

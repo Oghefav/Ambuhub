@@ -1,9 +1,8 @@
 import 'package:ambuhub/features/auth/domain/entities/user.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
-  final DioException? error;
+  final String? error;
   final UserEntity? user;
   const AuthState({this.error, this.user});
 

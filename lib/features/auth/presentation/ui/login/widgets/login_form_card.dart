@@ -4,6 +4,7 @@ import 'package:ambuhub/features/auth/domain/entities/login_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
+import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/navigation_text.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/submit_button.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/text_field_builder.dart';
@@ -25,90 +26,109 @@ class LoginFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.all(15.w),
-      color: AppColours.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r),
-        side: BorderSide(color: AppColours.veryLightVividTeal),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(15.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Log in', style: Theme.of(context).textTheme.displayMedium),
-            SizedBox(height: 8.h),
-            Text(
-              'Access your Ambuhub account with your email and password.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            SizedBox(height: 20.h),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFieldBuilder(
-                    label: 'Email',
-                    hintText: 'You@example.com',
-                    controller: emailController,
-                    inputType: TextInputType.emailAddress,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                        errorText: 'Please fill out this field',
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          print('auth is successful');
+        }
+        if (state is AuthFailed) {
+          print('auth is not successfull');
+        }
+      },
+      builder: (context, state) {
+        return Card(
+          elevation: 0,
+          margin: EdgeInsets.all(15.w),
+          color: AppColours.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            side: BorderSide(color: AppColours.veryLightVividTeal),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(15.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Log in',
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Access your Ambuhub account with your email and password.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                SizedBox(height: 20.h),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFieldBuilder(
+                        label: 'Email',
+                        hintText: 'You@example.com',
+                        controller: emailController,
+                        inputType: TextInputType.emailAddress,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            errorText: 'Please fill out this field',
+                          ),
+                          FormBuilderValidators.email(
+                            errorText: 'Please enter a valid email',
+                          ),
+                        ]),
                       ),
-                      FormBuilderValidators.email(
-                        errorText: 'Please enter a valid email',
+                      TextFieldBuilder(
+                        label: 'Password',
+                        hintText: 'Your Password',
+                        isObsure: true,
+                        controller: passwordController,
+                        inputType: TextInputType.visiblePassword,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                            errorText: 'Please fill out this field',
+                          ),
+                        ]),
                       ),
-                    ]),
+                    ],
                   ),
-                  TextFieldBuilder(
-                    label: 'Password',
-                    hintText: 'Your Password',
-                    isObsure: true,
-                    controller: passwordController,
-                    inputType: TextInputType.visiblePassword,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                        errorText: 'Please fill out this field',
-                      ),
-                    ]),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(height: 20.h),
+                BlocSelector<AuthBloc, AuthState, bool>(
+                  selector: (state) => state is AuthLoading,
+                  builder: (context, isLoading) {
+                    return SubmitButton(
+                      onPressed: () {
+                        onSubmitButtonPressed(
+                          context,
+                          emailController,
+                          passwordController,
+                        );
+                      },
+                      buttonText: isLoading ? 'Signing in' : 'Sign in',
+                    );
+                  },
+                ),
+                SizedBox(height: 15.h),
+                BlocSelector<AuthBloc, AuthState, String?>(
+                  selector: (state) => state is AuthFailed ? state.error : null,
+                  builder: (context, errorMessage) {
+                    if (errorMessage == null) {
+                      return SizedBox.shrink();
+                    }
+                    return ErrorMessageContainer(errorMessage: errorMessage);
+                  },
+                ),
+                SizedBox(height: 20.h),
+                const NavigationText(
+                  firstText: 'Don\'t have an account? ',
+                  secondText: 'Sign up',
+                  routeName: AppRoutes.roleScreen,
+                ),
+              ],
             ),
-            SizedBox(height: 20.h),
-            BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {
-                if (state is AuthSuccess) {
-                  print('auth is successful');
-                }
-                if (state is AuthFailed) {
-                  print('auth is not successfull');
-                }
-              },
-              builder: (context, state) {
-                return SubmitButton(
-                  onPressed:(){ onSubmitButtonPressed(
-                    context,
-                    emailController,
-                    passwordController,
-                  );},
-                    buttonText: state is AuthLoading ? 'Signing in' : 'Sign in',
-                  );
-                
-              },
-            ),
-            SizedBox(height: 20.h),
-            const NavigationText(
-              firstText: 'Don\'t have an account? ',
-              secondText: 'Sign up',
-              routeName: AppRoutes.roleScreen,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -117,6 +137,7 @@ class LoginFormCard extends StatelessWidget {
     TextEditingController emailController,
     TextEditingController passwordController,
   ) {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
         Login(

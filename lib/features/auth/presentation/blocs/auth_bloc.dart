@@ -21,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (dataState is DataSuccess) {
       emit(AuthSuccess(user: dataState.data));
     } else {
-      emit(AuthFailed(error: dataState.error));
+      emit(AuthFailed(error: dataState.errorMessage));
     }
   }
   void onSignUp(SignUp signUp, Emitter<AuthState> emit) async {
@@ -31,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (dataState is DataSuccess) {
       emit(AuthSuccess(user: dataState.data));
     } else {
-      emit(AuthFailed(error: dataState.error));
+      emit(AuthFailed(error: dataState.errorMessage));
     }
   }
 }

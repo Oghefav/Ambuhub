@@ -8,16 +8,35 @@ class AppTheme {
       fontFamily: 'inter',
       // TODO: Add page trasition theme.
 
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: AppColours.verylightTeal,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColours.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: Border(bottom: BorderSide(color: AppColours.veryLightVividTeal, width: 2, )),
+
+
+        
+      ),
+      
+      drawerTheme: DrawerThemeData(
+        backgroundColor: AppColours.white ,
+        width: 250.w
+            ),
       textTheme: TextTheme(
         displayLarge: TextStyle(fontWeight: FontWeight.w900, fontSize: 18.sp),
         displayMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 30.sp),
-        bodyMedium: TextStyle(fontSize: 13.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
+        bodyMedium: TextStyle(fontSize: 13.sp, color: AppColours.grey, fontWeight: FontWeight.w500),
         titleSmall: TextStyle(fontWeight: FontWeight.w700, fontSize:  15.sp),
         titleMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.sp,),
         bodySmall: TextStyle(
           fontSize: 12.sp,
-          color: Colors.grey.shade700,
+          color: AppColours.grey,
+          fontWeight: FontWeight.w500,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 15.sp,
+          color: AppColours.grey,
           fontWeight: FontWeight.w500,
         ),
       ),

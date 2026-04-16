@@ -1,4 +1,5 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
@@ -26,7 +27,7 @@ class SignupFormCard extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          print('auth is successful');
+          Navigator.pushReplacementNamed(context, AppRoutes.mainDashboard);
         }
         if (state is AuthFailed) {
           print('auth is not successfull');

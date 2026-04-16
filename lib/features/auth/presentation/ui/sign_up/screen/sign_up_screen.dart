@@ -1,5 +1,5 @@
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
-import 'package:ambuhub/features/auth/presentation/ui/widgets/gradient_background.dart';
+import 'package:ambuhub/core/widgets/gradient_background.dart';
 import 'package:ambuhub/features/auth/presentation/ui/sign_up/widgets/signup_form_card.dart';
 import 'package:flutter/material.dart';
 

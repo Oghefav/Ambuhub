@@ -29,7 +29,7 @@ class LoginFormCard extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          print('auth is successful');
+          Navigator.pushReplacementNamed(context, AppRoutes.mainDashboard);
         }
         if (state is AuthFailed) {
           print('auth is not successfull');

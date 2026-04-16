@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// TODO: Validate country and number if needed
+// TODO 1: Validate country and number if needed
+// TODO 1: make dashboard persistis use token is token is the active kjkjk;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dependeciesInjection();
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       designSize: Size(360, 800),
+      ensureScreenSize: true,
       builder: (context, child) => MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(create: ((context) => sl<AuthBloc>())),

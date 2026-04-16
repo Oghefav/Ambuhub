@@ -1,3 +1,4 @@
+import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/core/widgets/dotted_border_container.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/bullet_point.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/card_builder.dart';
@@ -12,14 +13,7 @@ class DashBoardScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            leading: IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Icon(Icons.menu),
-            ),
-            title: Text('Provider'),
-            titleTextStyle: Theme.of(context).textTheme.titleMedium,
-          ),
+          CustomAppbar(),
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(

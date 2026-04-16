@@ -2,6 +2,7 @@ import 'package:ambuhub/config/app_theme.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/dependencies_injection.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,11 +28,14 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(create: ((context) => sl<AuthBloc>())),
+          BlocProvider<NavigationCubit>(
+            create: ((context) => NavigationCubit()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData,
-          initialRoute: AppRoutes.loginScreen,
+          initialRoute: AppRoutes.settingScreen,
           onGenerateRoute: AppRoutes.onGenerateRoute,
         ),
       ),

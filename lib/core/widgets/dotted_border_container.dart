@@ -10,20 +10,18 @@ class DottedBorderContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DottedBorder(
-
       options: RoundedRectDottedBorderOptions(
         strokeWidth: 2,
-        dashPattern: [6,3],
-        
+        dashPattern: [6, 3],
         color: AppColours.veryLightVividTeal,
         radius: Radius.circular(15.r),
       ),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
-          color: AppColours.white),
+          color: AppColours.white,
+        ),
         child: child,
-        
       ),
     );
   }

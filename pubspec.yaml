@@ -44,6 +44,9 @@ dependencies:
   flutter_lucide: ^1.8.2
   form_builder_validators: ^11.3.0
   dotted_border: ^3.1.0
+  dio_cookie_manager: ^3.4.0
+  image_picker: ^1.2.1
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

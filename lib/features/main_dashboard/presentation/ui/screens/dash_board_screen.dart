@@ -10,62 +10,64 @@ class DashBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CustomAppbar(),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Padding(
-                padding: EdgeInsetsGeometry.all(15.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'DashBoard',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    SizedBox(height: 15.h),
-                    Text(
-                      'Overview of your standby, transport, personnel, and equipment activity on Ambuhub. Detailed metrics will appear her once booking go live.',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    SizedBox(height: 15.h),
-                    CardBuilder(titleText: 'Active Listings'),
-                    CardBuilder(titleText: 'Open Bookings'),
-                    CardBuilder(titleText: 'Unread messages'),
-                    DottedBorderContainer(
-                      child: Padding(
-                        padding: EdgeInsetsGeometry.all(15.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Next steps',
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            BulletPoint(
-                              text:
-                                  'Add a service to appear in search and category browse.',
-                            ),
-                            BulletPoint(
-                              text:
-                                  'Complete your business profile so organizers can trust your crew.',
-                            ),
-                            BulletPoint(
-                              text:
-                                  'Set availability for event dates and transport windows.',
-                            ),
-                          ],
+    return  ColoredBox(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: CustomScrollView(
+          slivers: [
+            CustomAppbar(),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Padding(
+                  padding: EdgeInsetsGeometry.all(15.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'DashBoard',
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ),
+                      SizedBox(height: 15.h),
+                      Text(
+                        'Overview of your standby, transport, personnel, and equipment activity on Ambuhub. Detailed metrics will appear her once booking go live.',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      SizedBox(height: 15.h),
+                      CardBuilder(titleText: 'Active Listings'),
+                      CardBuilder(titleText: 'Open Bookings'),
+                      CardBuilder(titleText: 'Unread messages'),
+                      DottedBorderContainer(
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(15.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Next steps',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                              BulletPoint(
+                                text:
+                                    'Add a service to appear in search and category browse.',
+                              ),
+                              BulletPoint(
+                                text:
+                                    'Complete your business profile so organizers can trust your crew.',
+                              ),
+                              BulletPoint(
+                                text:
+                                    'Set availability for event dates and transport windows.',
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ]),
-          ),
-        ],
+              ]),
+            ),
+          ],
+        
       ),
     );
   }

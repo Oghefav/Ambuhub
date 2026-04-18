@@ -8,6 +8,7 @@ import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/dash_boa
 import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/main_dashboard.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
 import 'package:ambuhub/features/profile/presentation/ui/screen/profile_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/screens/add_service_screen.dart';
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,9 @@ class AppRoutes {
   static const messageScreen = '/messageScreen';
   static const profileScreen = '/profileScreen';
   static const settingScreen = '/settingScreen';
+  static const addServiceScreen = '/addServiceScreen';
+  
+
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case loginScreen:
@@ -38,6 +42,8 @@ class AppRoutes {
             child: SignUpScreen(role: role),
           ),
         );
+      case addServiceScreen:
+        return MaterialPageRoute(builder: (_) => AddServiceScreen());
       case settingScreen:
         return MaterialPageRoute(builder: (_) => SettingScreen());
       case messageScreen:

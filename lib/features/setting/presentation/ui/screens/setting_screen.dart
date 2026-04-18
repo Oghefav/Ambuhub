@@ -7,19 +7,21 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CustomAppbar(),
-          SliverToBoxAdapter(
-            child: EmptyContentPageBuilder(
-              heading: 'Settings',
-              description:
-                  'Notifications, payout preferences, and account security will live here',
-              placeholderText: 'Settings placeholder.',
+    return ColoredBox(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: CustomScrollView(
+          slivers: [
+            CustomAppbar(),
+            SliverToBoxAdapter(
+              child: EmptyContentPageBuilder(
+                heading: 'Settings',
+                description:
+                    'Notifications, payout preferences, and account security will live here',
+                placeholderText: 'Settings placeholder.',
+              ),
             ),
-          ),
-        ],
+          ],
+        
       ),
     );
   }

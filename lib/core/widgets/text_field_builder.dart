@@ -7,6 +7,7 @@ class TextFieldBuilder extends HookWidget {
   final String hintText;
   final TextEditingController controller;
   final bool isObsure;
+  final int? maxLines;
   final TextInputType inputType;
   final FormFieldValidator<String> validator;
 
@@ -17,12 +18,12 @@ class TextFieldBuilder extends HookWidget {
     required this.controller,
     required this.validator,
     this.isObsure = false,
-    required this.inputType
+    required this.inputType,
+    this.maxLines,
   });
 
   @override
   Widget build(BuildContext context) {
-    // final isFieldEmpty = useState<bool>(true);
     final isTextObsure = useState<bool>(isObsure);
 
     useListenable(controller);

@@ -16,6 +16,11 @@ class ErrorHandler {
         return 'The server is taking too long to respond';
       case DioExceptionType.cancel:
         return 'Request was cancelled.';
+      case DioExceptionType.unknown:
+        if (e.message != null && e.message!.contains('SocketException')) {
+          return 'No Internet Connection';
+        }
+        return 'An unexpected network error occurred.';
       case DioExceptionType.badResponse:
         return _handleHttpStatusCode(e.response?.statusCode);
       default:

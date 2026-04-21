@@ -9,8 +9,10 @@ import 'package:ambuhub/features/services/data/data_source/service_api_service.d
 import 'package:ambuhub/features/services/data/repository/service_repo_implementation.dart';
 import 'package:ambuhub/features/services/domain/repository/service_repo.dart';
 import 'package:ambuhub/features/services/domain/usecase/add_service.dart';
+import 'package:ambuhub/features/services/domain/usecase/get_service_categories.dart';
 import 'package:ambuhub/features/services/domain/usecase/get_services.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -31,9 +33,13 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<SignUpUsecase>(() => SignUpUsecase(sl()));
   sl.registerLazySingleton<GetServicesUsecase>(() => GetServicesUsecase(sl()));
   sl.registerLazySingleton<AddServiceUsecase>(() => AddServiceUsecase(sl()));
+  sl.registerLazySingleton<GetServiceCategoriesUsecase>(
+    () => GetServiceCategoriesUsecase(sl()),
+  );
 
   // blocs
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl()));
   sl.registerFactory<GetServicesBloc>(() => GetServicesBloc(sl()));
-  sl.registerFactory<AddServiceBloc>(()=> AddServiceBloc(sl()));
+  sl.registerFactory<AddServiceBloc>(() => AddServiceBloc(sl()));
+  sl.registerFactory<GetServiceCatBloc>(() => GetServiceCatBloc(sl()));
 }

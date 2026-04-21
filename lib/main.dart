@@ -3,8 +3,11 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/dependencies_injection.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/onboarding/presentation/blocs/conectivity_event.dart';
+import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,13 +38,24 @@ class MyApp extends StatelessWidget {
           BlocProvider<NavigationCubit>(
             create: ((context) => NavigationCubit()),
           ),
-          BlocProvider<GetServicesBloc>(create: ((context)=> sl<GetServicesBloc>())),
-          BlocProvider<AddServiceBloc>(create: ((context)=> sl<AddServiceBloc>()))
+          BlocProvider<GetServicesBloc>(
+            create: ((context) => sl<GetServicesBloc>()),
+          ),
+          BlocProvider<AddServiceBloc>(
+            create: ((context) => sl<AddServiceBloc>()),
+          ),
+          BlocProvider<GetServiceCatBloc>(
+            create: ((context) => sl<GetServiceCatBloc>()),
+          ),
+          BlocProvider(
+            create: (_) =>
+                ConnectivityBloc()..add(ConnectivityStartMonitoring()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData,
-          initialRoute: AppRoutes.loginScreen,
+          initialRoute: AppRoutes.splashScreen,
           onGenerateRoute: AppRoutes.onGenerateRoute,
         ),
       ),

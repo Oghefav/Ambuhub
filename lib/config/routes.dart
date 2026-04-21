@@ -7,6 +7,8 @@ import 'package:ambuhub/features/booking/presentation/ui/screen/booking_screen.d
 import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/dash_board_screen.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/main_dashboard.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/screen/onboarding_screen.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/screen/splash_screen.dart';
 import 'package:ambuhub/features/profile/presentation/ui/screen/profile_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/screens/add_service_screen.dart';
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
@@ -26,7 +28,8 @@ class AppRoutes {
   static const profileScreen = '/profileScreen';
   static const settingScreen = '/settingScreen';
   static const addServiceScreen = '/addServiceScreen';
-  
+  static const onboardingScreen = '/onboardingScreen';
+  static const splashScreen = '/splashScreen';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -34,6 +37,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case roleScreen:
         return MaterialPageRoute(builder: (_) => RoleScreen());
+      case splashScreen:
+        return MaterialPageRoute(builder: (_) => SplashScreen());
+      case onboardingScreen:
+        return MaterialPageRoute(builder: (_) => OnboardingScreen());
       case signUpScreen:
         final role = settings.arguments as String;
         return MaterialPageRoute(

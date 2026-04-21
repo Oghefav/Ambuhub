@@ -3,7 +3,9 @@ import 'package:ambuhub/core/resources/error_handler.dart';
 import 'package:ambuhub/core/resources/get_category_slug.dart';
 import 'package:ambuhub/core/resources/get_dept_slug.dart';
 import 'package:ambuhub/features/services/data/data_source/service_api_service.dart';
+import 'package:ambuhub/features/services/data/model/category.dart';
 import 'package:ambuhub/features/services/data/model/service.dart';
+import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 import 'package:ambuhub/features/services/domain/repository/service_repo.dart';
@@ -101,6 +103,33 @@ class ServiceRepoImplementation implements ServiceRepo {
       }
     } on DioException catch (e) {
       print(e.error);
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
+   @override
+  Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories() async {
+    try {
+      final httpResponse = await _serviceApiService.getServiceCategories();
+      if (httpResponse.statusCode == 200) {
+        final List<dynamic> data = httpResponse.data['serviceCategories'];
+        final List<ServiceCategoryEntity> serviceCategories = data
+            .map((e) => ServiceCategoryModel.fromJson(e))
+            .toList();
+        return DataSuccess(data: serviceCategories);
+      } else {
+        final DioException dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          type: DioExceptionType.badResponse,
+          error: httpResponse.statusMessage,
+          response: httpResponse,
+        );
+        return DataFailed(
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
+        );
+      }
+    } on DioException catch (e) {
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }

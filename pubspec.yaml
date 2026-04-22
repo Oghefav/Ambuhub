@@ -51,6 +51,7 @@ dependencies:
   connectivity_plus: ^7.1.1
   internet_connection_checker_plus: ^2.9.1+2
   smooth_page_indicator: ^2.0.1
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -108,5 +109,15 @@ flutter:
           weight: 800
   
   #
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/images/logo.png"
+  android: true
+  android_12:
+    image: assets/images/logo.png
+    color: "#FFFFFF"
+
+  ios: true
+  fullscreen: true
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

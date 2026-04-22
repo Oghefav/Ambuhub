@@ -5,6 +5,8 @@ import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_stat
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     final connectivityState = context.read<ConnectivityBloc>().state;
     if (connectivityState is ConnectivityOnline) {
       context.read<GetServiceCatBloc>().add(GetServiceCategories());
@@ -55,17 +58,18 @@ class _SplashScreenState extends State<SplashScreen> {
         },
 
         child: BlocConsumer<GetServiceCatBloc, GetServiceCatState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is GetServiceCatSuccess) {
-              _navigateToNext();
-            } else if (state is GetServiceCatFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.error ?? 'Something went wrong'),
-                  backgroundColor: Colors.red,
+              await Future.wait(
+                state.categories!.map(
+                  (category) => precacheImage(
+                    CachedNetworkImageProvider(category.thumbnailUrl),
+                    context,
+                  ),
                 ),
               );
-            }
+              _navigateToNext();
+            } 
           },
           builder: (context, state) {
             return Center(
@@ -93,7 +97,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   SizedBox(height: 12.h),
                   if (state is GetServiceCatLoading)
-                    const CircularProgressIndicator()
+                    const CupertinoActivityIndicator(
+                      radius: 14,
+                      color: AppColours.blue,
+                    )
                   else if (state is GetServiceCatFailure)
                     Text(
                       state.error!,

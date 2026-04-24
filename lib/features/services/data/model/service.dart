@@ -24,7 +24,7 @@ class ServiceModel extends ServiceEntity {
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       id: json['_id'] ?? json['id'],
-      dept: json['departmentSlug'],
+      dept: json['departmentName'],
       description: json['description'],
       photoUrls: (json['photoUrls'] as List? ??[]).map((url)=>url.toString()).toList(),
       serviceCategory: json['category']?['name']?? json['serviceCategoryId'],

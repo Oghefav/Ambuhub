@@ -6,8 +6,8 @@ import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/dash_boa
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/drawer.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
 import 'package:ambuhub/features/profile/presentation/ui/screen/profile_screen.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/add_service_screen.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/listings_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/screen/add_service_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/listing/screen/listings_screen.dart';
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

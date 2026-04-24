@@ -137,7 +137,7 @@ class RoleScreen extends HookWidget {
           _iconContainer(isSelected, icon),
           SizedBox(height: 10.h),
           Text(
-            'Sign Up as a $role',
+            'Sign up as a $role',
             style: Theme.of(context).textTheme.titleSmall,
           ),
           SizedBox(height: 10.h),

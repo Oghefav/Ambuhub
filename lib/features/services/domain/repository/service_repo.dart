@@ -7,4 +7,7 @@ abstract class ServiceRepo {
   Future<DataState<ServiceEntity>> addService(ServiceParams service);
   Future<DataState<List<ServiceEntity>>> getServices();
   Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories();
+  Future<DataState<List<ServiceEntity>>> getServiceInfo(
+    String categorySlug,
+  );
 }

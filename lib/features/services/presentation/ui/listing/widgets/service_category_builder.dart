@@ -1,6 +1,6 @@
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/custom_divider.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/widget/service_container.dart';
+import 'package:ambuhub/features/services/presentation/ui/listing/widgets/service_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -107,7 +107,7 @@ class ServiceRepoImplementation implements ServiceRepo {
     }
   }
 
-   @override
+  @override
   Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories() async {
     try {
       final httpResponse = await _serviceApiService.getServiceCategories();
@@ -117,6 +117,38 @@ class ServiceRepoImplementation implements ServiceRepo {
             .map((e) => ServiceCategoryModel.fromJson(e))
             .toList();
         return DataSuccess(data: serviceCategories);
+      } else {
+        final DioException dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          type: DioExceptionType.badResponse,
+          error: httpResponse.statusMessage,
+          response: httpResponse,
+        );
+        return DataFailed(
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
+  @override
+  Future<DataState<List<ServiceEntity>>> getServiceInfo(
+    String categorySlug,
+  ) async {
+    try {
+      final httpResponse = await _serviceApiService.getServiceInfo(
+        categorySlug,
+      );
+
+      if (httpResponse.statusCode == 200) {
+        final List data = httpResponse.data['services'];
+        final List<ServiceEntity> services = data.map((e) {
+          return ServiceModel.fromJson(e);
+        }).toList();
+        return DataSuccess(data: services);
       } else {
         final DioException dioException = DioException(
           requestOptions: httpResponse.requestOptions,

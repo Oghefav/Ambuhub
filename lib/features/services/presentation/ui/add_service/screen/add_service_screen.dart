@@ -1,5 +1,5 @@
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/widget/add_service_card.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/add_service_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

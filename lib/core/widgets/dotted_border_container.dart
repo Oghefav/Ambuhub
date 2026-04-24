@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DottedBorderContainer extends StatelessWidget {
   final Widget child;
-  const DottedBorderContainer({super.key, required this.child});
+  final Color? color;
+  const DottedBorderContainer({super.key, required this.child, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class DottedBorderContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
-          color: AppColours.white,
+          color: color ?? AppColours.white,
         ),
         child: child,
       ),

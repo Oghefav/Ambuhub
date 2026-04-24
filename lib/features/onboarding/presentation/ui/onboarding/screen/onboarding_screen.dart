@@ -1,7 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/widgets/submit_button.dart';
-import 'package:ambuhub/features/onboarding/presentation/ui/widgets/onboarding_page_builder.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/widgets/onboarding_page_builder.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_state.dart';
 import 'package:flutter/material.dart';

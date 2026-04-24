@@ -7,7 +7,7 @@ import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_state.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/widget/drop_down_form_field_builder.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/drop_down_form_field_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

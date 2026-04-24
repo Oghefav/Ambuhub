@@ -7,10 +7,12 @@ import 'package:ambuhub/features/booking/presentation/ui/screen/booking_screen.d
 import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/dash_board_screen.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/screens/main_dashboard.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
-import 'package:ambuhub/features/onboarding/presentation/ui/screen/onboarding_screen.dart';
-import 'package:ambuhub/features/onboarding/presentation/ui/screen/splash_screen.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/onboarding_screen.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/splash_screen.dart';
 import 'package:ambuhub/features/profile/presentation/ui/screen/profile_screen.dart';
-import 'package:ambuhub/features/services/presentation/ui/screens/add_service_screen.dart';
+import 'package:ambuhub/features/services/domain/enitities/category.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/screen/add_service_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/service_info/screen/service_info_screen.dart';
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +32,7 @@ class AppRoutes {
   static const addServiceScreen = '/addServiceScreen';
   static const onboardingScreen = '/onboardingScreen';
   static const splashScreen = '/splashScreen';
+  static const serviceInfoScreen = '/serviceInfoScreen';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -63,6 +66,9 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => DashBoardScreen());
       case mainDashboard:
         return MaterialPageRoute(builder: (_) => MainDashboard());
+      case serviceInfoScreen:
+        final category = settings.arguments as ServiceCategoryEntity;
+        return MaterialPageRoute(builder: (_) => ServiceInfoScreen(category: category));
       case profileScreen:
         return MaterialPageRoute(builder: (_) => ProfileScreen());
       default:

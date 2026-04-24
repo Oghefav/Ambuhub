@@ -1,7 +1,11 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingPageBuilder extends StatelessWidget {
@@ -19,7 +23,7 @@ class OnboardingPageBuilder extends StatelessWidget {
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
             child: AspectRatio(
               aspectRatio: 3 / 4,
               child: CachedNetworkImage(
@@ -50,6 +54,10 @@ class OnboardingPageBuilder extends StatelessWidget {
 
                 SizedBox(height: 10.h),
                 GestureDetector(
+                  onTap: (){
+                    BlocProvider.of<GetServicesBloc>(context).add(GetServiceInfo(categorySlug: category.slug));
+                    Navigator.pushNamed(context, AppRoutes.serviceInfoScreen, arguments: category);
+                  },
                   child: Text(
                     'Learn more',
                     style: Theme.of(

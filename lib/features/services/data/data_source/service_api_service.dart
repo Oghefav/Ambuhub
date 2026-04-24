@@ -14,6 +14,11 @@ class ServiceApiService {
     return _dio.post('/services', data: data);
   }
 
+  Future<Response<dynamic>> getServiceInfo(String categorySlug) {
+    final params = {'categorySlug': categorySlug};
+    return _dio.get('/services/marketplace', queryParameters: params);
+  }
+
   Future<Response<dynamic>> uploadImages(List<File> data) async {
     final formData = FormData();
     for (var file in data) {

@@ -20,3 +20,6 @@ class SignUp extends AuthEvent {
     required super.signUpParams
   });
 }
+class AuthReset extends AuthEvent {
+  const AuthReset();
+}

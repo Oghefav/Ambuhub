@@ -12,6 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     : super(const AuthInitial()) {
     on<Login>(onLogin);
     on<SignUp>(onSignUp);
+    on<AuthReset>(onAuthReset);
   }
 
   void onLogin(Login login, Emitter<AuthState> emit) async {
@@ -33,5 +34,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(AuthFailed(error: dataState.errorMessage));
     }
+  }
+  void onAuthReset(AuthReset event, Emitter<AuthState> emit) {
+    emit(const AuthInitial());
   }
 }

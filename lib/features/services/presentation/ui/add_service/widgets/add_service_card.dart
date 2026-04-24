@@ -7,6 +7,9 @@ import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_state.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/drop_down_form_field_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,40 +22,39 @@ import 'package:path/path.dart' as p;
 class AddServiceFormCard extends HookWidget {
   AddServiceFormCard({super.key});
 
-  final List<String> categories = [
-    'Ambulance personnel',
-    'Ambulance servicing',
-    'Medical transport',
-  ];
-  final List<String> ambulancePersonnelDepts = [
-    'Ambulance Driver',
-    'Basic Emergency Medical Technician',
-    'Paramedic(Air/Ground Ambulance)',
-    'Ambulance Nurse',
-    'Ambulance Doctor',
-    'Emergency Physician',
-    'Intensivist',
-  ];
+  // final List<String> categories = [
+  //   'Ambulance personnel',
+  //   'Ambulance servicing',
+  //   'Medical transport',
+  // ];
+  // final List<String> ambulancePersonnelDepts = [
+  //   'Ambulance Driver',
+  //   'Basic Emergency Medical Technician',
+  //   'Paramedic(Air/Ground Ambulance)',
+  //   'Ambulance Nurse',
+  //   'Ambulance Doctor',
+  //   'Emergency Physician',
+  //   'Intensivist',
+  // ];
 
-  final List<String> ambulanceServicingDepts = [
-    'Ambulance Sales',
-    'Ambulance Maintenance',
-    'Ambulance equipment',
-  ];
+  // final List<String> ambulanceServicingDepts = [
+  //   'Ambulance Sales',
+  //   'Ambulance Maintenance',
+  //   'Ambulance equipment',
+  // ];
 
-  final List<String> medicalTransportDepts = [
-    'Ground Ambulance',
-    'Air Ambulance',
-    'Cargo for remains (Local and international)',
-    'Hearse for remains',
-    'Community Provider',
-  ];
-
+  
   final _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
+  
 
   @override
   Widget build(BuildContext context) {
+    final categoriesData = context.read<GetServiceCatBloc>().state.categories;
+    final categories = categoriesData?.map((e) => e).toList() ?? [];
+    final categoryNames = categoriesData?.map((e) => e.name).toList() ?? [];
+    // final departments = categoriesData?.map((e) => e.departments.map((e) => e.name).toList()).toList() ?? [];
+    // final 
     final selectedCategory = useState<String>('');
     final selectedDept = useState<String>('');
     final titleController = useTextEditingController();
@@ -99,14 +101,12 @@ class AddServiceFormCard extends HookWidget {
     }
 
     List<String> getDepartments() {
-      switch (selectedCategory.value) {
-        case 'Ambulance personnel':
-          return ambulancePersonnelDepts;
-        case 'Ambulance servicing':
-          return ambulanceServicingDepts;
-        default:
-          return medicalTransportDepts;
-      }
+      if (selectedCategory.value.isEmpty) return [];
+      final match = categories.firstWhere(
+        (e) => e.name == selectedCategory.value,
+        orElse: () => categories.first,
+      );
+      return match.departments.map((e) => e.name).toList();
     }
 
     return Card(
@@ -126,7 +126,7 @@ class AddServiceFormCard extends HookWidget {
                     isEnabled: true,
                     title: 'Service category',
                     hintText: 'Select a category',
-                    items: categories,
+                    items: categoryNames,
                     placeHolder: 'Select a category',
                     onChanged: (value) {
                       if (value != null) {
@@ -240,6 +240,7 @@ class AddServiceFormCard extends HookWidget {
             BlocListener<AddServiceBloc, AddServiceState>(
               listener: (context, state) {
                 if (state is AddServiceSuccess) {
+                  BlocProvider.of<GetServicesBloc>(context).add(GetServices());
                   BlocProvider.of<NavigationCubit>(context).setPage(2);
                 }
               },
@@ -247,7 +248,7 @@ class AddServiceFormCard extends HookWidget {
                 selector: (state) => state is AddServiceLoading ? true : false,
                 builder: (context, isLoading) {
                   return SubmitButton(
-                    buttonText: 'Publish service',
+                    buttonText: isLoading ? 'Publishing service' : 'Publish service',
                     textStyle: Theme.of(
                       context,
                     ).textTheme.titleSmall!.copyWith(color: AppColours.white),
@@ -256,11 +257,11 @@ class AddServiceFormCard extends HookWidget {
                             BlocProvider.of<AddServiceBloc>(context).add(
                               AddService(
                                 service: ServiceParams(
-                                  dept: selectedDept.value,
+                                  dept:categories.firstWhere((e)=> e.name == selectedCategory.value).departments.firstWhere((e)=> e.name == selectedDept.value).slug,
                                   description: descriptionController.text
                                       .trim(),
                                   photoUrls: selectedImages.value,
-                                  serviceCategory: selectedCategory.value
+                                  serviceCategory: categories.firstWhere((e)=> e.name == selectedCategory.value).slug
                                       ,
                                   title: titleController.text.trim(),
                                 ),

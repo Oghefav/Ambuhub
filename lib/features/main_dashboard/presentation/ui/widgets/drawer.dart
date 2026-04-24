@@ -104,21 +104,24 @@ class AppDrawer extends StatelessWidget {
               ),
               SizedBox(height: 290.h),
               CustomDivider(),
-              Row(
-                children: [
-                  SizedBox(width: 10.w),
-                  IconButton(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.loginScreen,
+              SizedBox(height: 10.h),
+              GestureDetector(
+                onTap: () => Navigator.pushReplacementNamed(
+                  context,
+                  AppRoutes.loginScreen,
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(width: 20.w),
+
+                    Icon(LucideIcons.log_out),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'Sign out',
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    icon: Icon(LucideIcons.log_out),
-                  ),
-                  Text(
-                    'Sign out',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

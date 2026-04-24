@@ -1,7 +1,10 @@
+import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
 import 'package:ambuhub/core/widgets/gradient_background.dart';
 import 'package:ambuhub/features/auth/presentation/ui/login/widgets/login_form_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,6 +13,10 @@ class LoginScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(() {
+      BlocProvider.of<AuthBloc>(context).add(const AuthReset());
+      return null;
+    }, []);
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
 

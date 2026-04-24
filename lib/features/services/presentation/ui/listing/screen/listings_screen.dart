@@ -1,5 +1,6 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
+import 'package:ambuhub/core/widgets/dotted_border_container.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
@@ -7,6 +8,7 @@ import 'package:ambuhub/features/services/presentation/bloc/get_services/get_ser
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_state.dart';
 import 'package:ambuhub/features/services/presentation/ui/listing/widgets/service_category_builder.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,6 +99,14 @@ class _ListingsScreenState extends State<ListingsScreen> {
                           categoryName: 'Ambulance Servicing',
                           services: ambulanceServicingCategory,
                         ),
+                      if(state.services!.isEmpty)...
+                      [
+                        SliverToBoxAdapter(child: SizedBox(height: 20.h)),
+                        SliverToBoxAdapter(
+                        child: DottedBorderContainer(child: Center(child: Padding(padding: EdgeInsetsGeometry.symmetric(vertical: 50.h, horizontal: 20.w),
+                        child: Text('No services to show yet', style: Theme.of(context).textTheme.bodyLarge,),
+                        ))),
+                      ),],
                       SliverToBoxAdapter(child: SizedBox(height: 15)),
                       SliverToBoxAdapter(
                         child: Center(
@@ -107,7 +117,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
                               ).setPage(1);
                             },
                             child: Text(
-                              'Add another service',
+                              state.services!.isEmpty ? 'Add a service' : 'Add another service',
                               style: Theme.of(context).textTheme.bodyMedium!
                                   .copyWith(color: AppColours.blue),
                             ),

@@ -1,4 +1,5 @@
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
+import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 
 
 class ServiceModel extends ServiceEntity {
@@ -11,12 +12,12 @@ class ServiceModel extends ServiceEntity {
     required super.id
   });
 
-  Map<String, dynamic> toJson() {
+  static Map<String, dynamic> toJson(ServiceParams serviceParams, List<String> photoUrls) {
     return {
-      'title': title,
-      'description': description,
-      'serviceCategorySlug': serviceCategory,
-      'departmentSlug': dept,
+      'title': serviceParams.title,
+      'description': serviceParams.description,
+      'serviceCategorySlug': serviceParams.serviceCategory,
+      'departmentSlug': serviceParams.dept,
       'photoUrls': photoUrls,
     };
   }
@@ -24,7 +25,7 @@ class ServiceModel extends ServiceEntity {
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       id: json['_id'] ?? json['id'],
-      dept: json['departmentName'],
+      dept: json['departmentName'] ?? json['departmentSlug'],
       description: json['description'],
       photoUrls: (json['photoUrls'] as List? ??[]).map((url)=>url.toString()).toList(),
       serviceCategory: json['category']?['name']?? json['serviceCategoryId'],

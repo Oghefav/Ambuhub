@@ -1,4 +1,5 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,7 +30,7 @@ class ServiceContainer extends StatelessWidget {
             borderRadius: BorderRadiusGeometry.only(topLeft:  Radius.circular(15.r),bottomLeft: Radius.circular(15.r) ),
             child: Image.network(
               imageurl,
-              height: 120.h,
+              height: 140.h,
               width: 100.w,
               fit: BoxFit.fitHeight,
               errorBuilder: (context, error, stackTrace) {
@@ -46,7 +47,7 @@ class ServiceContainer extends StatelessWidget {
                 return SizedBox(
                   height: 80.h,
                   width: 100,
-                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  child: Center(child: CupertinoActivityIndicator(color: AppColours.blue)),
                 );
               },
             ),
@@ -67,6 +68,7 @@ class ServiceContainer extends StatelessWidget {
                   SizedBox(height: 10.h),
                   Text(
                       description,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),

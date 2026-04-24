@@ -85,7 +85,7 @@ Widget _emptyServiceBuilder(BuildContext context) {
                     ),
       
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Text(
                         'back soon or explore other services',
                         style: Theme.of(context).textTheme.bodyLarge,

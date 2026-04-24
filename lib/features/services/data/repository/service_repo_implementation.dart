@@ -59,14 +59,7 @@ class ServiceRepoImplementation implements ServiceRepo {
         photoUrls = (uploadImagesResponse.data['urls'] as List? ?? [])
             .map((url) => url.toString())
             .toList();
-        final service = {
-          'title': data.title,
-          'description': data.description,
-          'serviceCategorySlug': getCategorySlug(data.serviceCategory),
-          'departmentSlug': getDepartmentSlug(data.dept),
-          'photoUrls': photoUrls,
-        };
-        print(service);
+        final service = ServiceModel.toJson(data, photoUrls);
         try {
           final httpResponse = await _serviceApiService.addServices(service);
           if (httpResponse.statusCode == 200 ||

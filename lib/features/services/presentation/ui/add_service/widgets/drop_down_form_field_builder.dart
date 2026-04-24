@@ -56,6 +56,7 @@ class DropDownFormFieldBuilder extends StatelessWidget {
                       value: item,
                       child: Text(
                         item,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),

@@ -1,7 +1,5 @@
 import 'package:ambuhub/core/resources/data_state.dart';
 import 'package:ambuhub/core/resources/error_handler.dart';
-import 'package:ambuhub/core/resources/get_category_slug.dart';
-import 'package:ambuhub/core/resources/get_dept_slug.dart';
 import 'package:ambuhub/features/services/data/data_source/service_api_service.dart';
 import 'package:ambuhub/features/services/data/model/category.dart';
 import 'package:ambuhub/features/services/data/model/service.dart';
@@ -40,7 +38,6 @@ class ServiceRepoImplementation implements ServiceRepo {
         );
       }
     } on DioException catch (e) {
-      print(e.message);
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
@@ -66,7 +63,6 @@ class ServiceRepoImplementation implements ServiceRepo {
               httpResponse.statusCode == 201) {
             final data = httpResponse.data['service'];
             final service = ServiceModel.fromJson(data as Map<String, dynamic>);
-            print(service);
             return DataSuccess(data: service);
           } else {
             final DioException dioException = DioException(
@@ -74,7 +70,6 @@ class ServiceRepoImplementation implements ServiceRepo {
               error: httpResponse.statusMessage,
               type: DioExceptionType.badResponse,
             );
-            print(httpResponse.statusCode);
             return DataFailed(
               ErrorHandler.getErrorMessage(dioException),
               error: dioException,
@@ -95,7 +90,6 @@ class ServiceRepoImplementation implements ServiceRepo {
         );
       }
     } on DioException catch (e) {
-      print(e.error);
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }

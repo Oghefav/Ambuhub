@@ -23,7 +23,10 @@ class OnboardingPageBuilder extends StatelessWidget {
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.r),
+              topRight: Radius.circular(10.r),
+            ),
             child: AspectRatio(
               aspectRatio: 3 / 4,
               child: CachedNetworkImage(
@@ -54,15 +57,22 @@ class OnboardingPageBuilder extends StatelessWidget {
 
                 SizedBox(height: 10.h),
                 GestureDetector(
-                  onTap: (){
-                    BlocProvider.of<GetServicesBloc>(context).add(GetServiceInfo(categorySlug: category.slug));
-                    Navigator.pushNamed(context, AppRoutes.serviceInfoScreen, arguments: category);
+                  onTap: () {
+                    BlocProvider.of<GetServicesBloc>(
+                      context,
+                    ).add(GetServiceInfo(categorySlug: category.slug));
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.serviceInfoScreen,
+                      arguments: category,
+                    );
                   },
                   child: Text(
-                    'Learn more',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall!.copyWith(color: AppColours.blue),
+                    'View services',
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColours.blue,
+                      fontSize: 12.sp,
+                    ),
                   ),
                 ),
               ],

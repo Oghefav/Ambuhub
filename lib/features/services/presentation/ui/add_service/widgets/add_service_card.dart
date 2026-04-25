@@ -22,39 +22,14 @@ import 'package:path/path.dart' as p;
 class AddServiceFormCard extends HookWidget {
   AddServiceFormCard({super.key});
 
-  // final List<String> categories = [
-  //   'Ambulance personnel',
-  //   'Ambulance servicing',
-  //   'Medical transport',
-  // ];
-  // final List<String> ambulancePersonnelDepts = [
-  //   'Ambulance Driver',
-  //   'Basic Emergency Medical Technician',
-  //   'Paramedic(Air/Ground Ambulance)',
-  //   'Ambulance Nurse',
-  //   'Ambulance Doctor',
-  //   'Emergency Physician',
-  //   'Intensivist',
-  // ];
-
-  // final List<String> ambulanceServicingDepts = [
-  //   'Ambulance Sales',
-  //   'Ambulance Maintenance',
-  //   'Ambulance equipment',
-  // ];
-
-  
   final _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
-  
 
   @override
   Widget build(BuildContext context) {
     final categoriesData = context.read<GetServiceCatBloc>().state.categories;
     final categories = categoriesData?.map((e) => e).toList() ?? [];
     final categoryNames = categoriesData?.map((e) => e.name).toList() ?? [];
-    // final departments = categoriesData?.map((e) => e.departments.map((e) => e.name).toList()).toList() ?? [];
-    // final 
     final selectedCategory = useState<String>('');
     final selectedDept = useState<String>('');
     final titleController = useTextEditingController();
@@ -64,10 +39,6 @@ class AddServiceFormCard extends HookWidget {
     final isFormValid = useState<bool>(false);
 
     void _validate() {
-      // if ((titleController.text.isEmpty && descriptionController.text.isEmpty) ||  titleController.text.isEmpty ||
-      //     descriptionController.text.isEmpty) {
-      //   return;
-      // }
       Future.microtask((() {
         isFormValid.value = _formKey.currentState?.validate() ?? false;
       }));
@@ -135,7 +106,6 @@ class AddServiceFormCard extends HookWidget {
                       } else {
                         selectedCategory.value = '';
                       }
-                      // _validate();
                     },
                   ),
                   SizedBox(height: 15.h),
@@ -147,7 +117,6 @@ class AddServiceFormCard extends HookWidget {
                     items: getDepartments(),
                     onChanged: (value) {
                       selectedDept.value = value!;
-                      // _validate();
                     },
                     title: 'Department (sub-category)',
                     placeHolder: 'Select a department',
@@ -248,7 +217,9 @@ class AddServiceFormCard extends HookWidget {
                 selector: (state) => state is AddServiceLoading ? true : false,
                 builder: (context, isLoading) {
                   return SubmitButton(
-                    buttonText: isLoading ? 'Publishing service' : 'Publish service',
+                    buttonText: isLoading
+                        ? 'Publishing service'
+                        : 'Publish service',
                     textStyle: Theme.of(
                       context,
                     ).textTheme.titleSmall!.copyWith(color: AppColours.white),
@@ -257,12 +228,23 @@ class AddServiceFormCard extends HookWidget {
                             BlocProvider.of<AddServiceBloc>(context).add(
                               AddService(
                                 service: ServiceParams(
-                                  dept:categories.firstWhere((e)=> e.name == selectedCategory.value).departments.firstWhere((e)=> e.name == selectedDept.value).slug,
+                                  dept: categories
+                                      .firstWhere(
+                                        (e) => e.name == selectedCategory.value,
+                                      )
+                                      .departments
+                                      .firstWhere(
+                                        (e) => e.name == selectedDept.value,
+                                      )
+                                      .slug,
                                   description: descriptionController.text
                                       .trim(),
                                   photoUrls: selectedImages.value,
-                                  serviceCategory: categories.firstWhere((e)=> e.name == selectedCategory.value).slug
-                                      ,
+                                  serviceCategory: categories
+                                      .firstWhere(
+                                        (e) => e.name == selectedCategory.value,
+                                      )
+                                      .slug,
                                   title: titleController.text.trim(),
                                 ),
                               ),

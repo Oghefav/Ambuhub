@@ -31,29 +31,28 @@ class ServiceInfoScreen extends StatelessWidget {
               final services = state.services;
               return CustomScrollView(
                 slivers: [
-                   SliverMainAxisGroup(
-                      slivers: [
-                        _topSection(context, category),
-                        SliverToBoxAdapter(child: SizedBox(height: 20.h)),
-                        if (services!.isEmpty) _emptyServiceBuilder(context),
+                  SliverMainAxisGroup(
+                    slivers: [
+                      _topSection(context, category),
+                      SliverToBoxAdapter(child: SizedBox(height: 20.h)),
+                      if (services!.isEmpty) _emptyServiceBuilder(context),
 
-                        ...category.departments.map((dept) {
-                          final List<ServiceEntity> deptServices = services
-                              .where((e) => e.dept == dept.name)
-                              .toList();
-                          if (deptServices.isEmpty) {
-                            return const SliverToBoxAdapter(
-                              child: SizedBox.shrink(),
-                            );
-                          }
-                          return DeptSectionBuilder(
-                            deptName: dept.name,
-                            services: deptServices,
+                      ...category.departments.map((dept) {
+                        final List<ServiceEntity> deptServices = services
+                            .where((e) => e.dept == dept.name)
+                            .toList();
+                        if (deptServices.isEmpty) {
+                          return const SliverToBoxAdapter(
+                            child: SizedBox.shrink(),
                           );
-                        }),
-                      ],
-                    ),
-                  
+                        }
+                        return DeptSectionBuilder(
+                          deptName: dept.name,
+                          services: deptServices,
+                        );
+                      }),
+                    ],
+                  ),
                 ],
               );
             }
@@ -83,7 +82,7 @@ Widget _emptyServiceBuilder(BuildContext context) {
                       'No listings in this category yet. Check ',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-      
+
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Text(
@@ -129,7 +128,7 @@ Widget _topSection(BuildContext context, ServiceCategoryEntity category) {
                   );
                 },
                 errorWidget: (context, url, error) {
-                  return const Center(child: Icon(Icons.error));
+                  return const SizedBox.shrink();
                 },
                 fit: BoxFit.cover,
               ),

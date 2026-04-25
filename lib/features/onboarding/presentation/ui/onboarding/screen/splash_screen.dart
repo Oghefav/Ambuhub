@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -77,11 +78,31 @@ class _SplashScreenState extends State<SplashScreen> {
         listenWhen: (previous, current) => previous != current,
         listener: (context, state) {
           if (state is ConnectivityOnline) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             final serviceState = context.read<GetServiceCatBloc>().state;
             if (serviceState is GetServiceCatFailure ||
                 serviceState is GetServiceCatInitial) {
               context.read<GetServiceCatBloc>().add(GetServiceCategories());
             }
+          }
+          if (state is ConnectivityOffline) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                closeIconColor: Colors.white,
+
+                duration: Duration(days: 1),
+                content: Row(
+                  children: [
+                    Icon(LucideIcons.wifi_off, color: Colors.white),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'You are currently offline',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
         },
 
@@ -121,14 +142,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     const CupertinoActivityIndicator(
                       radius: 14,
                       color: AppColours.blue,
-                    )
-                  else if (state is GetServiceCatFailure)
-                    Text(
-                      state.error!,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    )
-                  else
-                    const SizedBox.shrink(),
+                    ),
                 ],
               ),
             );

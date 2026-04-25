@@ -27,27 +27,21 @@ class DeptSectionBuilder extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
-          if (servicesLength > 1)
-            SliverToBoxAdapter(
-              child: SizedBox(
-                // width: 300.w,
-                height: 300.h,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: servicesLength,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      width: 300.w,
-                      child: _serviceItemBuilder(context, services[index]),
-                    );
-                  },
-                ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 210.h,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: servicesLength,
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    width: 170.w,
+                    child: _serviceItemBuilder(context, services[index]),
+                  );
+                },
               ),
             ),
-          if (servicesLength == 1)
-            SliverToBoxAdapter(
-              child: _serviceItemBuilder(context, services[0]),
-            ),
+          ),
         ],
       ),
     );
@@ -56,7 +50,7 @@ class DeptSectionBuilder extends StatelessWidget {
 
 Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
   return Card(
-    margin: EdgeInsets.only(bottom: 30.h, right: 15.w),
+    margin: EdgeInsets.only(bottom: 30.h, right: 10.w),
     color: AppColours.white,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(15.r),
@@ -68,7 +62,7 @@ Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
       mainAxisSize: MainAxisSize.min,
       children: [
         AspectRatio(
-          aspectRatio: 16 / 8,
+          aspectRatio: 7 / 5,
           child: ClipRRect(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15.r),
@@ -85,22 +79,23 @@ Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
             ),
           ),
         ),
-        SizedBox(height: 15.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 service.title,
-                style: Theme.of(context).textTheme.titleSmall,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall!.copyWith(fontSize: 13.sp),
               ),
-              SizedBox(height: 15.h),
               Text(
                 service.description,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: Theme.of(context).textTheme.bodyLarge,
+                maxLines: 2,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),

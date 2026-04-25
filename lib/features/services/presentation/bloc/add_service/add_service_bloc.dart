@@ -8,6 +8,7 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
   final AddServiceUsecase _addServiceUsecase;
   AddServiceBloc(this._addServiceUsecase) : super(const AddServiceInitial()) {
     on<AddService>(onAddService);
+    on<AddServiceReset>(onAddServiceReset);
   }
 
   void onAddService(AddService event, Emitter<AddServiceState> emit) async {
@@ -19,5 +20,9 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
     } else {
       emit(AddServiceError(errorMessage: dataState.errorMessage));
     }
+  }
+
+  void onAddServiceReset(AddServiceReset event, Emitter<AddServiceState> emit) {
+    emit(const AddServiceInitial());
   }
 }

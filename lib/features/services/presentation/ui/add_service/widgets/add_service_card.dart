@@ -24,6 +24,7 @@ class AddServiceFormCard extends HookWidget {
 
   final _picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
+  final List<String> listType = ['Sale', 'Rent'];
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,17 @@ class AddServiceFormCard extends HookWidget {
     final selectedCategory = useState<String>('');
     final selectedDept = useState<String>('');
     final titleController = useTextEditingController();
+    final stockController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final filePaths = useState<List<String>>([]);
     final selectedImages = useState<List<File>>([]);
     final isFormValid = useState<bool>(false);
+    final isListingTypeEnabled = useState<bool>(false);
+    final isStockEnabled = useState<bool>(false);
+    final selectedListType = useState<String>('');
+    final notEnabledListTypeHintText = useState<String>(
+      'Choose a category first',
+    );
 
     void _validate() {
       Future.microtask((() {
@@ -46,7 +54,6 @@ class AddServiceFormCard extends HookWidget {
 
     useEffect(() {
       bool isFirstRun = true;
-
       void listener() {
         if (isFirstRun) {
           isFirstRun = false;
@@ -61,6 +68,28 @@ class AddServiceFormCard extends HookWidget {
         titleController.removeListener(_validate);
         descriptionController.removeListener(_validate);
       };
+    });
+
+    useEffect(() {
+      isListingTypeEnabled.value =
+          selectedCategory.value.isNotEmpty &&
+          (selectedCategory.value == 'Ambulance equipment' ||
+              selectedCategory.value == 'Medical transport');
+
+      return null;
+    });
+    useEffect(() {
+      notEnabledListTypeHintText.value = selectedCategory.value.isNotEmpty
+          ? 'Not applicable for this category'
+          : 'Choose a category first';
+
+      return null;
+    });
+
+    useEffect(() {
+      isStockEnabled.value = selectedListType.value == 'Sale';
+
+      return null;
     });
 
     Future<void> pickFile() async {
@@ -102,6 +131,8 @@ class AddServiceFormCard extends HookWidget {
                     onChanged: (value) {
                       if (value != null) {
                         selectedDept.value = '';
+                        selectedListType.value = '';
+                        stockController.text = '';
                         selectedCategory.value = value;
                       } else {
                         selectedCategory.value = '';
@@ -122,8 +153,39 @@ class AddServiceFormCard extends HookWidget {
                     placeHolder: 'Select a department',
                   ),
                   SizedBox(height: 15.h),
-                  Text('Title', style: Theme.of(context).textTheme.titleMedium),
+                  DropDownFormFieldBuilder(
+                    value: selectedListType.value,
+                    hintText: 'Select a listing type',
+                    isEnabled: isListingTypeEnabled.value,
+                    notEnabledhintText: notEnabledListTypeHintText.value,
+                    items: listType,
+                    onChanged: (value) {
+                      selectedListType.value = value!;
+                    },
+                    title: 'Listing type',
+                    placeHolder: 'Select a listing type',
+                  ),
+                  SizedBox(height: 15.h),
+                  Text('Stock', style: Theme.of(context).textTheme.titleMedium),
                   SizedBox(height: 5.h),
+                  TextFormField(
+                    enabled: isStockEnabled.value,
+                    controller: stockController,
+                    validator: isStockEnabled.value
+                        ? FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ])
+                        : null,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: isStockEnabled.value
+                          ? 'Enter stock quantity'
+                          : 'Available only for sale listings',
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  Text('Title', style: Theme.of(context).textTheme.titleMedium),
                   TextFormField(
                     controller: titleController,
                     validator: FormBuilderValidators.compose([
@@ -210,6 +272,9 @@ class AddServiceFormCard extends HookWidget {
               listener: (context, state) {
                 if (state is AddServiceSuccess) {
                   BlocProvider.of<GetServicesBloc>(context).add(GetServices());
+                  BlocProvider.of<AddServiceBloc>(
+                    context,
+                  ).add(AddServiceReset());
                   BlocProvider.of<NavigationCubit>(context).setPage(2);
                 }
               },
@@ -246,6 +311,12 @@ class AddServiceFormCard extends HookWidget {
                                       )
                                       .slug,
                                   title: titleController.text.trim(),
+                                  stock: isStockEnabled.value
+                                      ? int.parse(stockController.text.trim())
+                                      : null,
+                                  listingType: selectedListType.value.isEmpty
+                                      ? null
+                                      : selectedListType.value,
                                 ),
                               ),
                             );

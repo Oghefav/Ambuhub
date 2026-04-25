@@ -33,6 +33,7 @@ class _ListingsScreenState extends State<ListingsScreen> {
         List<ServiceEntity> medicalTransportCategory = [];
         List<ServiceEntity> ambulancePersonnelCategory = [];
         List<ServiceEntity> ambulanceServicingCategory = [];
+        List<ServiceEntity> ambulanceEquipmentCategory = [];
         if (state is GetServicesSuccess) {
           final services = state.services;
           medicalTransportCategory = services!.where((element) {
@@ -43,6 +44,9 @@ class _ListingsScreenState extends State<ListingsScreen> {
           }).toList();
           ambulanceServicingCategory = services.where((element) {
             return element.serviceCategory == 'Ambulance servicing';
+          }).toList();
+          ambulanceEquipmentCategory = services.where((element) {
+            return element.serviceCategory == 'Ambulance equipment';
           }).toList();
         }
         return ColoredBox(
@@ -98,6 +102,8 @@ class _ListingsScreenState extends State<ListingsScreen> {
                           categoryName: 'Ambulance Servicing',
                           services: ambulanceServicingCategory,
                         ),
+                      if(ambulanceEquipmentCategory.isNotEmpty)
+                        ServiceCategoryBuilder(categoryName: 'Ambulance equipment', services: ambulanceEquipmentCategory),
                       if (state.services!.isEmpty) ...[
                         SliverToBoxAdapter(child: SizedBox(height: 20.h)),
                         SliverToBoxAdapter(

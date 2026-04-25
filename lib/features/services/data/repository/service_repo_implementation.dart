@@ -57,11 +57,13 @@ class ServiceRepoImplementation implements ServiceRepo {
             .map((url) => url.toString())
             .toList();
         final service = ServiceModel.toJson(data, photoUrls);
+        print(service);
         try {
           final httpResponse = await _serviceApiService.addServices(service);
           if (httpResponse.statusCode == 200 ||
               httpResponse.statusCode == 201) {
             final data = httpResponse.data['service'];
+            print(data);
             final service = ServiceModel.fromJson(data as Map<String, dynamic>);
             return DataSuccess(data: service);
           } else {

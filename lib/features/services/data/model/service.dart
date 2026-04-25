@@ -1,7 +1,6 @@
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 
-
 class ServiceModel extends ServiceEntity {
   const ServiceModel({
     required super.dept,
@@ -9,16 +8,21 @@ class ServiceModel extends ServiceEntity {
     required super.photoUrls,
     required super.serviceCategory,
     required super.title,
-    required super.id
+    required super.id,
   });
 
-  static Map<String, dynamic> toJson(ServiceParams serviceParams, List<String> photoUrls) {
+  static Map<String, dynamic> toJson(
+    ServiceParams serviceParams,
+    List<String> photoUrls,
+  ) {
     return {
       'title': serviceParams.title,
       'description': serviceParams.description,
       'serviceCategorySlug': serviceParams.serviceCategory,
       'departmentSlug': serviceParams.dept,
       'photoUrls': photoUrls,
+      'listingType': serviceParams.listingType?.toLowerCase(),
+      'stock': serviceParams.stock,
     };
   }
 
@@ -27,8 +31,10 @@ class ServiceModel extends ServiceEntity {
       id: json['_id'] ?? json['id'],
       dept: json['departmentName'] ?? json['departmentSlug'],
       description: json['description'],
-      photoUrls: (json['photoUrls'] as List? ??[]).map((url)=>url.toString()).toList(),
-      serviceCategory: json['category']?['name']?? json['serviceCategoryId'],
+      photoUrls: (json['photoUrls'] as List? ?? [])
+          .map((url) => url.toString())
+          .toList(),
+      serviceCategory: json['category']?['name'] ?? json['serviceCategoryId'],
       title: json['title'],
     );
   }
@@ -42,5 +48,3 @@ class ServiceModel extends ServiceEntity {
   //   );
   // }
 }
-
-

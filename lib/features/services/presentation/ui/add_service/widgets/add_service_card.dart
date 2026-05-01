@@ -45,8 +45,10 @@ class AddServiceFormCard extends HookWidget {
     final notEnabledListTypeHintText = useState<String>(
       'Choose a category first',
     );
+    final isResetting = useState<bool>(false);
 
     void _validate() {
+      if (isResetting.value) return;
       Future.microtask((() {
         isFormValid.value = _formKey.currentState?.validate() ?? false;
       }));
@@ -275,6 +277,19 @@ class AddServiceFormCard extends HookWidget {
                   BlocProvider.of<AddServiceBloc>(
                     context,
                   ).add(AddServiceReset());
+                  isResetting.value = true;
+                  _formKey.currentState?.reset();
+                  titleController.clear();
+                  descriptionController.clear();
+                  stockController.clear();
+                  selectedCategory.value = '';
+                  selectedDept.value = '';
+                  selectedListType.value = '';
+                  selectedImages.value = [];
+                  filePaths.value = [];
+                  isFormValid.value = false;
+                  isListingTypeEnabled.value = false;
+                  isStockEnabled.value = false;
                   BlocProvider.of<NavigationCubit>(context).setPage(2);
                 }
               },

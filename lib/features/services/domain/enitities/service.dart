@@ -7,6 +7,9 @@ class ServiceEntity extends Equatable {
   final String serviceCategory;
   final String dept;
   final List<String> photoUrls;
+  final String? listingType;
+  final int? stock;
+  final int? price;
 
   const ServiceEntity({
     required this.id,
@@ -15,6 +18,9 @@ class ServiceEntity extends Equatable {
     required this.photoUrls,
     required this.serviceCategory,
     required this.title,
+    this.listingType,
+    this.stock,
+    this.price,
   });
 
   @override

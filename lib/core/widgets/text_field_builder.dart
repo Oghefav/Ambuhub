@@ -1,3 +1,4 @@
+import 'package:ambuhub/config/app_colour.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,17 +10,19 @@ class TextFieldBuilder extends HookWidget {
   final bool isObsure;
   final int? maxLines;
   final TextInputType inputType;
-  final FormFieldValidator<String> validator;
+  final IconData? prefixIcon;
+  final FormFieldValidator<String>? validator;
 
   const TextFieldBuilder({
     super.key,
     required this.label,
     required this.hintText,
     required this.controller,
-    required this.validator,
+    this.validator,
     this.isObsure = false,
     required this.inputType,
     this.maxLines,
+    this.prefixIcon,
   });
 
   @override
@@ -38,9 +41,10 @@ class TextFieldBuilder extends HookWidget {
           TextFormField(
             controller: controller,
             obscureText: isTextObsure.value,
-            validator: validator,
+            validator: validator ?? (value) => null,
             keyboardType: inputType,
             decoration: InputDecoration(
+              prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: AppColours.grey, size: 10.sp) : null,
               hintText: hintText,
               suffixIcon: controller.text.isNotEmpty && isObsure
                   ? GestureDetector(

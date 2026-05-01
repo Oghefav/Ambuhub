@@ -1,4 +1,5 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,13 +30,13 @@ class DeptSectionBuilder extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 210.h,
+              height: 280.h,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: servicesLength,
                 itemBuilder: (context, index) {
                   return SizedBox(
-                    width: 170.w,
+                    width: 180.w,
                     child: _serviceItemBuilder(context, services[index]),
                   );
                 },
@@ -63,20 +64,52 @@ Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
       children: [
         AspectRatio(
           aspectRatio: 7 / 5,
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.r),
-              topRight: Radius.circular(15.r),
-            ),
-            child: CachedNetworkImage(
-              imageUrl: service.photoUrls[0],
-              fadeInDuration: Duration.zero,
-              fadeOutDuration: Duration.zero,
-              progressIndicatorBuilder: (context, url, progress) =>
-                  const CupertinoActivityIndicator(color: AppColours.blue),
-              errorWidget: (context, url, error) => const SizedBox.shrink(),
-              fit: BoxFit.cover,
-            ),
+          child: Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.r),
+                  topRight: Radius.circular(15.r),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: service.photoUrls[0],
+                  fadeInDuration: Duration.zero,
+                  fadeOutDuration: Duration.zero,
+                  progressIndicatorBuilder: (context, url, progress) =>
+                      const CupertinoActivityIndicator(color: AppColours.blue),
+                  errorWidget: (context, url, error) =>
+                      const SizedBox.shrink(),
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                ),
+              ),
+              if (service.listingType != null)
+                Positioned(
+                  bottom: 10.h,
+                  left: 10.w,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(5.r),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: Text(
+                      service.listingType!.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(
+                            color: AppColours.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 8.sp,
+                          ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
         Padding(
@@ -91,10 +124,29 @@ Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
                   context,
                 ).textTheme.titleSmall!.copyWith(fontSize: 13.sp),
               ),
+              if (service.price != null)
+                ...[
+                  SizedBox(height: 5.h),
+                  Text(
+                  formatCurrency(service.price),
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall!.copyWith(fontSize: 13.sp),
+                ),
+                
+              ],
+              SizedBox(height: 5.h),
+              Text(
+                'Stock: ${service.stock?.toString() ?? 'N/A'}',
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              SizedBox(height: 5.h),
               Text(
                 service.description,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 3,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

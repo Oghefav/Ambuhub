@@ -32,7 +32,9 @@ class DropDownFormFieldBuilder extends StatelessWidget {
         Text(title, style: Theme.of(context).textTheme.titleSmall),
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
-          initialValue: (items != null && items!.contains(value))? value : null,
+          initialValue: (items != null && items!.contains(value))
+              ? value
+              : null,
           isExpanded: true,
           decoration: InputDecoration(
             fillColor: (!isEnabled)
@@ -65,9 +67,11 @@ class DropDownFormFieldBuilder extends StatelessWidget {
                 ]
               : null,
           onChanged: (isEnabled) ? onChanged : null,
-          validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ]),
+          validator: isEnabled
+              ? FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                ])
+              : null,
         ),
       ],
     );

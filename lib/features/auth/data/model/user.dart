@@ -1,18 +1,57 @@
-import 'package:ambuhub/features/auth/domain/entities/user.dart';
+import 'package:ambuhub/features/auth/domain/entities/client.dart';
+import 'package:ambuhub/features/auth/domain/entities/service_provider.dart';
 
-class UserModel extends UserEntity {
-  const UserModel({
+class ClientModel extends ClientEntity {
+  const ClientModel({
     required super.id,
     required super.email,
-    required super.name,
+    required super.firstName,
+    required super.lastName,
+    required super.phone,
+    required super.country,
+    required super.dateOfBirth,
     required super.role,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
+  factory ClientModel.fromJson(Map<String, dynamic> json) {
+    return ClientModel(
       id: json['id'],
       email: json['email'],
-      name: json['name'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      phone: json['phone'],
+      country: json['countryCode'],
+      dateOfBirth: json['dateOfBirth'],
+      role: json['role'],
+      );
+  }
+}
+
+class ServiceProviderModel extends ServiceProviderEntity {
+  const ServiceProviderModel({
+    required super.id,
+    required super.email,
+    required super.firstName,
+    required super.lastName,
+    required super.businessName,
+    super.websiteUrl,
+    required super.physicalAddress,
+    required super.phone,
+    required super.country,
+    required super.role,
+  });
+
+  factory ServiceProviderModel.fromJson(Map<String, dynamic> json) {
+    return ServiceProviderModel(
+      id: json['id'],
+      email: json['email'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      businessName: json['businessName'],
+      websiteUrl: json['website'],
+      physicalAddress: json['physicalAddress'],
+      phone: json['phone'],
+      country: json['countryCode'],
       role: json['role'],
     );
   }

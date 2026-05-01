@@ -13,12 +13,15 @@ class LoginScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      BlocProvider.of<AuthBloc>(context).add(const AuthReset());
-      return null;
-    }, []);
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    useEffect(() {
+      BlocProvider.of<AuthBloc>(context).add(const AuthReset());
+      emailController.clear();
+      passwordController.clear();
+      return null;
+    }, []);
+    
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

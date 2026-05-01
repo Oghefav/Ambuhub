@@ -1,6 +1,8 @@
+import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/features/auth/presentation/ui/sign_up/widgets/client_sigup.dart';
+import 'package:ambuhub/features/auth/presentation/ui/sign_up/widgets/service_provider_signup_form.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
 import 'package:ambuhub/core/widgets/gradient_background.dart';
-import 'package:ambuhub/features/auth/presentation/ui/sign_up/widgets/signup_form_card.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -10,6 +12,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColours.white,
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -20,7 +23,7 @@ class SignUpScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                    SignupFormCard(role: role),
+                    if (role == 'Client') ClientSignupFormCard(role: role) else ServiceProviderSignupFormCard(role: role),
                     BottomText(),
                   ],
                 ),
@@ -32,3 +35,5 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
+
+

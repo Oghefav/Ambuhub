@@ -5,8 +5,9 @@ import 'package:ambuhub/features/auth/data/model/login.dart';
 import 'package:ambuhub/features/auth/data/model/sign_up.dart';
 import 'package:ambuhub/features/auth/data/model/user.dart';
 import 'package:ambuhub/features/auth/domain/entities/login_params.dart';
+import 'package:ambuhub/features/auth/domain/entities/service_provider.dart';
 import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
-import 'package:ambuhub/features/auth/domain/entities/user.dart';
+import 'package:ambuhub/features/auth/domain/entities/client.dart';
 import 'package:ambuhub/features/auth/domain/repository/repository.dart';
 import 'package:dio/dio.dart';
 
@@ -16,15 +17,44 @@ class AuthRepoImplementation implements AuthRepository {
   const AuthRepoImplementation(this._authApiService);
 
   @override
-  Future<DataState<UserEntity>> signUp(SignUpParams params) async {
-    final data = SignUpModel.fromParams(params);
+  Future<DataState<ClientEntity>> signUpClient(ClientSignUpParams params) async {
+    final data = ClientSignUpModel.fromParams(params);
     try {
       final httpResponse = await _authApiService.signUp(data.toJson());
 
       if (httpResponse.statusCode == 201) {
         final Map<String, dynamic> userData = httpResponse.data;
+        print(userData);
+        final user = ClientModel.fromJson(userData['user']);
+        print(user.email);
+        return DataSuccess(data: user);
+      } else {
+        print(' the error ${httpResponse.data['message']}');
+        final dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
+        return DataFailed(
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
+        );
+      }
+    } on DioException catch (e) {
+      print('the erroe $e');
+      return DataFailed(ErrorHandler.getErrorMessage(e));
+    }
+  }
+  @override
+  Future<DataState<ServiceProviderEntity>> signUpServiceProvider(ServiceProviderSignUpParams params) async {
+    final data = ServiceProviderSignUpModel.fromParams(params);
+    try {
+      final httpResponse = await _authApiService.signUp(data.toJson());
 
-        final user = UserModel.fromJson(userData['user']);
+      if (httpResponse.statusCode == 201) {
+        final Map<String, dynamic> userData = httpResponse.data;
+        print(userData);
+        final user = ServiceProviderModel.fromJson(userData['user']);
         print(user.email);
         return DataSuccess(data: user);
       } else {
@@ -46,17 +76,23 @@ class AuthRepoImplementation implements AuthRepository {
   }
 
   @override
-  Future<DataState<UserEntity>> login(LoginParams params) async {
+  Future<DataState<dynamic>> login(LoginParams params) async {
     final data = LoginModel.fromParams(params);
     try {
       final httpResponse = await _authApiService.logIn(data.toJson());
 
       if (httpResponse.statusCode == 200) {
         final Map<String, dynamic> userData = httpResponse.data;
-
-        final user = UserModel.fromJson(userData['user']);
-        print(user.email);
-        return DataSuccess(data: user);
+        print(userData);
+        if (userData['user']['role'] == 'client') {
+          final user = ClientModel.fromJson(userData['user']);
+          print(user.email);
+          return DataSuccess(data: user);
+        } else {
+          final user = ServiceProviderModel.fromJson(userData['user']);
+          print(user.email);
+          return DataSuccess(data: user);
+        }
       } else {
         print(httpResponse.data['message']);
 

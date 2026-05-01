@@ -31,7 +31,8 @@ Future<void> dependeciesInjection() async {
 
   // usecases
   sl.registerLazySingleton<LoginUsecase>(() => LoginUsecase(sl()));
-  sl.registerLazySingleton<SignUpUsecase>(() => SignUpUsecase(sl()));
+  sl.registerLazySingleton<ClientSignUpUsecase>(() => ClientSignUpUsecase(sl()));
+  sl.registerLazySingleton<ServiceProviderSignUpUsecase>(() => ServiceProviderSignUpUsecase(sl()));
   sl.registerLazySingleton<GetServicesUsecase>(() => GetServicesUsecase(sl()));
   sl.registerLazySingleton<AddServiceUsecase>(() => AddServiceUsecase(sl()));
   sl.registerLazySingleton<GetServiceCategoriesUsecase>(
@@ -40,7 +41,7 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<GetServiceInfoUsecase>(() => GetServiceInfoUsecase(sl()));
 
   // blocs
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl()));
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
   sl.registerFactory<GetServicesBloc>(() => GetServicesBloc(sl(), sl()));
   sl.registerFactory<AddServiceBloc>(() => AddServiceBloc(sl()));
   sl.registerFactory<GetServiceCatBloc>(() => GetServiceCatBloc(sl()));

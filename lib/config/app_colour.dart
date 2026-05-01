@@ -7,7 +7,7 @@ class AppColours {
   static const Color lightTeal = Color.fromRGBO(212, 231, 254, 1.0);
   static const Color verylightTeal = Color.fromRGBO(243, 248, 252, 1.0);
   static const Color deepRed = Color.fromRGBO(168, 7, 32, 1.0);
-
+  static const Color veryDarkBlue = Color.fromRGBO(3, 10, 33, 1.0);
   static const Color vividOrange = Color.fromRGBO(202, 53, 0, 1.0);
   static const Color vividTeal = Color.fromRGBO(1, 106, 180, 1.0);
   static const Color blue = Color.fromRGBO(21, 101, 192, 1.0);
@@ -17,4 +17,6 @@ class AppColours {
   static const Color white = Color.fromRGBO(255, 255, 255, 1.0);
   static const Color veryLightTeal2 = Color.fromRGBO(228, 239, 246, 1.0);
   static const Color drawerScrimColor = Color.fromRGBO(151, 179, 195, 1.0);
+  static const Color darkGrey = Color.fromRGBO(36, 46, 77, 1.0);
+  static const Color lightGrey = Color.fromRGBO(81, 90, 115, 1.0);
 }

@@ -3,11 +3,13 @@ import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 
 abstract class AuthEvent {
   final LoginParams? loginParams;
-  final SignUpParams? signUpParams;
+  final ClientSignUpParams? clientSignUpParams;
+  final ServiceProviderSignUpParams? serviceProviderSignUpParams;
 
   const AuthEvent({
     this.loginParams,
-    this.signUpParams
+    this.clientSignUpParams,
+    this.serviceProviderSignUpParams,
   });
 }
 
@@ -15,11 +17,14 @@ class Login extends AuthEvent {
   const Login({required super.loginParams});
 }
 
-class SignUp extends AuthEvent {
-  const SignUp({
-    required super.signUpParams
-  });
+class ClientSignUp extends AuthEvent {
+  const ClientSignUp({required super.clientSignUpParams});
 }
+
+class ServiceProviderSignUp extends AuthEvent {
+  const ServiceProviderSignUp({required super.serviceProviderSignUpParams});
+}
+
 class AuthReset extends AuthEvent {
   const AuthReset();
 }

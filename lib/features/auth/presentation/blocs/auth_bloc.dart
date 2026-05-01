@@ -7,11 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUsecase _loginUsecase;
-  final SignUpUsecase _signUpUsecase;
-  AuthBloc(this._loginUsecase, this._signUpUsecase)
+  final ClientSignUpUsecase _clientSignUpUsecase;
+  final ServiceProviderSignUpUsecase _serviceProviderSignUpUsecase;
+  AuthBloc(this._loginUsecase, this._clientSignUpUsecase, this._serviceProviderSignUpUsecase)
     : super(const AuthInitial()) {
     on<Login>(onLogin);
-    on<SignUp>(onSignUp);
+    on<ClientSignUp>(onClientSignUp);
+    on<ServiceProviderSignUp>(onServiceProviderSignUp);
     on<AuthReset>(onAuthReset);
   }
 
@@ -20,17 +22,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final dataState = await _loginUsecase(params: login.loginParams);
 
     if (dataState is DataSuccess) {
-      emit(AuthSuccess(user: dataState.data));
+      emit(AuthSuccess(data: dataState.data));
     } else {
       emit(AuthFailed(error: dataState.errorMessage));
     }
   }
-  void onSignUp(SignUp signUp, Emitter<AuthState> emit) async {
+  void onClientSignUp(ClientSignUp clientSignUp, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-    final dataState = await _signUpUsecase(params: signUp.signUpParams);
+    final dataState = await _clientSignUpUsecase(params: clientSignUp.clientSignUpParams);
 
     if (dataState is DataSuccess) {
-      emit(AuthSuccess(user: dataState.data));
+      emit(AuthSuccess(data: dataState.data));
+    } else {
+      emit(AuthFailed(error: dataState.errorMessage));
+    }
+  }
+  void onServiceProviderSignUp(ServiceProviderSignUp serviceProviderSignUp, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
+    final dataState = await _serviceProviderSignUpUsecase(params: serviceProviderSignUp.serviceProviderSignUpParams);
+
+    if (dataState is DataSuccess) {
+      emit(AuthSuccess(data: dataState.data));
     } else {
       emit(AuthFailed(error: dataState.errorMessage));
     }

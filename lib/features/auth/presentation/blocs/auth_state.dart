@@ -1,13 +1,12 @@
-import 'package:ambuhub/features/auth/domain/entities/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
   final String? error;
-  final UserEntity? user;
-  const AuthState({this.error, this.user});
+  final dynamic data;
+  const AuthState({this.error, this.data});
 
   @override
-  List<Object?> get props => [error, user];
+  List<Object?> get props => [error, data];
 }
 
 class AuthInitial extends AuthState {
@@ -19,7 +18,7 @@ class AuthLoading extends AuthState {
 }
 
 class AuthSuccess extends AuthState {
-  const AuthSuccess({required super.user});
+  const AuthSuccess({super.data});
 }
 
 class AuthFailed extends AuthState {

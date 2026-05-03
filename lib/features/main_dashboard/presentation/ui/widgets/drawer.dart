@@ -1,6 +1,6 @@
+import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/custom_divider.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/drawer_header.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/drawer_tile_builder.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +16,27 @@ class AppDrawer extends StatelessWidget {
     return BlocBuilder<NavigationCubit, int>(
       builder: (context, currentIndex) {
         return Drawer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.sizeOf(context).height,
+            ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(right: BorderSide(color: AppColours.penBlue, width: 2)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColours.penBlue,
+                    AppColours.veryDarkBlue,
+                    AppColours.veryDarkBlue,
+                  ],
+                  stops: [0.0, 0.2, 1.0],
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               SizedBox(height: 10.h),
               AppDrawerHeader(),
               SizedBox(height: 15.w),
@@ -103,7 +121,7 @@ class AppDrawer extends StatelessWidget {
                 index: 7,
               ),
               SizedBox(height: 290.h),
-              CustomDivider(),
+              Divider(color: AppColours.penBlue, height: 2.h),
               SizedBox(height: 10.h),
               GestureDetector(
                 onTap: () => Navigator.pushReplacementNamed(
@@ -114,16 +132,18 @@ class AppDrawer extends StatelessWidget {
                   children: [
                     SizedBox(width: 20.w),
 
-                    Icon(LucideIcons.log_out),
+                    Icon(LucideIcons.log_out, color: AppColours.white,),
                     SizedBox(width: 10.w),
                     Text(
                       'Sign out',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: AppColours.white),
                     ),
                   ],
                 ),
               ),
-            ],
+                ],
+              ),
+            ),
           ),
         );
       },

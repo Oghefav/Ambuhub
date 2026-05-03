@@ -8,6 +8,7 @@ class ServiceParams {
   final List<File> photoUrls;
   final String? listingType;
   final int? stock;
+  final int? price;
 
   const ServiceParams({
     required this.dept,
@@ -16,6 +17,7 @@ class ServiceParams {
     required this.serviceCategory,
     required this.title,
     this.listingType,
-    this.stock
+    this.stock,
+    this.price,
   });
 }

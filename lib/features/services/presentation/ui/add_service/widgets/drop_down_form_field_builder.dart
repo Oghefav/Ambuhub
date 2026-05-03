@@ -29,7 +29,8 @@ class DropDownFormFieldBuilder extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.titleSmall),
+                  Text(title, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp)),
+
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
           initialValue: (items != null && items!.contains(value))
@@ -41,6 +42,8 @@ class DropDownFormFieldBuilder extends StatelessWidget {
                 ? AppColours.veryLightVividTeal
                 : Colors.transparent,
             hintText: (isEnabled) ? hintText : notEnabledhintText,
+            hintStyle: Theme.of(context).textTheme.bodySmall,
+                    
           ),
           style: Theme.of(context).textTheme.bodyLarge,
           items: (isEnabled)

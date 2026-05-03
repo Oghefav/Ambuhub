@@ -41,6 +41,10 @@ class _MyAppState extends State<MyApp> {
       _precached = true;
       Future.wait([
         precacheImage(const AssetImage('assets/images/logo.png'), context),
+        precacheImage(const AssetImage('assets/images/equipment.webp'), context),
+        precacheImage(const AssetImage('assets/images/personnel.webp'), context),
+        precacheImage(const AssetImage('assets/images/transport.webp'), context),
+        precacheImage(const AssetImage('assets/images/servicing.webp'), context),
       ]).then((value) {
         FlutterNativeSplash.remove();
       });

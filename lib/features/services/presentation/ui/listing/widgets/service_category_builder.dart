@@ -26,6 +26,7 @@ class ServiceCategoryBuilder extends StatelessWidget {
                 Text(categoryName, style: Theme.of(context).textTheme.titleMedium),
                 SizedBox(height: 4.h),
                 CustomDivider(),
+                SizedBox(height: 10.h),
               ],
             ),
           ),
@@ -33,10 +34,7 @@ class ServiceCategoryBuilder extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
             return ServiceContainer(
-              dept: services[index].dept,
-              description: services[index].description,
-              imageurl: services[index].photoUrls[0],
-              title: services[index].title,
+              serviceEntity: services[index]
             );
           }, childCount: services.length > 4 ? 4 : services.length),
         ),

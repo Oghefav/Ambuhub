@@ -22,18 +22,18 @@ class AppDrawerHeader extends StatelessWidget {
               Text(
                 'Ambuhub',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColours.vividTeal,
+                  color: AppColours.veryLightGrey,
                   fontSize: 20.sp,
                 ),
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(LucideIcons.x, size: 20.sp, color: AppColours.grey),
+                icon: Icon(LucideIcons.x, size: 20.sp, color: AppColours.veryLightGrey),
               ),
             ],
           ),
         ),
-        CustomDivider(),
+        Divider(color: AppColours.penBlue, height: 3.h,),
       ],
     );
   }

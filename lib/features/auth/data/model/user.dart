@@ -17,12 +17,12 @@ class ClientModel extends ClientEntity {
     return ClientModel(
       id: json['id'],
       email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      phone: json['phone'],
-      country: json['countryCode'],
-      dateOfBirth: json['dateOfBirth'],
-      role: json['role'],
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      phone: json['phone'] ?? '' ,
+      country: json['countryCode'] ?? '',
+      dateOfBirth: json['dateOfBirth'] ?? '',
+      role: json['role'] ?? '',
       );
   }
 }
@@ -45,13 +45,13 @@ class ServiceProviderModel extends ServiceProviderEntity {
     return ServiceProviderModel(
       id: json['id'],
       email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      businessName: json['businessName'],
-      websiteUrl: json['website'],
-      physicalAddress: json['physicalAddress'],
-      phone: json['phone'],
-      country: json['countryCode'],
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      businessName: json['businessName'] ?? '',
+      websiteUrl: json['website'] ?? '',
+      physicalAddress: json['physicalAddress'] ?? '',
+      phone: json['phone'] ?? '',
+      country: json['countryCode'] ?? '',
       role: json['role'],
     );
   }

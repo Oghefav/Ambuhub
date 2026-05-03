@@ -1,4 +1,4 @@
-import 'package:ambuhub/config/app_colour.dart';
+import 'dart:ui';
 import 'package:ambuhub/features/availablity/presentation/ui/screens/availability_screen.dart';
 import 'package:ambuhub/features/booking/presentation/ui/screen/booking_screen.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
@@ -11,13 +11,17 @@ import 'package:ambuhub/features/services/presentation/ui/listing/screen/listing
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class MainDashboard extends StatelessWidget {
+class MainDashboard extends HookWidget{
+
   const MainDashboard({super.key});
   @override
   Widget build(BuildContext context) {
+    final isDrawerOpen = useState<bool>(false);
+
     final List<Widget> pages = [
-      const DashBoardScreen(),
+      DashBoardScreen(),
       AddServiceScreen(),
       ListingsScreen(),
       BookingScreen(),
@@ -29,9 +33,27 @@ class MainDashboard extends StatelessWidget {
     return BlocBuilder<NavigationCubit, int>(
       builder: (context, currentIndex) {
         return Scaffold(
-          drawerScrimColor: AppColours.teal.withAlpha(80),
           drawer: AppDrawer(),
-          body: IndexedStack(index: currentIndex, children: pages),
+          onDrawerChanged: (isOpen) {
+            isDrawerOpen.value = isOpen;
+          },
+          body: Stack(
+                children: [IndexedStack(index: currentIndex, children: pages)
+                ,
+                if (isDrawerOpen.value)
+                  Positioned.fill(child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                    child: Container(
+                          color: Colors.black.withAlpha(
+                            10,
+                          ), // Almost invisible, but triggers the blur
+                        ),
+                  ))
+                ],
+
+              )
+            
+          
         );
       },
     );

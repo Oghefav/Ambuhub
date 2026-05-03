@@ -36,7 +36,7 @@ class TextFieldBuilder extends HookWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.titleSmall),
+          Text(label, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp)),
           SizedBox(height: 5.h),
           TextFormField(
             controller: controller,

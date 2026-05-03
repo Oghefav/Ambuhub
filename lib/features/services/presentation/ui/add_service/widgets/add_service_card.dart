@@ -11,6 +11,7 @@ import 'package:ambuhub/features/services/presentation/bloc/get_service_categori
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/drop_down_form_field_builder.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/photo_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -35,6 +36,7 @@ class AddServiceFormCard extends HookWidget {
     final selectedDept = useState<String>('');
     final titleController = useTextEditingController();
     final stockController = useTextEditingController();
+    final priceController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final filePaths = useState<List<String>>([]);
     final selectedImages = useState<List<File>>([]);
@@ -42,6 +44,7 @@ class AddServiceFormCard extends HookWidget {
     final isListingTypeEnabled = useState<bool>(false);
     final isStockEnabled = useState<bool>(false);
     final selectedListType = useState<String>('');
+    final price = useState<int?>(null);
     final notEnabledListTypeHintText = useState<String>(
       'Choose a category first',
     );
@@ -84,13 +87,11 @@ class AddServiceFormCard extends HookWidget {
       notEnabledListTypeHintText.value = selectedCategory.value.isNotEmpty
           ? 'Not applicable for this category'
           : 'Choose a category first';
-
       return null;
     });
 
     useEffect(() {
       isStockEnabled.value = selectedListType.value == 'Sale';
-
       return null;
     });
 
@@ -168,7 +169,13 @@ class AddServiceFormCard extends HookWidget {
                     placeHolder: 'Select a listing type',
                   ),
                   SizedBox(height: 15.h),
-                  Text('Stock', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Stock',
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.sp,
+                    ),
+                  ),
                   SizedBox(height: 5.h),
                   TextFormField(
                     enabled: isStockEnabled.value,
@@ -187,7 +194,38 @@ class AddServiceFormCard extends HookWidget {
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  Text('Title', style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    'Price (NGN)',
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  TextFormField(
+                    enabled: isStockEnabled.value,
+                    controller: priceController,
+                    validator: isStockEnabled.value
+                        ? FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                          ])
+                        : null,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: isStockEnabled.value
+                          ? 'Enter price in naira'
+                          : 'Available only for sale listings',
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  SizedBox(height: 15.h),
+                  Text(
+                    'Title',
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.sp,
+                    ),
+                  ),
                   TextFormField(
                     controller: titleController,
                     validator: FormBuilderValidators.compose([
@@ -202,7 +240,10 @@ class AddServiceFormCard extends HookWidget {
                   SizedBox(height: 15.h),
                   Text(
                     'Description',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13.sp,
+                    ),
                   ),
                   TextFormField(
                     controller: descriptionController,
@@ -220,44 +261,10 @@ class AddServiceFormCard extends HookWidget {
                 ],
               ),
             ),
-            SizedBox(height: 15.h),
-            Text('Photos', style: Theme.of(context).textTheme.titleSmall),
-            Text(
-              'Images only (JPEG, PNG, WebP, etc.). Up to 10 files, 5MB each.',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    pickFile();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 5.w,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColours.blue,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Text(
-                      'Choose files',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleSmall!.copyWith(color: AppColours.white),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                if (selectedImages.value.isNotEmpty &&
-                    selectedImages.value.length == 1)
-                  Text(filePaths.value.first, overflow: TextOverflow.ellipsis),
-                if (selectedImages.value.length > 1)
-                  Text('${selectedImages.value.length} files.'),
-              ],
+            PhotoSection(
+              selectedImages: selectedImages.value,
+              filePaths: filePaths.value,
+              onTap: () async => await pickFile(),
             ),
             SizedBox(height: 15.h),
             BlocSelector<AddServiceBloc, AddServiceState, String?>(
@@ -281,6 +288,7 @@ class AddServiceFormCard extends HookWidget {
                   _formKey.currentState?.reset();
                   titleController.clear();
                   descriptionController.clear();
+                  priceController.clear();
                   stockController.clear();
                   selectedCategory.value = '';
                   selectedDept.value = '';
@@ -328,6 +336,9 @@ class AddServiceFormCard extends HookWidget {
                                   title: titleController.text.trim(),
                                   stock: isStockEnabled.value
                                       ? int.parse(stockController.text.trim())
+                                      : null,
+                                  price: isStockEnabled.value
+                                      ? int.parse(priceController.text.trim())
                                       : null,
                                   listingType: selectedListType.value.isEmpty
                                       ? null

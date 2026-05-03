@@ -1,4 +1,4 @@
-import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/core/validation/form_validators.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
@@ -120,10 +120,14 @@ class ClientSignupFormCard extends HookWidget {
                           Text('Date of birth', style: Theme.of(context).textTheme.titleSmall),
                           SizedBox(height: 5.h),
                           TextFormField(
+                            readOnly: true,
                             controller: dateOfBirthController,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(
                                 errorText: 'Please fill out this field',
+                              ),
+                              FormValidators.minimumAge(
+                                birthDate: () => selectedDate.value,
                               ),
                             ]),
                             keyboardType: TextInputType.datetime,
@@ -134,6 +138,8 @@ class ClientSignupFormCard extends HookWidget {
                                   context,
                                   dateOfBirthController,
                                   selectedDate,
+                                  lastBirthDate:
+                                      FormValidators.latestBirthDateForMinimumAge(),
                                 ),
                                 icon: Icon(LucideIcons.calendar),
                               ),
@@ -249,14 +255,18 @@ class ClientSignupFormCard extends HookWidget {
 Future<void> selectDate(
   BuildContext context,
   TextEditingController dateController,
-  ValueNotifier<DateTime?> selectedDate,
-) async {
+  ValueNotifier<DateTime?> selectedDate, {
+  required DateTime lastBirthDate,
+}) async {
   final DateTime? picked = await showDatePicker(
     context: context,
     firstDate: DateTime(1950),
-    initialDate: selectedDate.value ?? DateTime.now(),
-    // firstDate: DateTime(2000),
-    lastDate: DateTime(2101),
+    initialDate: _clampDate(
+      selectedDate.value ?? lastBirthDate,
+      DateTime(1950),
+      lastBirthDate,
+    ),
+    lastDate: lastBirthDate,
     // Customizing the calendar colors to match Ambuhub
     builder: (context, child) {
       return Transform.scale(scale: 0.8, child: child);
@@ -267,4 +277,10 @@ Future<void> selectDate(
     selectedDate.value = picked;
     dateController.text = selectedDate.value?.toString().split(' ')[0] ?? '';
   }
+}
+
+DateTime _clampDate(DateTime value, DateTime min, DateTime max) {
+  if (value.isBefore(min)) return min;
+  if (value.isAfter(max)) return max;
+  return value;
 }

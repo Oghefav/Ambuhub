@@ -1,4 +1,3 @@
-import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
@@ -237,17 +236,6 @@ class ServiceProviderSignupFormCard extends HookWidget {
   ) {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
-      print(selectedCountryCode);
-      print(firstNameController.text.trim());
-      print(lastNameController.text.trim());
-      print(emailController.text.trim());
-      print(phoneNumberController.text.trim());
-      print(businessNameController.text.trim());
-      print(websiteUrlController.text.trim());
-      print(physicalAddressController.text.trim());
-      print(role.toLowerCase().replaceAll(' ', '-'));
-      print(selectedCountryCode);
-      print(passwordController.text.trim());
       BlocProvider.of<AuthBloc>(context).add(
         ServiceProviderSignUp(
           serviceProviderSignUpParams: ServiceProviderSignUpParams(

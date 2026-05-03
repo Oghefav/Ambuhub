@@ -26,6 +26,7 @@ class ServiceModel extends ServiceEntity {
       'photoUrls': photoUrls,
       'listingType': serviceParams.listingType?.toLowerCase(),
       'stock': serviceParams.stock,
+      'price': serviceParams.price,
     };
   }
 

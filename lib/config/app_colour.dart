@@ -19,4 +19,8 @@ class AppColours {
   static const Color drawerScrimColor = Color.fromRGBO(151, 179, 195, 1.0);
   static const Color darkGrey = Color.fromRGBO(36, 46, 77, 1.0);
   static const Color lightGrey = Color.fromRGBO(81, 90, 115, 1.0);
+  static const Color veryLightGrey = Color.fromRGBO(197, 208, 222, 1.0);
+  static const Color penBlue = Color.fromRGBO(28, 59, 153, 1.0);
+  static const Color vividBlue = Color.fromRGBO(0, 107, 247, 1.0);
+  static const Color veryLightBlue = Color.fromRGBO(0, 181, 222, 1.0);
 }

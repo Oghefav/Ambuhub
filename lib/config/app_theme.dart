@@ -10,9 +10,10 @@ class AppTheme {
       // TODO: Add page trasition theme.
       scaffoldBackgroundColor: AppColours.verylightTeal,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColours.white,
+        backgroundColor: AppColours.veryDarkBlue,
         actionsIconTheme: IconThemeData(color: AppColours.white),
         elevation: 0,
+        foregroundColor: AppColours.white,
         scrolledUnderElevation: 0,
         shape: Border(
           bottom: BorderSide(color: AppColours.veryLightVividTeal, width: 2),
@@ -33,7 +34,6 @@ class AppTheme {
         ),
       ),
       drawerTheme: DrawerThemeData(
-        backgroundColor: AppColours.white,
         width: 250.w,
       ),
       textTheme: TextTheme(

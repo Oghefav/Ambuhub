@@ -1,3 +1,4 @@
+import 'package:ambuhub/config/app_colour.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget {
@@ -8,9 +9,14 @@ class CustomAppbar extends StatelessWidget {
     return SliverAppBar(
       leading: IconButton(
         onPressed: () => Scaffold.of(context).openDrawer(),
-        icon: Icon(Icons.menu),
+        icon: Icon(Icons.menu, color: AppColours.veryLightGrey),
       ),
-      title: Text('Provider'),
+      title: Text(
+        'Provider',
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall!.copyWith(color: AppColours.veryLightGrey),
+      ),
       titleTextStyle: Theme.of(context).textTheme.titleMedium,
     );
   }

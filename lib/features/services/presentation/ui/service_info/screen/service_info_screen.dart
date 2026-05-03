@@ -3,7 +3,9 @@ import 'package:ambuhub/core/widgets/dotted_border_container.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_state.dart';
+import 'package:ambuhub/features/services/presentation/ui/listing/widgets/error_widget.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_info/widget/dept_section_builder.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_info/widget/search_section.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,6 +49,7 @@ class ServiceInfoScreen extends HookWidget {
             service.title.toLowerCase().contains(query) ||
             service.description.toLowerCase().contains(query) ||
             service.dept.toLowerCase().contains(query) ||
+            (service.listingType?.toLowerCase().contains(query) ?? false) ||
             (intQuery != null &&
                 (service.stock == intQuery || service.price == intQuery));
 
@@ -90,6 +93,15 @@ class ServiceInfoScreen extends HookWidget {
               if (state is GetServicesLoading) {
                 return const Center(
                   child: CupertinoActivityIndicator(color: AppColours.blue),
+                );
+              }
+              if (state is GetServicesFailure) {
+                return  Center(
+                  child: SliverFillRemaining(
+                    child: Center(
+                      child: ErrorSection(onPressed: () => context.read<GetServicesBloc>().add(GetServiceInfo(categorySlug: category.slug)), errorMessage: state.errorMessage!),
+                    ),
+                  ),
                 );
               }
               if (state is GetServicesSuccess) {

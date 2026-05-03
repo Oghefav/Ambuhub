@@ -4,6 +4,7 @@ import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +13,18 @@ class OnboardingPageBuilder extends StatelessWidget {
   final ServiceCategoryEntity category;
   const OnboardingPageBuilder({super.key, required this.category});
 
+  String getImage(String categorySlug) {
+    switch (categorySlug) {
+      case final String slug when slug.contains('equipment'):
+        return 'assets/images/equipment.webp';
+      case final String slug when slug.contains('personnel'):
+        return 'assets/images/personnel.webp';
+      case final String slug when slug.contains('transport'):
+        return 'assets/images/transport.webp';
+      default:
+        return 'assets/images/servicing.webp';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -29,14 +42,7 @@ class OnboardingPageBuilder extends StatelessWidget {
             ),
             child: AspectRatio(
               aspectRatio: 3 / 4,
-              child: CachedNetworkImage(
-                imageUrl: category.thumbnailUrl,
-                fadeInDuration: Duration.zero,
-                fadeOutDuration: Duration.zero,
-                placeholder: (context, url) => const SizedBox.shrink(),
-                errorWidget: (context, url, error) => const SizedBox.shrink(),
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset(getImage(category.slug), fit: BoxFit.cover),
             ),
           ),
           SizedBox(height: 15.h),

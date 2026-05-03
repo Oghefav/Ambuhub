@@ -28,25 +28,22 @@ class DrawerTileBuilder extends StatelessWidget {
 
         padding: EdgeInsets.all(10.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColours.veryLightTeal2 : color,
-          borderRadius: BorderRadius.circular(15.r),
+          border: isSelected ? Border.all(color: AppColours.teal, ) : null,
+          color: isSelected ? AppColours.penBlue : Colors.transparent,
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
             Icon(
               iconData,
-              color: isSelected ? AppColours.vividTeal : AppColours.grey,
+              color: AppColours.veryLightGrey,
             ),
             SizedBox(width: 20.w),
             Text(
               title,
-              style: isSelected
-                  ? Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: AppColours.vividTeal,
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight(600),
-                    )
-                  : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight(600),
+                      color: AppColours.veryLightGrey
                     ),
             ),
           ],

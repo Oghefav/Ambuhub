@@ -1,5 +1,6 @@
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/add_service_card.dart';
+import 'package:ambuhub/features/services/presentation/ui/widgets/top_section_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,15 +20,8 @@ class AddServiceScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Add service',
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
+                  TopSectionContainer(bigText: 'Add service', smallText: 'List standby coverage, scheduled transport, personnel, or equipment for venues and organizers.'),
                   SizedBox(height: 15.h),
-                  Text(
-                    'List standby coverage, scheduled transport, personnel, or equipment for venues and organizers.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
                   AddServiceFormCard(),
                 ],
               ),

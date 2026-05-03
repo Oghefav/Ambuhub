@@ -30,7 +30,7 @@ class DeptSectionBuilder extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 280.h,
+              height: 290.h,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: servicesLength,
@@ -76,7 +76,7 @@ Widget _serviceItemBuilder(BuildContext context, ServiceEntity service) {
                   fadeInDuration: Duration.zero,
                   fadeOutDuration: Duration.zero,
                   progressIndicatorBuilder: (context, url, progress) =>
-                      const CupertinoActivityIndicator(color: AppColours.blue),
+                      Center(child: const CupertinoActivityIndicator(color: AppColours.blue)),
                   errorWidget: (context, url, error) =>
                       const SizedBox.shrink(),
                   fit: BoxFit.fill,

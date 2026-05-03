@@ -37,38 +37,37 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToNext() async {
     // if (_navigated) return;
     // _navigated = true;
-    await Future.delayed(const Duration(seconds: 4));
 
     if (mounted) {
       Navigator.pushReplacementNamed(context, AppRoutes.onboardingScreen);
     }
   }
 
-  void _precacheImages(
-    List<ServiceCategoryEntity> categories,
-    BuildContext context,
-  ) async {
-    await Future.wait(
-      categories.map((category) async {
-        final provider = CachedNetworkImageProvider(
-          category.thumbnailUrl,
-          cacheManager: AmbuhubCache.cacheManager,
-        );
-        try {
-          if (!context.mounted) return;
+  // void _precacheImages(
+  //   List<ServiceCategoryEntity> categories,
+  //   BuildContext context,
+  // ) async {
+  //   await Future.wait(
+  //     categories.map((category) async {
+  //       final provider = CachedNetworkImageProvider(
+  //         category.thumbnailUrl,
+  //         cacheManager: AmbuhubCache.cacheManager,
+  //       );
+  //       try {
+  //         if (!context.mounted) return;
 
-          await precacheImage(provider, context);
-        } catch (e) {
-          if (e.toString().contains('PathNotFoundException')) {
-            await AmbuhubCache.cacheManager.removeFile(category.thumbnailUrl);
+  //         await precacheImage(provider, context);
+  //       } catch (e) {
+  //         if (e.toString().contains('PathNotFoundException')) {
+  //           await AmbuhubCache.cacheManager.removeFile(category.thumbnailUrl);
 
-            if (!context.mounted) return;
-            await precacheImage(provider, context);
-          }
-        }
-      }),
-    );
-  }
+  //           if (!context.mounted) return;
+  //           await precacheImage(provider, context);
+  //         }
+  //       }
+  //     }),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
               SnackBar(
                 closeIconColor: Colors.white,
 
-                duration: Duration(days: 1),
+                duration: Duration(seconds: 5),
                 content: Row(
                   children: [
                     Icon(LucideIcons.wifi_off, color: Colors.white),
@@ -109,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: BlocConsumer<GetServiceCatBloc, GetServiceCatState>(
           listener: (context, state) async {
             if (state is GetServiceCatSuccess) {
-              _precacheImages(state.categories!, context);
+              // _precacheImages(state.categories!, context);
               _navigateToNext();
             }
           },

@@ -1,7 +1,6 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/core/widgets/dotted_border_container.dart';
-import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';

@@ -1,5 +1,4 @@
 import 'package:ambuhub/config/app_colour.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/ui/widgets/custom_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

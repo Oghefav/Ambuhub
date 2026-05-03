@@ -3,8 +3,6 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

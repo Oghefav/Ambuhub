@@ -1,13 +1,10 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
-import 'package:ambuhub/core/network/cache_manager.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_bloc.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_state.dart';
-import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_state.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

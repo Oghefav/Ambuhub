@@ -44,7 +44,6 @@ class AddServiceFormCard extends HookWidget {
     final isListingTypeEnabled = useState<bool>(false);
     final isStockEnabled = useState<bool>(false);
     final selectedListType = useState<String>('');
-    final price = useState<int?>(null);
     final notEnabledListTypeHintText = useState<String>(
       'Choose a category first',
     );

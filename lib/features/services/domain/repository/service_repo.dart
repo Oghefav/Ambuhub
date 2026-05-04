@@ -10,4 +10,5 @@ abstract class ServiceRepo {
   Future<DataState<List<ServiceEntity>>> getServiceInfo(
     String categorySlug,
   );
+  Future<DataState<ServiceEntity>> updateService(ServiceParams service);
 }

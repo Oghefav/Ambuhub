@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ambuhub/core/resources/data_state.dart';
 import 'package:ambuhub/core/resources/error_handler.dart';
 import 'package:ambuhub/features/services/data/data_source/service_api_service.dart';
@@ -137,6 +139,7 @@ class ServiceRepoImplementation implements ServiceRepo {
         final List<ServiceEntity> services = data.map((e) {
           return ServiceModel.fromJson(e);
         }).toList();
+        print(services);
         return DataSuccess(data: services);
       } else {
         final DioException dioException = DioException(
@@ -154,4 +157,67 @@ class ServiceRepoImplementation implements ServiceRepo {
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
+
+ @override
+Future<DataState<ServiceEntity>> updateService(ServiceParams service) async {
+  final List<String> existingUrls = service.uploadedPhotoUrls ?? [];
+  final List<File> filesToUpload = service.photoUrls
+      .where((file) => !existingUrls.contains(file.path)) 
+      .toList();
+
+  try {
+    List<String> finalPhotoUrls = List.from(existingUrls);
+    if (filesToUpload.isNotEmpty) {
+      try {
+        final uploadImagesResponse = await _serviceApiService.uploadImages(
+          filesToUpload,
+        );
+
+        if (uploadImagesResponse.statusCode == 200 || 
+            uploadImagesResponse.statusCode == 201) {
+          
+          final newUrls = (uploadImagesResponse.data['urls'] as List? ?? [])
+              .map((url) => url.toString())
+              .toList();
+          
+          finalPhotoUrls.addAll(newUrls);
+        } else {
+          final DioException dioException = DioException(
+            requestOptions: uploadImagesResponse.requestOptions,
+            error: uploadImagesResponse.statusMessage,
+            type: DioExceptionType.badResponse,
+          );
+          return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
+        }
+      } on DioException catch (e) {
+        return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+      }
+    }
+    final serviceBody = ServiceModel.toJson(service, finalPhotoUrls);
+
+    try {
+      final httpResponse = await _serviceApiService.updateService(serviceBody);
+      print('im here');
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        final data = httpResponse.data['service'];
+        final updatedService = ServiceModel.fromJson(data as Map<String, dynamic>);
+        print(updatedService);
+        return DataSuccess(data: updatedService);
+      } else {
+        print('im here 2');
+        final DioException dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
+        return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
+      }
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+    
+  } catch (e) {
+    return DataFailed("An unexpected error occurred: ${e.toString()}");
+  }
+}
 }

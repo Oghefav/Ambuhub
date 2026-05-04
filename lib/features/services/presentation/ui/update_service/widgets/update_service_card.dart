@@ -1,15 +1,16 @@
 import 'dart:io';
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
+import 'package:ambuhub/core/widgets/submit_button.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
-import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_event.dart';
-import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_state.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_state.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/drop_down_form_field_builder.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/photo_section.dart';
 import 'package:ambuhub/features/services/presentation/ui/widgets/submit_buttom.dart';
@@ -21,59 +22,47 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 
-class AddServiceFormCard extends HookWidget {
-  AddServiceFormCard({super.key});
+class UpdateServiceFormCard extends HookWidget {
+  final ServiceEntity service;
+  UpdateServiceFormCard({super.key, required this.service});
 
   final _picker = ImagePicker();
+  final _formKey = GlobalKey<FormState>();
   final List<String> listType = ['Sale', 'Rent'];
 
   @override
   Widget build(BuildContext context) {
-    final formKey = useMemoized(() => GlobalKey<FormState>());
     final categoriesData = context.read<GetServiceCatBloc>().state.categories;
     final categories = categoriesData?.map((e) => e).toList() ?? [];
     final categoryNames = categoriesData?.map((e) => e.name).toList() ?? [];
-    final selectedCategory = useState<String>('');
-    final selectedDept = useState<String>('');
-    final titleController = useTextEditingController();
-    final stockController = useTextEditingController();
-    final priceController = useTextEditingController();
-    final descriptionController = useTextEditingController();
-    final filePaths = useState<List<String>>([]);
-    final selectedImages = useState<List<File>>([]);
+    final selectedCategory = useState<String>(service.serviceCategory);
+    final selectedDept = useState<String>(service.dept);
+    final titleController = useTextEditingController(text: service.title);
+    final stockController = useTextEditingController(
+      text: service.stock?.toString(),
+    );
+    final priceController = useTextEditingController(
+      text: service.price?.toString(),
+    );
+    final descriptionController = useTextEditingController(
+      text: service.description,
+    );
+    final filePaths = useState<List<String>>(service.photoUrls);
+    final selectedImages = useState<List<File>?>(null);
     final isFormValid = useState<bool>(false);
-    final isListingTypeEnabled = useState<bool>(false);
-    final isStockEnabled = useState<bool>(false);
-    final selectedListType = useState<String>('');
+    final isListingTypeEnabled = useState<bool>(service.listingType != null);
+    final isStockEnabled = useState<bool>(service.stock != null);
+    final selectedListType = useState<String>(service.listingType ?? '');
     final notEnabledListTypeHintText = useState<String>(
       'Choose a category first',
     );
-    // final isResetting = useState<bool>(false);
-
-    void _validate() {
-      // if (isResetting.value) return;
-      Future.microtask((() {
-        isFormValid.value = formKey.currentState?.validate() ?? false;
-      }));
-    }
-
+    final uploadedPhotoUrls = service.photoUrls;
     useEffect(() {
-      bool isFirstRun = true;
-      void listener() {
-        if (isFirstRun) {
-          isFirstRun = false;
-          return;
-        }
-        _validate();
-      }
-
-      titleController.addListener(listener);
-      descriptionController.addListener(listener);
-      return () {
-        titleController.removeListener(_validate);
-        descriptionController.removeListener(_validate);
-      };
-    });
+      Future.microtask(() {
+        isFormValid.value = _formKey.currentState?.validate() ?? false;
+      });
+      return null;
+    }, []);
 
     useEffect(() {
       isListingTypeEnabled.value =
@@ -120,11 +109,12 @@ class AddServiceFormCard extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Form(
-              key: formKey,
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DropDownFormFieldBuilder(
+                    initialValue: service.serviceCategory,
                     value: selectedCategory.value,
                     isEnabled: true,
                     title: 'Service category',
@@ -132,6 +122,7 @@ class AddServiceFormCard extends HookWidget {
                     items: categoryNames,
                     placeHolder: 'Select a category',
                     onChanged: (value) {
+                      if (value == selectedCategory.value) return;
                       if (value != null) {
                         selectedDept.value = '';
                         selectedListType.value = '';
@@ -144,6 +135,7 @@ class AddServiceFormCard extends HookWidget {
                   ),
                   SizedBox(height: 15.h),
                   DropDownFormFieldBuilder(
+                    initialValue: service.dept,
                     value: selectedDept.value,
                     hintText: 'Select a department',
                     isEnabled: selectedCategory.value.isNotEmpty,
@@ -157,6 +149,7 @@ class AddServiceFormCard extends HookWidget {
                   ),
                   SizedBox(height: 15.h),
                   DropDownFormFieldBuilder(
+                    initialValue: service.listingType,
                     value: selectedListType.value,
                     hintText: 'Select a listing type',
                     isEnabled: isListingTypeEnabled.value,
@@ -262,16 +255,16 @@ class AddServiceFormCard extends HookWidget {
               ),
             ),
             PhotoSection(
-              isUpdate: false,
-              hintText: 'Images only (JPEG, PNG, WebP, etc.). Up to 10 files, 5MB each.',
-              selectedImages: selectedImages.value,
+              selectedImages: selectedImages.value ?? [],
               filePaths: filePaths.value,
+              hintText:
+                  '${uploadedPhotoUrls.length} image(s) on this listing. Add more below; new images are appended.',
               onTap: () async => await pickFile(),
             ),
             SizedBox(height: 15.h),
-            BlocSelector<AddServiceBloc, AddServiceState, String?>(
+            BlocSelector<UpdateServiceBloc, UpdateServiceState, String?>(
               selector: (state) =>
-                  state is AddServiceError ? state.errorMessage : null,
+                  state is UpdateServiceError ? state.errorMessage : null,
               builder: (context, errorMessage) {
                 if (errorMessage == null) {
                   return SizedBox.shrink();
@@ -279,28 +272,28 @@ class AddServiceFormCard extends HookWidget {
                 return ErrorMessageContainer(errorMessage: errorMessage);
               },
             ),
-            BlocListener<AddServiceBloc, AddServiceState>(
+            BlocListener<UpdateServiceBloc, UpdateServiceState>(
               listener: (context, state) {
-                if (state is AddServiceSuccess) {
+                if (state is UpdateServiceSuccess) {
                   BlocProvider.of<GetServicesBloc>(context).add(GetServices());
-                  BlocProvider.of<NavigationCubit>(context).setPage('listings');
                   Navigator.pushReplacementNamed(
                     context,
                     AppRoutes.listingsScreen,
                   );
                 }
               },
-              child: BlocSelector<AddServiceBloc, AddServiceState, bool>(
-                selector: (state) => state is AddServiceLoading ? true : false,
+              child: BlocSelector<UpdateServiceBloc, UpdateServiceState, bool>(
+                selector: (state) =>
+                    state is UpdateServiceLoading ? true : false,
                 builder: (context, isLoading) {
                   return ServiceSubmitButton(
                     buttonText: isLoading
-                        ? 'Publishing service'
-                        : 'Publish service',
+                        ? 'Updating service'
+                        : 'Update service',
                     onPressed: isFormValid.value && !isLoading
                         ? () {
-                            BlocProvider.of<AddServiceBloc>(context).add(
-                              AddService(
+                            BlocProvider.of<UpdateServiceBloc>(context).add(
+                              UpdateService(
                                 service: ServiceParams(
                                   dept: categories
                                       .firstWhere(
@@ -313,12 +306,13 @@ class AddServiceFormCard extends HookWidget {
                                       .slug,
                                   description: descriptionController.text
                                       .trim(),
-                                  photoUrls: selectedImages.value,
+                                  photoUrls: selectedImages.value ?? [],
                                   serviceCategory: categories
                                       .firstWhere(
                                         (e) => e.name == selectedCategory.value,
                                       )
                                       .slug,
+                                  uploadedPhotoUrls: uploadedPhotoUrls,
                                   title: titleController.text.trim(),
                                   stock: isStockEnabled.value
                                       ? int.parse(stockController.text.trim())
@@ -329,6 +323,7 @@ class AddServiceFormCard extends HookWidget {
                                   listingType: selectedListType.value.isEmpty
                                       ? null
                                       : selectedListType.value,
+                                  id: service.id,
                                 ),
                               ),
                             );

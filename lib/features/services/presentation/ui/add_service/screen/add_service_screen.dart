@@ -1,3 +1,4 @@
+import 'package:ambuhub/core/widgets/app_scaffold.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/add_service_card.dart';
 import 'package:ambuhub/features/services/presentation/ui/widgets/top_section_container.dart';
@@ -9,9 +10,8 @@ class AddServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: CustomScrollView(
+    return AppScaffold(
+      body: CustomScrollView(
         slivers: [
           CustomAppbar(),
           SliverToBoxAdapter(
@@ -20,7 +20,11 @@ class AddServiceScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TopSectionContainer(bigText: 'Add service', smallText: 'List standby coverage, scheduled transport, personnel, or equipment for venues and organizers.'),
+                  TopSectionContainer(
+                    bigText: 'Add service',
+                    smallText:
+                        'List standby coverage, scheduled transport, personnel, or equipment for venues and organizers.',
+                  ),
                   SizedBox(height: 15.h),
                   AddServiceFormCard(),
                 ],

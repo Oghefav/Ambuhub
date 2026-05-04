@@ -1,21 +1,16 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
+import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailTopSection extends StatelessWidget {
-  final String categoryName;
-  final String deptName;
-  final String? listingType;
-  final String title;
-  const DetailTopSection({
-    super.key,
-    required this.categoryName,
-    required this.deptName,
-    required this.title,
-    this.listingType,
-  });
+  final ServiceEntity service;
+  const DetailTopSection({super.key, required this.service});
 
   @override
   Widget build(BuildContext context) {
@@ -34,91 +29,108 @@ class DetailTopSection extends StatelessWidget {
         ),
       ),
       child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(15.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _textContainer(context, categoryName.toUpperCase()),
-                    SizedBox(height: 10.h),
-                    _textContainer(context, deptName),
-                    
-                    if (listingType != null) 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10.h),
-                        _textContainer(context,
-                         listingType!.toTitleCase(), 
-                         fillColor: Color.fromRGBO(19, 92, 161, 1.0),
-                        //  borderColor: Colors.grey.withAlpha(100),
-                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      title.toTitleCase(),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(15.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _textContainer(context, service.serviceCategory.toUpperCase()),
+                SizedBox(height: 10.h),
+                _textContainer(context, service.dept),
+
+                if (service.listingType != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10.h),
+                      _textContainer(
                         context,
-                      ).textTheme.titleLarge!.copyWith(color: AppColours.white),
+                        service.listingType!.toTitleCase(),
+                        fillColor: Color.fromRGBO(19, 92, 161, 1.0),
+                        //  borderColor: Colors.grey.withAlpha(100),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 10.h),
+                Text(
+                  service.title.toTitleCase(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge!.copyWith(color: AppColours.white),
+                ),
+                SizedBox(height: 15.h),
+                Row(
+                  children: [
+                    Icon(
+                      LucideIcons.calendar,
+                      color: AppColours.veryLightGrey,
+                      size: 15.sp,
                     ),
-                    SizedBox(height: 15.h),
-                    Row(
-                      children: [
-                        Icon(LucideIcons.calendar, color: AppColours.veryLightGrey,
-                          size: 15.sp,
-                        ),
-                        SizedBox(width: 5.w),
-                        Text(
-                          'Created Apr 24, 2026',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: AppColours.veryLightGrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      children: [
-                        Icon(LucideIcons.calendar, color: AppColours.veryLightGrey, size: 15.sp,),
-                        SizedBox(width: 5.w),
-                        Text(
-                          'Updated Apr 25, 2026',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: AppColours.veryLightGrey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buttonContainer(
-                          context,
-                          text: 'Update listing',
-                          icon: LucideIcons.pencil,
-                        ),
-                        SizedBox(width: 10.w),
-                        _buttonContainer(
-                          context,
-                          text: 'Delete',
-                          icon: LucideIcons.trash_2,
-                          borderColor: Color.fromRGBO(163, 103, 132, 1.0),
-                          backgroundColor: Color.fromRGBO(69, 44, 102, 1.0),
-                          foregroundColor: AppColours.white,
-                        ),
-                      ],
+                    SizedBox(width: 5.w),
+                    Text(
+                      'Created Apr 24, 2026',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppColours.veryLightGrey,
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    Icon(
+                      LucideIcons.calendar,
+                      color: AppColours.veryLightGrey,
+                      size: 15.sp,
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      'Updated Apr 25, 2026',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppColours.veryLightGrey,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<NavigationCubit>(context).setPage('');
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.updateServiceScreen,
+                          arguments: service,
+                        );
+                      },
+                      child: _buttonContainer(
+                        context,
+                        text: 'Update listing',
+                        icon: LucideIcons.pencil,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    _buttonContainer(
+                      context,
+                      text: 'Delete',
+                      icon: LucideIcons.trash_2,
+                      borderColor: Color.fromRGBO(163, 103, 132, 1.0),
+                      backgroundColor: Color.fromRGBO(69, 44, 102, 1.0),
+                      foregroundColor: AppColours.white,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
+        ],
+      ),
     );
   }
 

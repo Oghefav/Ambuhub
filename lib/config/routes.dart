@@ -13,8 +13,10 @@ import 'package:ambuhub/features/profile/presentation/ui/screen/profile_screen.d
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/screen/add_service_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/listing/screen/listings_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_detail/service_detail_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_info/screen/service_info_screen.dart';
+import 'package:ambuhub/features/services/presentation/ui/update_service/update_service_screen.dart';
 import 'package:ambuhub/features/setting/presentation/ui/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,12 +33,13 @@ class AppRoutes {
   static const messageScreen = '/messageScreen';
   static const profileScreen = '/profileScreen';
   static const settingScreen = '/settingScreen';
+  static const listingsScreen = '/listingsScreen';
   static const addServiceScreen = '/addServiceScreen';
   static const onboardingScreen = '/onboardingScreen';
   static const splashScreen = '/splashScreen';
   static const serviceInfoScreen = '/serviceInfoScreen';
   static const serviceDetailScreen = '/serviceDetailScreen';
-
+  static const updateServiceScreen = '/updateServiceScreen';
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case loginScreen:
@@ -62,6 +65,8 @@ class AppRoutes {
         );
       case addServiceScreen:
         return MaterialPageRoute(builder: (_) => AddServiceScreen());
+      case listingsScreen:
+        return MaterialPageRoute(builder: (_) => ListingsScreen());
       case settingScreen:
         return MaterialPageRoute(builder: (_) => SettingScreen());
       case messageScreen:
@@ -72,8 +77,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => BookingScreen());
       case dashBoardScreen:
         return MaterialPageRoute(builder: (_) => DashBoardScreen());
-      case mainDashboard:
-        return MaterialPageRoute(builder: (_) => MainDashboard());
+      // case mainDashboard:
+      //   return MaterialPageRoute(builder: (_) => MainDashboard());
       case serviceInfoScreen:
         final category = settings.arguments as ServiceCategoryEntity;
         return MaterialPageRoute(
@@ -81,6 +86,11 @@ class AppRoutes {
         );
       case profileScreen:
         return MaterialPageRoute(builder: (_) => ProfileScreen());
+      case updateServiceScreen:
+        final service = settings.arguments as ServiceEntity;
+        return MaterialPageRoute(
+          builder: (_) => UpdateServiceScreen(service: service),
+        );
       default:
         return MaterialPageRoute(builder: (_) => LoginScreen());
     }

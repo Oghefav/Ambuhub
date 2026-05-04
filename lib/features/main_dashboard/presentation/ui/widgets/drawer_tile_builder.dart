@@ -7,13 +7,13 @@ class DrawerTileBuilder extends StatelessWidget {
   final String title;
   final GestureTapCallback onTap;
   final bool isSelected;
-  final int index;
+  // final int index;
   final Color? color;
   const DrawerTileBuilder({
     super.key,
     required this.iconData,
     required this.onTap,
-    required this.index,
+    // required this.index,
     required this.isSelected,
     required this.title,
     this.color = Colors.transparent,

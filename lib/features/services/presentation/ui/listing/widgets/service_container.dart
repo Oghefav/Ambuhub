@@ -1,9 +1,11 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
+import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ServiceContainer extends StatelessWidget {
@@ -13,11 +15,14 @@ class ServiceContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(
-        context,
-        AppRoutes.serviceDetailScreen,
-        arguments: serviceEntity,
-      ),
+      onTap: () {
+        BlocProvider.of<NavigationCubit>(context).setPage('');
+        Navigator.pushReplacementNamed(
+          context,
+          AppRoutes.serviceDetailScreen,
+          arguments: serviceEntity,
+        );
+      },
       child: Card(
         color: AppColours.white,
         margin: EdgeInsets.only(bottom: 15.h),
@@ -34,13 +39,13 @@ class ServiceContainer extends StatelessWidget {
               ),
               child: Image.network(
                 serviceEntity.photoUrls.first,
-                height: 140.h,
+                height: 130.h,
                 width: 100.w,
                 fit: BoxFit.fitHeight,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: 80.h,
-                    width: 100,
+                    width: 100.w,
                     color: AppColours.veryLightVividTeal.withOpacity(0.2),
                     child: const Icon(Icons.broken_image, color: Colors.grey),
                   );
@@ -49,8 +54,7 @@ class ServiceContainer extends StatelessWidget {
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return SizedBox(
-                    height: 80.h,
-                    width: 100,
+                    width: 100.w,
                     child: Center(
                       child: CupertinoActivityIndicator(color: AppColours.blue),
                     ),
@@ -60,7 +64,7 @@ class ServiceContainer extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(10.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 5.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -71,19 +75,18 @@ class ServiceContainer extends StatelessWidget {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 10.h),
                     Text(
                       serviceEntity.title.toTitleCase(),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    SizedBox(height: 10.h),
+                    // SizedBox(height: 10.h),
                     Text(
                       serviceEntity.description,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    SizedBox(height: 10.h),
+                    // SizedBox(height: 10.h),
                     Text(
                       'View details',
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(

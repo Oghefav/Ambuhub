@@ -38,4 +38,8 @@ class ServiceApiService {
   Future<Response<dynamic>> getServiceCategories() {
     return _dio.get('/service-categories');
   }
+  
+  Future<Response<dynamic>> updateService(Map<String, dynamic> data) {
+    return _dio.put('/services/${data['id']}', data: data);
+  }
 }

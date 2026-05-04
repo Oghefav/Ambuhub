@@ -1,3 +1,4 @@
+import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 
@@ -19,6 +20,7 @@ class ServiceModel extends ServiceEntity {
     List<String> photoUrls,
   ) {
     return {
+      'id': serviceParams.id,
       'title': serviceParams.title,
       'description': serviceParams.description,
       'serviceCategorySlug': serviceParams.serviceCategory,
@@ -40,7 +42,10 @@ class ServiceModel extends ServiceEntity {
           .toList(),
       serviceCategory: json['category']?['name'] ?? json['serviceCategoryId'],
       title: json['title'],
-      listingType: json['listingType'],
+      listingType: json['listingType'] != null
+          ? (json['listingType'] as String)
+                .toTitleCase() // ← 'sale' → 'Sale'
+          : null,
       stock: json['stock'],
       price: json['price'],
     );

@@ -12,10 +12,13 @@ import 'package:ambuhub/features/services/domain/usecase/add_service.dart';
 import 'package:ambuhub/features/services/domain/usecase/get_service_categories.dart';
 import 'package:ambuhub/features/services/domain/usecase/get_service_info.dart';
 import 'package:ambuhub/features/services/domain/usecase/get_services.dart';
+import 'package:ambuhub/features/services/domain/usecase/update_service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -31,18 +34,29 @@ Future<void> dependeciesInjection() async {
 
   // usecases
   sl.registerLazySingleton<LoginUsecase>(() => LoginUsecase(sl()));
-  sl.registerLazySingleton<ClientSignUpUsecase>(() => ClientSignUpUsecase(sl()));
-  sl.registerLazySingleton<ServiceProviderSignUpUsecase>(() => ServiceProviderSignUpUsecase(sl()));
+  sl.registerLazySingleton<ClientSignUpUsecase>(
+    () => ClientSignUpUsecase(sl()),
+  );
+  sl.registerLazySingleton<ServiceProviderSignUpUsecase>(
+    () => ServiceProviderSignUpUsecase(sl()),
+  );
   sl.registerLazySingleton<GetServicesUsecase>(() => GetServicesUsecase(sl()));
   sl.registerLazySingleton<AddServiceUsecase>(() => AddServiceUsecase(sl()));
   sl.registerLazySingleton<GetServiceCategoriesUsecase>(
     () => GetServiceCategoriesUsecase(sl()),
   );
-  sl.registerLazySingleton<GetServiceInfoUsecase>(() => GetServiceInfoUsecase(sl()));
+  // sl.registerSingleton<GlobalKey<ScaffoldState>>(GlobalKey<ScaffoldState>());
+  sl.registerLazySingleton<UpdateServiceUsecase>(
+    () => UpdateServiceUsecase(sl()),
+  );
+  sl.registerLazySingleton<GetServiceInfoUsecase>(
+    () => GetServiceInfoUsecase(sl()),
+  );
 
   // blocs
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
   sl.registerFactory<GetServicesBloc>(() => GetServicesBloc(sl(), sl()));
   sl.registerFactory<AddServiceBloc>(() => AddServiceBloc(sl()));
+  sl.registerFactory<UpdateServiceBloc>(() => UpdateServiceBloc(sl()));
   sl.registerFactory<GetServiceCatBloc>(() => GetServiceCatBloc(sl()));
 }

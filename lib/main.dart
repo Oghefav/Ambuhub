@@ -8,13 +8,13 @@ import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_bloc
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// TODO 1: Validate country and number if needed
-// TODO 2: FIZED ADD SCREEN
+// TODO 1: and number if needed
 // TODO 1: make dashboard persistis use token is token is the active kjkjk;
 void main() async {
    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +71,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<GetServiceCatBloc>(
             create: ((context) => sl<GetServiceCatBloc>()),
+          ),
+          BlocProvider<UpdateServiceBloc>(
+            create: ((context) => sl<UpdateServiceBloc>()),
           ),
           BlocProvider(
             create: (_) =>

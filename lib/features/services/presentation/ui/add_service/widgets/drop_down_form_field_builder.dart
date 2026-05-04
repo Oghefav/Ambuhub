@@ -10,6 +10,7 @@ class DropDownFormFieldBuilder extends StatelessWidget {
   final String title;
   final String value;
   final String placeHolder;
+  final String? initialValue;
   final bool isEnabled;
   final String? notEnabledhintText;
   const DropDownFormFieldBuilder({
@@ -22,6 +23,7 @@ class DropDownFormFieldBuilder extends StatelessWidget {
     required this.onChanged,
     required this.title,
     required this.placeHolder,
+    this.initialValue,
   });
 
   @override
@@ -29,13 +31,17 @@ class DropDownFormFieldBuilder extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-                  Text(title, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp)),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+            fontWeight: FontWeight.w600,
+            fontSize: 13.sp,
+          ),
+        ),
 
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
-          initialValue: (items != null && items!.contains(value))
-              ? value
-              : null,
+          initialValue: initialValue?.isEmpty ?? true ? null : initialValue!,
           isExpanded: true,
           decoration: InputDecoration(
             fillColor: (!isEnabled)
@@ -43,13 +49,12 @@ class DropDownFormFieldBuilder extends StatelessWidget {
                 : Colors.transparent,
             hintText: (isEnabled) ? hintText : notEnabledhintText,
             hintStyle: Theme.of(context).textTheme.bodySmall,
-                    
           ),
           style: Theme.of(context).textTheme.bodyLarge,
           items: (isEnabled)
               ? [
                   DropdownMenuItem<String>(
-                    value: '',
+                    value: null,
                     enabled: true,
                     child: Text(
                       placeHolder,

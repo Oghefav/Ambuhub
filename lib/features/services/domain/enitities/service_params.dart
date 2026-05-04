@@ -1,16 +1,19 @@
 import 'dart:io';
 
 class ServiceParams {
+  final String? id;
   final String title;
   final String description;
   final String serviceCategory;
   final String dept;
   final List<File> photoUrls;
   final String? listingType;
+  final List<String>? uploadedPhotoUrls;
   final int? stock;
   final int? price;
 
   const ServiceParams({
+    this.id,
     required this.dept,
     required this.description,
     required this.photoUrls,
@@ -19,5 +22,6 @@ class ServiceParams {
     this.listingType,
     this.stock,
     this.price,
+    this.uploadedPhotoUrls,
   });
 }

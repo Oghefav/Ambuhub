@@ -96,10 +96,15 @@ class ServiceInfoScreen extends HookWidget {
                 );
               }
               if (state is GetServicesFailure) {
-                return  Center(
+                return Center(
                   child: SliverFillRemaining(
                     child: Center(
-                      child: ErrorSection(onPressed: () => context.read<GetServicesBloc>().add(GetServiceInfo(categorySlug: category.slug)), errorMessage: state.errorMessage!),
+                      child: ErrorSection(
+                        onPressed: () => context.read<GetServicesBloc>().add(
+                          GetServiceInfo(categorySlug: category.slug),
+                        ),
+                        errorMessage: state.errorMessage!,
+                      ),
                     ),
                   ),
                 );

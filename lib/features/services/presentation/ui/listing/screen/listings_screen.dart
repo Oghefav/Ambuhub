@@ -1,8 +1,9 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
+import 'package:ambuhub/core/widgets/app_scaffold.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/core/widgets/dotted_border_container.dart';
 import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
-import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_state.dart';
@@ -28,30 +29,26 @@ class _ListingsScreenState extends State<ListingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetServicesBloc, GetServicesState>(
-      builder: (context, state) {
-        List<ServiceEntity> medicalTransportCategory = [];
-        List<ServiceEntity> ambulancePersonnelCategory = [];
-        List<ServiceEntity> ambulanceServicingCategory = [];
-        List<ServiceEntity> ambulanceEquipmentCategory = [];
-        if (state is GetServicesSuccess) {
-          final services = state.services;
-          medicalTransportCategory = services!.where((element) {
-            return element.serviceCategory == 'Medical transport';
-          }).toList();
-          ambulancePersonnelCategory = services.where((element) {
-            return element.serviceCategory == 'Ambulance personnel';
-          }).toList();
-          ambulanceServicingCategory = services.where((element) {
-            return element.serviceCategory == 'Ambulance servicing';
-          }).toList();
-          ambulanceEquipmentCategory = services.where((element) {
-            return element.serviceCategory == 'Ambulance equipment';
-          }).toList();
-        }
-        return ColoredBox(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: CustomScrollView(
+    return AppScaffold(
+      body: BlocBuilder<GetServicesBloc, GetServicesState>(
+        builder: (context, state) {
+          if (state is GetServicesSuccess) {
+            final services = state.services;
+            print(services);
+            //   medicalTransportCategory = services!.where((element) {
+            //     return element.serviceCategory == 'Medical transport';
+            //   }).toList();
+            //   ambulancePersonnelCategory = services.where((element) {
+            //     return element.serviceCategory == 'Ambulance personnel';
+            //   }).toList();
+            //   ambulanceServicingCategory = services.where((element) {
+            //     return element.serviceCategory == 'Ambulance servicing';
+            //   }).toList();
+            //   ambulanceEquipmentCategory = services.where((element) {
+            //     return element.serviceCategory == 'Ambulance equipment';
+            //   }).toList();
+          }
+          return CustomScrollView(
             slivers: [
               CustomAppbar(),
               SliverPadding(
@@ -78,37 +75,17 @@ class _ListingsScreenState extends State<ListingsScreen> {
                         child: Center(
                           child: ErrorSection(
                             onPressed: () {
-                              BlocProvider.of<GetServicesBloc>(context).add(GetServices());
+                              BlocProvider.of<GetServicesBloc>(
+                                context,
+                              ).add(GetServices());
                             },
                             errorMessage: state.errorMessage!,
                           ),
-                        )
+                        ),
                       ),
 
                     if (state is GetServicesSuccess) ...[
-                      SliverToBoxAdapter(
-                        child: Text(
-                          'Services and equipment you have published, grouped by category.',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ),
-                      if (medicalTransportCategory.isNotEmpty)
-                        ServiceCategoryBuilder(
-                          categoryName: 'Medical Transport',
-                          services: medicalTransportCategory,
-                        ),
-                      if (ambulancePersonnelCategory.isNotEmpty)
-                        ServiceCategoryBuilder(
-                          categoryName: 'Ambulance personnel',
-                          services: ambulancePersonnelCategory,
-                        ),
-                      if (ambulanceServicingCategory.isNotEmpty)
-                        ServiceCategoryBuilder(
-                          categoryName: 'Ambulance Servicing',
-                          services: ambulanceServicingCategory,
-                        ),
-                      if(ambulanceEquipmentCategory.isNotEmpty)
-                        ServiceCategoryBuilder(categoryName: 'Ambulance equipment', services: ambulanceEquipmentCategory),
+                      ServiceCategoryBuilder(services: state.services!),
                       if (state.services!.isEmpty) ...[
                         SliverToBoxAdapter(child: SizedBox(height: 20.h)),
                         SliverToBoxAdapter(
@@ -135,7 +112,11 @@ class _ListingsScreenState extends State<ListingsScreen> {
                             onTap: () {
                               BlocProvider.of<NavigationCubit>(
                                 context,
-                              ).setPage(1);
+                              ).setPage('addService');
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.addServiceScreen,
+                              );
                             },
                             child: Text(
                               state.services!.isEmpty
@@ -152,9 +133,9 @@ class _ListingsScreenState extends State<ListingsScreen> {
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

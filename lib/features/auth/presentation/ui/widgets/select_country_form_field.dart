@@ -27,13 +27,14 @@ class SelectCountryFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // We use ValueListenableBuilder to ensure the UI updates when 'value' changes
+    final textTheme = Theme.of(context).textTheme;
     return ValueListenableBuilder<Country?>(
       valueListenable: value,
       builder: (context, selectedCountry, _) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: Theme.of(context).textTheme.titleSmall),
+            Text(label, style: textTheme.titleSmall),
             SizedBox(height: 5.h),
             DropdownButtonFormField2<Country>(
               // FIX 1: Explicitly set the 'value' so the field knows what is selected
@@ -46,7 +47,7 @@ class SelectCountryFormField extends StatelessWidget {
                 ),
               ),
               hint: Text(hintText),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: textTheme.bodyMedium,
 
               // FIX 2: Use DropdownMenuItem2 (standard for this package)
               items: countries

@@ -34,10 +34,11 @@ class ServiceProviderSignupFormCard extends HookWidget {
     final selectedCountryCode = useState<String?>(null);
     final selectedCountry = useState<Country?>(null);
     final countries = CountryService().getAll();
+    final textTheme = Theme.of(context).textTheme;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushReplacementNamed(context, AppRoutes.dashBoardScreen);
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
         }
         if (state is AuthFailed) {
           print('auth is not successfull');
@@ -46,7 +47,7 @@ class ServiceProviderSignupFormCard extends HookWidget {
       builder: (context, state) {
         return Column(
           children: [
-            TopSection(),
+            const TopSection(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
               child: Column(
@@ -54,14 +55,12 @@ class ServiceProviderSignupFormCard extends HookWidget {
                 children: [
                   Text(
                     'Sign up as $role',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleMedium!.copyWith(fontSize: 23.sp),
+                    style: textTheme.titleMedium!.copyWith(fontSize: 23.sp),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Email verification with a one-time code will be added soon. For now you can use your account right after signing up.',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: textTheme.bodyMedium,
                   ),
                   SizedBox(height: 20.h),
                   Form(
@@ -183,7 +182,7 @@ class ServiceProviderSignupFormCard extends HookWidget {
                         state is AuthFailed ? state.error : null,
                     builder: (context, errorMessage) {
                       if (errorMessage == null) {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       }
                       return ErrorMessageContainer(errorMessage: errorMessage);
                     },

@@ -1,7 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class ServiceContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () {
         BlocProvider.of<NavigationCubit>(context).setPage('');
@@ -28,7 +29,7 @@ class ServiceContainer extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 15.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.r),
-          side: BorderSide(color: AppColours.veryLightVividTeal),
+          side: const BorderSide(color: AppColours.veryLightVividTeal),
         ),
         child: Row(
           children: [
@@ -55,7 +56,7 @@ class ServiceContainer extends StatelessWidget {
                   if (loadingProgress == null) return child;
                   return SizedBox(
                     width: 100.w,
-                    child: Center(
+                    child: const Center(
                       child: CupertinoActivityIndicator(color: AppColours.blue),
                     ),
                   );
@@ -70,26 +71,26 @@ class ServiceContainer extends StatelessWidget {
                   children: [
                     Text(
                       serviceEntity.dept.toUpperCase(),
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      style: textTheme.titleSmall!.copyWith(
                         color: AppColours.vividBlue, fontSize: 13.sp),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       serviceEntity.title.toTitleCase(),
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: textTheme.titleMedium,
                     ),
                     // SizedBox(height: 10.h),
                     Text(
                       serviceEntity.description,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: textTheme.bodyMedium,
                     ),
                     // SizedBox(height: 10.h),
                     Text(
                       'View details',
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      style: textTheme.titleSmall!.copyWith(
                         color: AppColours.vividBlue, fontSize: 13.sp),
                     ),
                   ],

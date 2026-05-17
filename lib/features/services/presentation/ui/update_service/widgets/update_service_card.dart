@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
-import 'package:ambuhub/core/widgets/submit_button.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_state.dart';
@@ -32,7 +31,7 @@ class UpdateServiceFormCard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoriesData = context.read<GetServiceCatBloc>().state.categories;
+    final categoriesData = context.read<GetServiceCategoriesBloc>().state.serviceCategories;
     final categories = categoriesData?.map((e) => e).toList() ?? [];
     final categoryNames = categoriesData?.map((e) => e.name).toList() ?? [];
     final selectedCategory = useState<String>(service.serviceCategory);
@@ -57,6 +56,7 @@ class UpdateServiceFormCard extends HookWidget {
       'Choose a category first',
     );
     final uploadedPhotoUrls = service.photoUrls;
+    final textTheme = Theme.of(context).textTheme;
     useEffect(() {
       Future.microtask(() {
         isFormValid.value = _formKey.currentState?.validate() ?? false;
@@ -164,7 +164,7 @@ class UpdateServiceFormCard extends HookWidget {
                   SizedBox(height: 15.h),
                   Text(
                     'Stock',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -183,13 +183,13 @@ class UpdateServiceFormCard extends HookWidget {
                       hintText: isStockEnabled.value
                           ? 'Enter stock quantity'
                           : 'Available only for sale listings',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Price (NGN)',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -208,13 +208,13 @@ class UpdateServiceFormCard extends HookWidget {
                       hintText: isStockEnabled.value
                           ? 'Enter price in naira'
                           : 'Available only for sale listings',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Title',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -227,13 +227,13 @@ class UpdateServiceFormCard extends HookWidget {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: 'e.g. Event medical standby - 2 ambulances',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Description',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -248,7 +248,7 @@ class UpdateServiceFormCard extends HookWidget {
                     decoration: InputDecoration(
                       hintText:
                           'Coverage area, crew size, vehicle types, pricing notes...',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                        hintStyle: textTheme.bodySmall,
                     ),
                   ),
                 ],
@@ -267,7 +267,7 @@ class UpdateServiceFormCard extends HookWidget {
                   state is UpdateServiceError ? state.errorMessage : null,
               builder: (context, errorMessage) {
                 if (errorMessage == null) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
                 return ErrorMessageContainer(errorMessage: errorMessage);
               },
@@ -275,7 +275,7 @@ class UpdateServiceFormCard extends HookWidget {
             BlocListener<UpdateServiceBloc, UpdateServiceState>(
               listener: (context, state) {
                 if (state is UpdateServiceSuccess) {
-                  BlocProvider.of<GetServicesBloc>(context).add(GetServices());
+                  BlocProvider.of<GetProviderServicesBloc>(context).add(const GetProviderServices(forceRefresh: true));
                   Navigator.pushReplacementNamed(
                     context,
                     AppRoutes.listingsScreen,

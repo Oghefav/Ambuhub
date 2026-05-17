@@ -12,7 +12,7 @@ class AddServiceBloc extends Bloc<AddServiceEvent, AddServiceState> {
   }
 
   void onAddService(AddService event, Emitter<AddServiceState> emit) async {
-    emit(AddServiceLoading());
+    emit(const AddServiceLoading());
     final dataState = await _addServiceUsecase(params: event.service);
 
     if (dataState is DataSuccess) {

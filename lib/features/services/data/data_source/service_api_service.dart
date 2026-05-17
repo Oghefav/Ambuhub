@@ -6,17 +6,17 @@ class ServiceApiService {
   final Dio _dio;
   ServiceApiService(this._dio);
 
-  Future<Response<dynamic>> getServices() {
+  Future<Response<dynamic>> getProviderServices() {
     return _dio.get('/services/me');
+  }
+
+  Future<Response<dynamic>> getMarketplaceServices(String categorySlug) {
+    final params = {'categorySlug': categorySlug};
+    return _dio.get('/services/marketplace', queryParameters: params);
   }
 
   Future<Response<dynamic>> addServices(Map<String, dynamic> data) {
     return _dio.post('/services', data: data);
-  }
-
-  Future<Response<dynamic>> getServiceInfo(String categorySlug) {
-    final params = {'categorySlug': categorySlug};
-    return _dio.get('/services/marketplace', queryParameters: params);
   }
 
   Future<Response<dynamic>> uploadImages(List<File> data) async {

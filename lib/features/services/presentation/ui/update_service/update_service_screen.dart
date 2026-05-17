@@ -1,6 +1,6 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
-import 'package:ambuhub/core/widgets/app_scaffold.dart';
+import 'package:ambuhub/core/widgets/provider_app_scaffold.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/ui/update_service/widgets/update_service_card.dart';
@@ -15,10 +15,11 @@ class UpdateServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
+    final textTheme = Theme.of(context).textTheme;
+    return ProviderAppScaffold(
       body: CustomScrollView(
         slivers: [
-          CustomAppbar(),
+          const CustomAppbar(),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsetsGeometry.all(15.h),
@@ -37,7 +38,7 @@ class UpdateServiceScreen extends StatelessWidget {
                         SizedBox(width: 10.w),
                         Text(
                           'Back to listing',
-                          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          style: textTheme.titleSmall!.copyWith(
                             color: AppColours.penBlue,
                           ),
                         ),
@@ -45,7 +46,7 @@ class UpdateServiceScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 15.h),
-                  TopSectionContainer(
+                  const TopSectionContainer(
                     bigText: 'Update service',
                     smallText:
                         'Change details, photos, or pricing. Saved updates appear on the public category pages after a short refresh.',

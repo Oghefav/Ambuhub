@@ -5,19 +5,20 @@ class BottomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         Text(
           'If someone needs immediate professional medical care',
-          style: Theme.of(context).textTheme.bodySmall,
+          style: textTheme.bodySmall,
         ),
         Text(
           'contact your local medical helpline or public ',
-          style: Theme.of(context).textTheme.bodySmall,
+          style: textTheme.bodySmall,
         ),
         Text(
           'ambulance service.',
-          style: Theme.of(context).textTheme.bodySmall,
+          style: textTheme.bodySmall,
         ),
       ],
     );

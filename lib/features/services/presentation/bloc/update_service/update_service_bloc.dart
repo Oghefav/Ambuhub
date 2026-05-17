@@ -16,7 +16,7 @@ class UpdateServiceBloc extends Bloc<UpdateServiceEvent, UpdateServiceState> {
     UpdateService event,
     Emitter<UpdateServiceState> emit,
   ) async {
-    emit(UpdateServiceLoading());
+    emit(const UpdateServiceLoading());
     final dataState = await _updateServiceUsecase(params: event.service);
     if (dataState is DataSuccess) {
       emit(UpdateServiceSuccess(service: dataState.data));

@@ -18,15 +18,16 @@ class RoleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return AnimatedContainer(
-      duration: Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 100),
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsetsGeometry.all(10.h),
       decoration: BoxDecoration(
         border: Border.all(
           // width:isSelected? 0.5 : 1.0,
           color: isSelected
-              ? Color.fromRGBO(0, 105, 200, 1.0)
+              ? AppColours.selectedBlue
               : AppColours.veryLightVividTeal,
         ),
         borderRadius: BorderRadius.circular(10.r),
@@ -44,12 +45,12 @@ class RoleCard extends StatelessWidget {
                 Text(
                   'I\'m a $role',
                   maxLines: 3,
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: textTheme.titleSmall,
                 ),
                 SizedBox(height: 10.h),
                 Text(
                   roleDescription,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: textTheme.bodyMedium,
                 ),
               ],
             ),

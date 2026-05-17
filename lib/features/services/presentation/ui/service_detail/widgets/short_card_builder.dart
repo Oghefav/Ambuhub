@@ -13,7 +13,7 @@ class ShortCardBuilder extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15.h),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
-        side: BorderSide(color: AppColours.veryLightVividTeal),
+        side: const BorderSide(color: AppColours.veryLightVividTeal),
       ),
       child: Padding(padding: EdgeInsets.all(15.h),
        child: Column(

@@ -10,17 +10,18 @@ class NavigationText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Center(
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
               text: firstText,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: textTheme.bodyMedium,
             ),
             TextSpan(
               text: secondText,
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              style: textTheme.bodyMedium!.copyWith(
                 color: AppColours.blue,
                 fontWeight: FontWeight.w600,
               ),

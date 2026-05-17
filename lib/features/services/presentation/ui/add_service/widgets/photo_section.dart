@@ -20,16 +20,15 @@ class PhotoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 15.h),
-        Text('Photos', style: Theme.of(context).textTheme.titleSmall),
+        Text('Photos', style: textTheme.titleSmall),
         Text(
           hintText,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
+          style: textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
         ),
         SizedBox(height: 10.h),
         Row(
@@ -45,7 +44,7 @@ class PhotoSection extends StatelessWidget {
                       AppColours.penBlue,
                       AppColours.penBlue.withBlue(200),
                     ],
-                    stops: [0.5, 1.0],
+                    stops: const [0.5, 1.0],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
@@ -54,7 +53,7 @@ class PhotoSection extends StatelessWidget {
                 ),
                 child: Text(
                   'Choose files',
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  style: textTheme.titleSmall!.copyWith(
                     color: AppColours.white,
                     fontSize: 13.sp,
                   ),
@@ -68,24 +67,20 @@ class PhotoSection extends StatelessWidget {
                 child: Text(
                   filePaths.first,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
+                  style: textTheme.bodySmall!.copyWith(
+                    color: Colors.grey.shade900,
+                  ),
                 ),
               ),
             if (selectedImages.length > 1)
               Text(
                 '${selectedImages.length} files.',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
+                style: textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
               ),
             if (selectedImages.isEmpty && isUpdate == false)
               Text(
                 'No files chosen',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
+                style: textTheme.bodySmall!.copyWith(color: Colors.grey.shade900),
               ),
           ],
         ),

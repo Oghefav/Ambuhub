@@ -35,10 +35,11 @@ class ClientSignupFormCard extends HookWidget {
     final selectedCountry = useState<Country?>(null);
     final selectedCountryCode = useState<String?>(null);
     final countries = CountryService().getAll();
+    final textTheme = Theme.of(context).textTheme;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushReplacementNamed(context, AppRoutes.dashBoardScreen);
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
         }
         if (state is AuthFailed) {
           print('auth is not successfull');
@@ -47,7 +48,7 @@ class ClientSignupFormCard extends HookWidget {
       builder: (context, state) {
         return Column(
           children: [
-            TopSection(),
+            const TopSection(),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                 child: Column(
@@ -55,14 +56,12 @@ class ClientSignupFormCard extends HookWidget {
                   children: [
                     Text(
                       'Sign up as $role',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleMedium!.copyWith(fontSize: 23.sp),
+                      style: textTheme.titleMedium!.copyWith(fontSize: 23.sp),
                     ),
                     SizedBox(height: 15.h),
                     Text(
                       'Email verification with a one-time code will be added soon. For now you can use your account right after signing up.',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: textTheme.bodyMedium,
                     ),
                     SizedBox(height: 20.h),
                     Form(
@@ -117,7 +116,7 @@ class ClientSignupFormCard extends HookWidget {
                               ),
                             ]),
                           ),
-                          Text('Date of birth', style: Theme.of(context).textTheme.titleSmall),
+                          Text('Date of birth', style: textTheme.titleSmall),
                           SizedBox(height: 5.h),
                           TextFormField(
                             readOnly: true,
@@ -141,7 +140,7 @@ class ClientSignupFormCard extends HookWidget {
                                   lastBirthDate:
                                       FormValidators.latestBirthDateForMinimumAge(),
                                 ),
-                                icon: Icon(LucideIcons.calendar),
+                                icon: const Icon(LucideIcons.calendar),
                               ),
                             ),
                           ),
@@ -184,7 +183,7 @@ class ClientSignupFormCard extends HookWidget {
                       selector: (state) => state is AuthFailed ? state.error : null,
                       builder: (context, errorMessage) {
                         if (errorMessage == null) {
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
                         return ErrorMessageContainer(errorMessage: errorMessage);
                       },

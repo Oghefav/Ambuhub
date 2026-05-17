@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_state.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_event.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/drop_down_form_field_builder.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/widgets/photo_section.dart';
 import 'package:ambuhub/features/services/presentation/ui/widgets/submit_buttom.dart';
@@ -25,12 +25,12 @@ class AddServiceFormCard extends HookWidget {
   AddServiceFormCard({super.key});
 
   final _picker = ImagePicker();
-  final List<String> listType = ['Sale', 'Rent'];
+  final List<String> listType = ['Sale', 'Hire', 'Book'];
 
   @override
   Widget build(BuildContext context) {
     final formKey = useMemoized(() => GlobalKey<FormState>());
-    final categoriesData = context.read<GetServiceCatBloc>().state.categories;
+    final categoriesData = context.read<GetServiceCategoriesBloc>().state.serviceCategories;
     final categories = categoriesData?.map((e) => e).toList() ?? [];
     final categoryNames = categoriesData?.map((e) => e.name).toList() ?? [];
     final selectedCategory = useState<String>('');
@@ -45,12 +45,13 @@ class AddServiceFormCard extends HookWidget {
     final isListingTypeEnabled = useState<bool>(false);
     final isStockEnabled = useState<bool>(false);
     final selectedListType = useState<String>('');
+    final textTheme = Theme.of(context).textTheme;
     final notEnabledListTypeHintText = useState<String>(
       'Choose a category first',
     );
     // final isResetting = useState<bool>(false);
 
-    void _validate() {
+    void validate() {
       // if (isResetting.value) return;
       Future.microtask((() {
         isFormValid.value = formKey.currentState?.validate() ?? false;
@@ -64,14 +65,14 @@ class AddServiceFormCard extends HookWidget {
           isFirstRun = false;
           return;
         }
-        _validate();
+        validate();
       }
 
       titleController.addListener(listener);
       descriptionController.addListener(listener);
       return () {
-        titleController.removeListener(_validate);
-        descriptionController.removeListener(_validate);
+        titleController.removeListener(validate);
+        descriptionController.removeListener(validate);
       };
     });
 
@@ -171,7 +172,7 @@ class AddServiceFormCard extends HookWidget {
                   SizedBox(height: 15.h),
                   Text(
                     'Stock',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -190,13 +191,13 @@ class AddServiceFormCard extends HookWidget {
                       hintText: isStockEnabled.value
                           ? 'Enter stock quantity'
                           : 'Available only for sale listings',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Price (NGN)',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -215,13 +216,13 @@ class AddServiceFormCard extends HookWidget {
                       hintText: isStockEnabled.value
                           ? 'Enter price in naira'
                           : 'Available only for sale listings',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Title',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -234,13 +235,13 @@ class AddServiceFormCard extends HookWidget {
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: 'e.g. Event medical standby - 2 ambulances',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                   SizedBox(height: 15.h),
                   Text(
                     'Description',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    style: textTheme.titleSmall!.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 13.sp,
                     ),
@@ -255,7 +256,7 @@ class AddServiceFormCard extends HookWidget {
                     decoration: InputDecoration(
                       hintText:
                           'Coverage area, crew size, vehicle types, pricing notes...',
-                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      hintStyle: textTheme.bodySmall,
                     ),
                   ),
                 ],
@@ -263,7 +264,8 @@ class AddServiceFormCard extends HookWidget {
             ),
             PhotoSection(
               isUpdate: false,
-              hintText: 'Images only (JPEG, PNG, WebP, etc.). Up to 10 files, 5MB each.',
+              hintText:
+                  'Images only (JPEG, PNG, WebP, etc.). Up to 10 files, 5MB each.',
               selectedImages: selectedImages.value,
               filePaths: filePaths.value,
               onTap: () async => await pickFile(),
@@ -274,7 +276,7 @@ class AddServiceFormCard extends HookWidget {
                   state is AddServiceError ? state.errorMessage : null,
               builder: (context, errorMessage) {
                 if (errorMessage == null) {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
                 return ErrorMessageContainer(errorMessage: errorMessage);
               },
@@ -282,7 +284,9 @@ class AddServiceFormCard extends HookWidget {
             BlocListener<AddServiceBloc, AddServiceState>(
               listener: (context, state) {
                 if (state is AddServiceSuccess) {
-                  BlocProvider.of<GetServicesBloc>(context).add(GetServices());
+                  BlocProvider.of<GetProviderServicesBloc>(
+                    context,
+                  ).add(const GetProviderServices());
                   BlocProvider.of<NavigationCubit>(context).setPage('listings');
                   Navigator.pushReplacementNamed(
                     context,

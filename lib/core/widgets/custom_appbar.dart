@@ -6,18 +6,17 @@ class CustomAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return SliverAppBar(
       leading: IconButton(
         onPressed: () => Scaffold.of(context).openDrawer(),
-        icon: Icon(Icons.menu, color: AppColours.veryLightGrey),
+        icon: const Icon(Icons.menu, color: AppColours.veryLightGrey),
       ),
       title: Text(
         'Provider',
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall!.copyWith(color: AppColours.veryLightGrey),
+        style: textTheme.titleSmall!.copyWith(color: AppColours.veryLightGrey),
       ),
-      titleTextStyle: Theme.of(context).textTheme.titleMedium,
+      titleTextStyle: textTheme.titleMedium,
     );
   }
 }

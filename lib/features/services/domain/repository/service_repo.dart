@@ -5,9 +5,9 @@ import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 
 abstract class ServiceRepo {
   Future<DataState<ServiceEntity>> addService(ServiceParams service);
-  Future<DataState<List<ServiceEntity>>> getServices();
+  Future<DataState<List<ServiceEntity>>> getProviderServices();
   Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories();
-  Future<DataState<List<ServiceEntity>>> getServiceInfo(
+  Future<DataState<List<ServiceEntity>>> getMarketplaceServices(
     String categorySlug,
   );
   Future<DataState<ServiceEntity>> updateService(ServiceParams service);

@@ -18,7 +18,7 @@ class RoleScreen extends HookWidget {
       backgroundColor: AppColours.white,
       body: Column(
         children: [
-          GradientBackground(),
+          const GradientBackground(),
           Align(
             alignment: Alignment.center,
             child: _buildBody(context, roleSelected),
@@ -32,10 +32,10 @@ class RoleScreen extends HookWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TopSection(),
+        const TopSection(),
         RoleSection(roleSelected: roleSelected),
         SizedBox(height: 15.h),
-        BottomText(),
+        const BottomText(),
       ],
     );
   }

@@ -12,10 +12,10 @@ class IconContainer extends StatelessWidget {
     return  AnimatedContainer(
       width: isSelected ? 55 : 50,
       height: isSelected ? 55 : 50,
-      duration: Duration(microseconds: 300),
+      duration: const Duration(microseconds: 300),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(isSelected ? 10.r : 8.r),
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [AppColours.veryDarkBlue, AppColours.blue],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

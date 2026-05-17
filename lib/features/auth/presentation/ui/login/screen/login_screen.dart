@@ -1,3 +1,5 @@
+import 'package:ambuhub/core/hooks/use_route_aware.dart';
+import 'package:ambuhub/core/utililty/app_route_observer.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
@@ -15,12 +17,18 @@ class LoginScreen extends HookWidget {
   Widget build(BuildContext context) {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
-    useEffect(() {
-      BlocProvider.of<AuthBloc>(context).add(const AuthReset());
+
+    void resetLoginForm() {
       emailController.clear();
       passwordController.clear();
-      return null;
-    }, []);
+      context.read<AuthBloc>().add(const AuthReset());
+    }
+
+    useRouteAware(
+      observer: appRouteObserver,
+      onDidPush: resetLoginForm,
+      onDidPopNext: resetLoginForm,
+    );
     
 
     return Scaffold(

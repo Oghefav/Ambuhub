@@ -9,6 +9,7 @@ class TopSectionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.r),
@@ -20,7 +21,7 @@ class TopSectionContainer extends StatelessWidget {
             spreadRadius: -5.r,
           ),
         ],
-        gradient: LinearGradient(colors: 
+        gradient: const LinearGradient(colors: 
         [
           AppColours.veryDarkBlue,
           AppColours.penBlue,
@@ -38,9 +39,9 @@ class TopSectionContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(bigText, style: Theme.of(context).textTheme.titleLarge!.copyWith(color: AppColours.white)),
+            Text(bigText, style: textTheme.titleLarge!.copyWith(color: AppColours.white)),
             SizedBox(height: 10.h),
-            Text(smallText, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: AppColours.veryLightGrey)),
+            Text(smallText, style: textTheme.bodySmall!.copyWith(color: AppColours.veryLightGrey)),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ class ServiceEntity extends Equatable {
   final String? listingType;
   final int? stock;
   final int? price;
+  final bool? available;
 
   const ServiceEntity({
     required this.id,
@@ -21,6 +22,7 @@ class ServiceEntity extends Equatable {
     this.listingType,
     this.stock,
     this.price,
+    this.available,
   });
 
   @override

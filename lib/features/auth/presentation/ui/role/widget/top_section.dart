@@ -5,17 +5,18 @@ import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TopSection extends StatelessWidget {
-  const TopSection({super.key});
+  const TopSection({super.key,});
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       children: [
         Stack(
           children: [
             Container(
               height: 230.h,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [AppColours.veryDarkBlue, AppColours.blue],
                   begin: Alignment.topLeft,
@@ -31,9 +32,7 @@ class TopSection extends StatelessWidget {
                   children: [
                     Text(
                       'Ambuhub',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleMedium!.copyWith(color: AppColours.white),
+                      style: textTheme.titleMedium!.copyWith(color: AppColours.white),
                     ),
                     SizedBox(height: 10.h),
                     Container(
@@ -54,16 +53,12 @@ class TopSection extends StatelessWidget {
                     SizedBox(height: 10.h),
                     Text(
                       'Sign up to get started',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.displayMedium!.copyWith(color: AppColours.white),
+                      style: textTheme.displayMedium!.copyWith(color: AppColours.white),
                     ),
                     SizedBox(height: 10.h),
                     Text(
                       'Signing up is simple, free, and fast. Join our platform and unlock new possibilities.',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium!.copyWith(color: Colors.grey.shade100),
+                      style: textTheme.bodyMedium!.copyWith(color: Colors.grey.shade100),
                     ),
                   ],
                 ),
@@ -71,7 +66,7 @@ class TopSection extends StatelessWidget {
             ),
           ],
         ),
-        NavigationSection(),
+        const NavigationSection(),
       ],
     );
   }

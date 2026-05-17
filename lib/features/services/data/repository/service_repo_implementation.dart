@@ -16,34 +16,7 @@ class ServiceRepoImplementation implements ServiceRepo {
 
   const ServiceRepoImplementation(this._serviceApiService);
 
-  @override
-  Future<DataState<List<ServiceEntity>>> getServices() async {
-    try {
-      final httpResponse = await _serviceApiService.getServices();
-      if (httpResponse.statusCode == 200) {
-        final List<dynamic> data = httpResponse.data['services'];
-
-        final services = data.map((e) {
-          return ServiceModel.fromJson(e as Map<String, dynamic>);
-        }).toList();
-
-        return DataSuccess(data: services);
-      } else {
-        final DioException dioException = DioException(
-          requestOptions: httpResponse.requestOptions,
-          error: httpResponse.statusMessage,
-          type: DioExceptionType.badResponse,
-        );
-        return DataFailed(
-          ErrorHandler.getErrorMessage(dioException),
-          error: dioException,
-        );
-      }
-    } on DioException catch (e) {
-      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
-    }
-  }
-
+  
   @override
   Future<DataState<ServiceEntity>> addService(ServiceParams data) async {
     final serviceImages = data.photoUrls;
@@ -102,7 +75,9 @@ class ServiceRepoImplementation implements ServiceRepo {
   Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories() async {
     try {
       final httpResponse = await _serviceApiService.getServiceCategories();
+      print('httpResponse: $httpResponse');
       if (httpResponse.statusCode == 200) {
+        print('httpResponse: $httpResponse');
         final List<dynamic> data = httpResponse.data['serviceCategories'];
         final List<ServiceCategoryEntity> serviceCategories = data
             .map((e) => ServiceCategoryModel.fromJson(e))
@@ -126,20 +101,14 @@ class ServiceRepoImplementation implements ServiceRepo {
   }
 
   @override
-  Future<DataState<List<ServiceEntity>>> getServiceInfo(
+  Future<DataState<List<ServiceEntity>>> getMarketplaceServices(
     String categorySlug,
   ) async {
-    try {
-      final httpResponse = await _serviceApiService.getServiceInfo(
-        categorySlug,
-      );
-
+    try{
+      final httpResponse = await _serviceApiService.getMarketplaceServices(categorySlug);
       if (httpResponse.statusCode == 200) {
-        final List data = httpResponse.data['services'];
-        final List<ServiceEntity> services = data.map((e) {
-          return ServiceModel.fromJson(e);
-        }).toList();
-        print(services);
+        final List<dynamic> data = httpResponse.data['services'];
+        final List<ServiceEntity> services = data.map((e) => ServiceModel.fromJson(e)).toList();
         return DataSuccess(data: services);
       } else {
         final DioException dioException = DioException(
@@ -148,76 +117,104 @@ class ServiceRepoImplementation implements ServiceRepo {
           error: httpResponse.statusMessage,
           response: httpResponse,
         );
-        return DataFailed(
-          ErrorHandler.getErrorMessage(dioException),
-          error: dioException,
-        );
+        return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
       }
-    } on DioException catch (e) {
+
+    } on DioException catch (e){
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+  @override
+  Future<DataState<List<ServiceEntity>>> getProviderServices() async {
+    try{
+      final httpResponse = await _serviceApiService.getProviderServices();
+      if (httpResponse.statusCode == 200) {
+        final List<dynamic> data = httpResponse.data['services'];
+        final List<ServiceEntity> services = data.map((e) => ServiceModel.fromJson(e)).toList();
+        return DataSuccess(data: services);
+      } else {
+        final DioException dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          type: DioExceptionType.badResponse,
+          error: httpResponse.statusMessage,
+          response: httpResponse,
+        );
+        return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
+      }
+
+    } on DioException catch (e){
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 
- @override
-Future<DataState<ServiceEntity>> updateService(ServiceParams service) async {
-  final List<String> existingUrls = service.uploadedPhotoUrls ?? [];
-  final List<File> filesToUpload = service.photoUrls
-      .where((file) => !existingUrls.contains(file.path)) 
-      .toList();
+  @override
+  Future<DataState<ServiceEntity>> updateService(ServiceParams service) async {
+    final List<String> existingUrls = service.uploadedPhotoUrls ?? [];
+    final List<File> filesToUpload = service.photoUrls
+        .where((file) => !existingUrls.contains(file.path))
+        .toList();
 
-  try {
-    List<String> finalPhotoUrls = List.from(existingUrls);
-    if (filesToUpload.isNotEmpty) {
+    try {
+      List<String> finalPhotoUrls = List.from(existingUrls);
+      if (filesToUpload.isNotEmpty) {
+        try {
+          final uploadImagesResponse = await _serviceApiService.uploadImages(
+            filesToUpload,
+          );
+
+          if (uploadImagesResponse.statusCode == 200 ||
+              uploadImagesResponse.statusCode == 201) {
+            final newUrls = (uploadImagesResponse.data['urls'] as List? ?? [])
+                .map((url) => url.toString())
+                .toList();
+
+            finalPhotoUrls.addAll(newUrls);
+          } else {
+            final DioException dioException = DioException(
+              requestOptions: uploadImagesResponse.requestOptions,
+              error: uploadImagesResponse.statusMessage,
+              type: DioExceptionType.badResponse,
+            );
+            return DataFailed(
+              ErrorHandler.getErrorMessage(dioException),
+              error: dioException,
+            );
+          }
+        } on DioException catch (e) {
+          return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+        }
+      }
+      final serviceBody = ServiceModel.toJson(service, finalPhotoUrls);
+
       try {
-        final uploadImagesResponse = await _serviceApiService.uploadImages(
-          filesToUpload,
+        final httpResponse = await _serviceApiService.updateService(
+          serviceBody,
         );
-
-        if (uploadImagesResponse.statusCode == 200 || 
-            uploadImagesResponse.statusCode == 201) {
-          
-          final newUrls = (uploadImagesResponse.data['urls'] as List? ?? [])
-              .map((url) => url.toString())
-              .toList();
-          
-          finalPhotoUrls.addAll(newUrls);
+        print('im here');
+        if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+          final data = httpResponse.data['service'];
+          final updatedService = ServiceModel.fromJson(
+            data as Map<String, dynamic>,
+          );
+          print(updatedService);
+          return DataSuccess(data: updatedService);
         } else {
+          print('im here 2');
           final DioException dioException = DioException(
-            requestOptions: uploadImagesResponse.requestOptions,
-            error: uploadImagesResponse.statusMessage,
+            requestOptions: httpResponse.requestOptions,
+            error: httpResponse.statusMessage,
             type: DioExceptionType.badResponse,
           );
-          return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
+          return DataFailed(
+            ErrorHandler.getErrorMessage(dioException),
+            error: dioException,
+          );
         }
       } on DioException catch (e) {
         return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
       }
+    } catch (e) {
+      return DataFailed("An unexpected error occurred: ${e.toString()}");
     }
-    final serviceBody = ServiceModel.toJson(service, finalPhotoUrls);
-
-    try {
-      final httpResponse = await _serviceApiService.updateService(serviceBody);
-      print('im here');
-      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
-        final data = httpResponse.data['service'];
-        final updatedService = ServiceModel.fromJson(data as Map<String, dynamic>);
-        print(updatedService);
-        return DataSuccess(data: updatedService);
-      } else {
-        print('im here 2');
-        final DioException dioException = DioException(
-          requestOptions: httpResponse.requestOptions,
-          error: httpResponse.statusMessage,
-          type: DioExceptionType.badResponse,
-        );
-        return DataFailed(ErrorHandler.getErrorMessage(dioException), error: dioException);
-      }
-    } on DioException catch (e) {
-      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
-    }
-    
-  } catch (e) {
-    return DataFailed("An unexpected error occurred: ${e.toString()}");
   }
-}
 }

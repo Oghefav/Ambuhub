@@ -2,8 +2,8 @@ import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/widgets/submit_button.dart';
 import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/widgets/onboarding_page_builder.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_state.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,10 +19,10 @@ class OnboardingScreen extends HookWidget {
     final currentPage = useState(0);
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<GetServiceCatBloc, GetServiceCatState>(
+        child: BlocBuilder<GetServiceCategoriesBloc, GetServiceCategoriesState>(
           builder: (context, state) {
-            if (state is GetServiceCatSuccess) {
-              final serviceCategories = state.categories;
+            if (state is GetServiceCategoriesSuccess) {
+              final serviceCategories = state.serviceCategories;
               return Padding(
                 padding: EdgeInsets.all(15.h),
                 child: Column(
@@ -58,9 +58,10 @@ class OnboardingScreen extends HookWidget {
                           : 'Next',
                       onPressed: () {
                         if (currentPage.value == serviceCategories.length - 1) {
-                          Navigator.pushReplacementNamed(
+                          Navigator.pushNamedAndRemoveUntil(
                             context,
                             AppRoutes.loginScreen,
+                            (route) => false,
                           );
                         } else {
                           pageController.nextPage(
@@ -74,13 +75,13 @@ class OnboardingScreen extends HookWidget {
                 ),
               );
             }
-            if (state is GetServiceCatLoading) {
-              return ColoredBox(
+            if (state is GetServiceCategoriesLoading) {
+              return const ColoredBox(
                 color: AppColours.white,
                 child: CircularProgressIndicator(),
               );
             }
-            return ColoredBox(color: AppColours.blue, child: SizedBox.shrink());
+            return const ColoredBox(color: AppColours.blue, child: SizedBox.shrink());
           },
         ),
       ),

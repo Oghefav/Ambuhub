@@ -1,7 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
-import 'package:ambuhub/features/main_dashboard/presentation/cubit/navigation_cubit.dart';
+import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,14 +14,15 @@ class DetailTopSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
-            Color.fromRGBO(27, 55, 110, 1.0),
-            Color.fromRGBO(27, 55, 140, 1.0),
-            Color.fromRGBO(40, 39, 97, 1.0),
+            AppColours.midnightBlue,
+            AppColours.midnightIndigo,
+            AppColours.darkIndigo,
           ],
           stops: [0.2, 0.5, 1.0],
           begin: Alignment.topLeft,
@@ -48,7 +49,7 @@ class DetailTopSection extends StatelessWidget {
                       _textContainer(
                         context,
                         service.listingType!.toTitleCase(),
-                        fillColor: Color.fromRGBO(19, 92, 161, 1.0),
+                        fillColor: AppColours.oceanBlue,
                         //  borderColor: Colors.grey.withAlpha(100),
                       ),
                     ],
@@ -58,9 +59,9 @@ class DetailTopSection extends StatelessWidget {
                   service.title.toTitleCase(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge!.copyWith(color: AppColours.white),
+                  style: textTheme.titleLarge!.copyWith(
+                    color: AppColours.white,
+                  ),
                 ),
                 SizedBox(height: 15.h),
                 Row(
@@ -120,8 +121,8 @@ class DetailTopSection extends StatelessWidget {
                       context,
                       text: 'Delete',
                       icon: LucideIcons.trash_2,
-                      borderColor: Color.fromRGBO(163, 103, 132, 1.0),
-                      backgroundColor: Color.fromRGBO(69, 44, 102, 1.0),
+                      borderColor: AppColours.mauve,
+                      backgroundColor: AppColours.darkPurple,
                       foregroundColor: AppColours.white,
                     ),
                   ],
@@ -143,7 +144,7 @@ class DetailTopSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: fillColor ?? Color.fromRGBO(59, 83, 135, 1.0),
+        color: fillColor ?? AppColours.slateBlue,
         borderRadius: BorderRadius.circular(15.r),
         border: borderColor != null ? Border.all(color: borderColor) : null,
       ),

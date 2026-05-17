@@ -5,20 +5,27 @@ import 'package:ambuhub/features/auth/domain/repository/repository.dart';
 import 'package:ambuhub/features/auth/domain/usecases/login.dart';
 import 'package:ambuhub/features/auth/domain/usecases/sign_up.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:ambuhub/features/cart/data/data_source/remote/cart_api_service.dart';
+import 'package:ambuhub/features/cart/data/repository/cart_rep_implementation.dart';
+import 'package:ambuhub/features/cart/domain/repository/cart_repo.dart';
+import 'package:ambuhub/features/cart/domain/usecases/add_to_cart.dart';
+import 'package:ambuhub/features/cart/domain/usecases/get_cart.dart';
+import 'package:ambuhub/features/cart/domain/usecases/remove_from_cart.dart';
+import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/services/data/data_source/service_api_service.dart';
 import 'package:ambuhub/features/services/data/repository/service_repo_implementation.dart';
 import 'package:ambuhub/features/services/domain/repository/service_repo.dart';
 import 'package:ambuhub/features/services/domain/usecase/add_service.dart';
+import 'package:ambuhub/features/services/domain/usecase/get_marketplace_services.dart';
+import 'package:ambuhub/features/services/domain/usecase/get_provider_services.dart';
 import 'package:ambuhub/features/services/domain/usecase/get_service_categories.dart';
-import 'package:ambuhub/features/services/domain/usecase/get_service_info.dart';
-import 'package:ambuhub/features/services/domain/usecase/get_services.dart';
 import 'package:ambuhub/features/services/domain/usecase/update_service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/add_service/add_service_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_cat_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_services/get_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -27,10 +34,12 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<Dio>(() => DioClient().dio);
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl()));
   sl.registerLazySingleton<ServiceApiService>(() => ServiceApiService(sl()));
+  sl.registerLazySingleton<CartApiService>(() => CartApiService(sl()));
 
   // repo
   sl.registerLazySingleton<AuthRepository>(() => AuthRepoImplementation(sl()));
   sl.registerLazySingleton<ServiceRepo>(() => ServiceRepoImplementation(sl()));
+  sl.registerLazySingleton<CartRepo>(() => CartRepoImplementation(sl()));
 
   // usecases
   sl.registerLazySingleton<LoginUsecase>(() => LoginUsecase(sl()));
@@ -38,25 +47,27 @@ Future<void> dependeciesInjection() async {
     () => ClientSignUpUsecase(sl()),
   );
   sl.registerLazySingleton<ServiceProviderSignUpUsecase>(
-    () => ServiceProviderSignUpUsecase(sl()),
-  );
-  sl.registerLazySingleton<GetServicesUsecase>(() => GetServicesUsecase(sl()));
+      () => ServiceProviderSignUpUsecase(sl()),
+    );
+    sl.registerLazySingleton<GetProviderServicesUsecase>(() => GetProviderServicesUsecase(sl()));
   sl.registerLazySingleton<AddServiceUsecase>(() => AddServiceUsecase(sl()));
-  sl.registerLazySingleton<GetServiceCategoriesUsecase>(
-    () => GetServiceCategoriesUsecase(sl()),
-  );
-  // sl.registerSingleton<GlobalKey<ScaffoldState>>(GlobalKey<ScaffoldState>());
+  sl.registerLazySingleton<GetMarketplaceServicesUsecase>(() => GetMarketplaceServicesUsecase(sl()));
   sl.registerLazySingleton<UpdateServiceUsecase>(
     () => UpdateServiceUsecase(sl()),
   );
-  sl.registerLazySingleton<GetServiceInfoUsecase>(
-    () => GetServiceInfoUsecase(sl()),
+  sl.registerLazySingleton<GetCartUsecase>(() => GetCartUsecase(sl()));
+  sl.registerLazySingleton<AddToCartUsecase>(() => AddToCartUsecase(sl()));
+  sl.registerLazySingleton<RemoveFromCartUsecase>(
+    () => RemoveFromCartUsecase(sl()),
   );
+  sl.registerLazySingleton<GetServiceCategoriesUsecase>(() => GetServiceCategoriesUsecase(sl()));
 
   // blocs
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
-  sl.registerFactory<GetServicesBloc>(() => GetServicesBloc(sl(), sl()));
+  sl.registerFactory<GetProviderServicesBloc>(() => GetProviderServicesBloc(sl(),));
   sl.registerFactory<AddServiceBloc>(() => AddServiceBloc(sl()));
   sl.registerFactory<UpdateServiceBloc>(() => UpdateServiceBloc(sl()));
-  sl.registerFactory<GetServiceCatBloc>(() => GetServiceCatBloc(sl()));
+  sl.registerFactory<GetMarketplaceServicesBloc>(() => GetMarketplaceServicesBloc(sl(),));
+  sl.registerFactory<CartBloc>(() => CartBloc(sl(), sl(), sl()));
+  sl.registerFactory<GetServiceCategoriesBloc>(() => GetServiceCategoriesBloc(sl()));
 }

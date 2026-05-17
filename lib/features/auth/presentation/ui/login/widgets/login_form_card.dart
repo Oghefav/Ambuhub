@@ -26,13 +26,11 @@ class LoginFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final texttheme = Theme.of(context).textTheme;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushReplacementNamed(context, AppRoutes.dashBoardScreen);
-        }
-        if (state is AuthFailed) {
-          print('auth is not successfull');
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
         }
       },
       builder: (context, state) {
@@ -42,7 +40,7 @@ class LoginFormCard extends StatelessWidget {
           color: AppColours.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.r),
-            side: BorderSide(color: AppColours.veryLightVividTeal),
+            side: const BorderSide(color: AppColours.veryLightVividTeal),
           ),
           child: Padding(
             padding: EdgeInsets.all(15.w),
@@ -51,45 +49,51 @@ class LoginFormCard extends StatelessWidget {
               children: [
                 Text(
                   'Log in',
-                  style: Theme.of(context).textTheme.displayMedium,
+                  style: texttheme.displayMedium,
                 ),
                 SizedBox(height: 8.h),
                 Text(
                   'Access your Ambuhub account with your email and password.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: texttheme.bodyMedium,
                 ),
                 SizedBox(height: 20.h),
                 Form(
                   key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFieldBuilder(
-                        label: 'Email',
-                        hintText: 'You@example.com',
-                        controller: emailController,
-                        inputType: TextInputType.emailAddress,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                            errorText: 'Please fill out this field',
-                          ),
-                          FormBuilderValidators.email(
-                            errorText: 'Please enter a valid email',
-                          ),
-                        ]),
-                      ),
-                      TextFieldBuilder(
-                        label: 'Password',
-                        hintText: 'Your Password',
-                        isObsure: true,
-                        controller: passwordController,
-                        inputType: TextInputType.visiblePassword,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                            errorText: 'Please fill out this field',
-                          ),
-                        ]),
-                      ),
-                    ],
+                  child: AutofillGroup(
+                    child: Column(
+                      children: [
+                        TextFieldBuilder(
+                          label: 'Email',
+                          hintText: 'You@example.com',
+                          controller: emailController,
+                          onChanged: (value) => value.trim(),
+                          inputType: TextInputType.emailAddress,
+                          autofillHints: const [AutofillHints.email],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Please fill out this field',
+                            ),
+                            FormBuilderValidators.email(
+                              errorText: 'Please enter a valid email',
+                            ),
+                          ]),
+                        ),
+                        TextFieldBuilder(
+                          label: 'Password',
+                          hintText: 'Your Password',
+                          isObsure: true,
+                          controller: passwordController,
+                          inputType: TextInputType.visiblePassword,
+                          onChanged: (value) => value.trim(),
+                          autofillHints: const [AutofillHints.password],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Please fill out this field',
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -97,7 +101,7 @@ class LoginFormCard extends StatelessWidget {
                   selector: (state) => state is AuthFailed ? state.error : null,
                   builder: (context, errorMessage) {
                     if (errorMessage == null) {
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
                     return ErrorMessageContainer(errorMessage: errorMessage);
                   },

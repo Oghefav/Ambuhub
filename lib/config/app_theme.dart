@@ -9,7 +9,7 @@ class AppTheme {
 
       // TODO: Add page trasition theme.
       scaffoldBackgroundColor: AppColours.verylightTeal,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: AppColours.veryDarkBlue,
         actionsIconTheme: IconThemeData(color: AppColours.white),
         elevation: 0,
@@ -61,22 +61,22 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColours.veryLightVividTeal),
+          borderSide: const BorderSide(color: AppColours.veryLightVividTeal),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColours.vividTeal),
+          borderSide: const BorderSide(color: AppColours.vividTeal),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColours.vividOrange),
+          borderSide: const BorderSide(color: AppColours.vividOrange),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColours.veryLightVividTeal),),
+          borderSide: const BorderSide(color: AppColours.veryLightVividTeal),),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColours.vividOrange),
+          borderSide: const BorderSide(color: AppColours.vividOrange),
         ),
       ),
     );

@@ -6,20 +6,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NavigationSection extends StatelessWidget {
   const NavigationSection({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w,),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   IconButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () =>
+                        Navigator.pop(context,),
                     icon: Icon(LucideIcons.arrow_left, size: 20.sp),
                   ),
                   SizedBox(width: 10.w),
@@ -29,7 +29,7 @@ class NavigationSection extends StatelessWidget {
                   ),
                 ],
               ),
-              NavigationText(
+              const NavigationText(
                 firstText: 'Already have an account? ',
                 secondText: 'Log in',
                 routeName: AppRoutes.loginScreen,
@@ -37,7 +37,7 @@ class NavigationSection extends StatelessWidget {
             ],
           ),
         ),
-        Divider(color: Colors.grey),
+        const Divider(color: Colors.grey),
       ],
     );
   }

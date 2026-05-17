@@ -12,6 +12,8 @@ class TextFieldBuilder extends HookWidget {
   final TextInputType inputType;
   final IconData? prefixIcon;
   final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
+  final Iterable<String>? autofillHints;
 
   const TextFieldBuilder({
     super.key,
@@ -23,6 +25,8 @@ class TextFieldBuilder extends HookWidget {
     required this.inputType,
     this.maxLines,
     this.prefixIcon,
+    this.onChanged,
+    this.autofillHints,
   });
 
   @override
@@ -43,6 +47,8 @@ class TextFieldBuilder extends HookWidget {
             obscureText: isTextObsure.value,
             validator: validator ?? (value) => null,
             keyboardType: inputType,
+            onChanged: onChanged,
+            autofillHints: autofillHints,
             decoration: InputDecoration(
               prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: AppColours.grey, size: 10.sp) : null,
               hintText: hintText,
@@ -50,8 +56,8 @@ class TextFieldBuilder extends HookWidget {
                   ? GestureDetector(
                       onTap: () => isTextObsure.value = !isTextObsure.value,
                       child: isTextObsure.value
-                          ? Icon(Icons.visibility_off)
-                          : Icon(Icons.visibility),
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility),
                     )
                   : null,
             ),

@@ -1,6 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
-import 'package:ambuhub/core/widgets/app_scaffold.dart';
+import 'package:ambuhub/core/widgets/provider_app_scaffold.dart';
 import 'package:ambuhub/core/widgets/custom_appbar.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_detail/widgets/detail_top_section.dart';
@@ -17,11 +18,11 @@ class ServiceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AppScaffold(
+    final textTheme = Theme.of(context).textTheme;
+    return ProviderAppScaffold(
       body: CustomScrollView(
         slivers: [
-          CustomAppbar(),
+          const CustomAppbar(),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(15.r),
@@ -29,7 +30,7 @@ class ServiceDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Navigator.pushReplacementNamed(context, AppRoutes.listingsScreen),
                     child: Row(
                       children: [
                         Icon(
@@ -40,7 +41,7 @@ class ServiceDetailScreen extends StatelessWidget {
                         SizedBox(width: 10.w),
                         Text(
                           'My listings',
-                          style: theme.textTheme.titleSmall!.copyWith(
+                          style: textTheme.titleSmall!.copyWith(
                             color: AppColours.penBlue,
                           ),
                         ),
@@ -75,7 +76,7 @@ class ServiceDetailScreen extends StatelessWidget {
                         SizedBox(width: 10.w),
                         Text(
                           'PRICE',
-                          style: theme.textTheme.titleSmall!.copyWith(
+                          style: textTheme.titleSmall!.copyWith(
                             color: AppColours.blue,
                           ),
                         ),
@@ -84,7 +85,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     bottomSection: service.price != null
                         ? Text(
                             formatCurrency(service.price),
-                            style: theme.textTheme.titleSmall!.copyWith(
+                            style: textTheme.titleSmall!.copyWith(
                               color: AppColours.veryDarkBlue,
                             ),
                           )
@@ -96,13 +97,13 @@ class ServiceDetailScreen extends StatelessWidget {
                         Icon(
                           LucideIcons.layers,
                           size: 20.sp,
-                          color: Color.fromRGBO(36, 118, 140, 1.0),
+                          color: AppColours.darkTealAccent,
                         ),
                         SizedBox(width: 10.w),
                         Text(
                           'STOCK',
-                          style: theme.textTheme.titleSmall!.copyWith(
-                            color: Color.fromRGBO(36, 118, 140, 1.0),
+                          style: textTheme.titleSmall!.copyWith(
+                            color: AppColours.darkTealAccent,
                           ),
                         ),
                       ],
@@ -110,7 +111,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     bottomSection: service.stock != null
                         ? Text(
                             service.stock.toString(),
-                            style: theme.textTheme.titleLarge,
+                            style: textTheme.titleLarge,
                           )
                         : _lineWidget(),
                   ),
@@ -119,8 +120,8 @@ class ServiceDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           'LISTING TYPE',
-                          style: theme.textTheme.titleSmall!.copyWith(
-                            color: Color.fromRGBO(143, 73, 184, 1.0),
+                          style: textTheme.titleSmall!.copyWith(
+                            color: AppColours.vividPurple,
                           ),
                         ),
                       ],
@@ -128,7 +129,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     bottomSection: service.listingType != null
                         ? Text(
                             service.listingType.toString().toTitleCase(),
-                            style: theme.textTheme.titleLarge,
+                            style: textTheme.titleLarge,
                           )
                         : _lineWidget(),
                   ),
@@ -137,15 +138,15 @@ class ServiceDetailScreen extends StatelessWidget {
                       children: [
                         Text(
                           'DESCRITION',
-                          style: theme.textTheme.titleSmall!.copyWith(
-                            color: Color.fromRGBO(72, 96, 168, 1.0),
+                          style: textTheme.titleSmall!.copyWith(
+                            color: AppColours.softIndigo,
                           ),
                         ),
                       ],
                     ),
                     bottomSection: Text(
                       service.description,
-                      style: theme.textTheme.bodyMedium,
+                      style: textTheme.bodyMedium,
                     ),
                   ),
                 ],

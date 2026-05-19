@@ -1,4 +1,5 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +12,9 @@ class TextFieldBuilder extends HookWidget {
   final int? maxLines;
   final TextInputType inputType;
   final IconData? prefixIcon;
+  final bool? fillable;
+  final Color? fillColor;
+  final bool? addForgetPasswordTitle;
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final Iterable<String>? autofillHints;
@@ -27,6 +31,9 @@ class TextFieldBuilder extends HookWidget {
     this.prefixIcon,
     this.onChanged,
     this.autofillHints,
+    this.fillColor,
+    this.fillable,
+    this.addForgetPasswordTitle = false,
   });
 
   @override
@@ -36,11 +43,29 @@ class TextFieldBuilder extends HookWidget {
     useListenable(controller);
 
     return Padding(
-      padding:EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(bottom: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w600, fontSize: 13.sp)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13.sp,
+                ),
+              ),
+              if (addForgetPasswordTitle != null && addForgetPasswordTitle!)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.resetPasswordScreen);
+                  },
+                  child: Text('Forget password?', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColours.vividTeal, fontSize: 12.sp)),
+                ),
+            ],
+          ),
           SizedBox(height: 5.h),
           TextFormField(
             controller: controller,
@@ -50,7 +75,12 @@ class TextFieldBuilder extends HookWidget {
             onChanged: onChanged,
             autofillHints: autofillHints,
             decoration: InputDecoration(
-              prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: AppColours.grey, size: 10.sp) : null,
+              // fillColor: fillColor,
+              // filled: fillable,
+              hintStyle: Theme.of(context).textTheme.bodySmall,
+              prefixIcon: prefixIcon != null
+                  ? Icon(prefixIcon, color: AppColours.grey, size: 10.sp)
+                  : null,
               hintText: hintText,
               suffixIcon: controller.text.isNotEmpty && isObsure
                   ? GestureDetector(

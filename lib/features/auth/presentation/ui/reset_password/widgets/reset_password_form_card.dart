@@ -1,6 +1,6 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
-import 'package:ambuhub/features/auth/domain/entities/login_params.dart';
+import 'package:ambuhub/features/auth/domain/entities/reset_password_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
@@ -13,15 +13,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class LoginFormCard extends StatelessWidget {
+class ResetPasswordFormCard extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
   final _formKey = GlobalKey<FormState>();
 
-  LoginFormCard({
+  ResetPasswordFormCard({
     super.key,
     required this.emailController,
     required this.passwordController,
+    required this.confirmPasswordController,
   });
 
   @override
@@ -29,12 +31,9 @@ class LoginFormCard extends StatelessWidget {
     final texttheme = Theme.of(context).textTheme;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
-          if (state.data.role == 'provider') {
-            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.clientDashBoardScreen, (route) => false);
-          }
+        if (state is AuthSuccess && state.data is String) {
+          confirmPasswordController.clear();
+          passwordController.clear();
         }
       },
       builder: (context, state) {
@@ -51,13 +50,10 @@ class LoginFormCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Log in',
-                  style: texttheme.displayMedium,
-                ),
+                Text('Reset password', style: texttheme.titleLarge),
                 SizedBox(height: 8.h),
                 Text(
-                  'Access your Ambuhub account with your email and password.',
+                  'Enter the email on your account and choose a new password. This does not send email or OTP—only use on accounts you control.',
                   style: texttheme.bodyMedium,
                 ),
                 SizedBox(height: 20.h),
@@ -83,18 +79,43 @@ class LoginFormCard extends StatelessWidget {
                           ]),
                         ),
                         TextFieldBuilder(
-                          label: 'Password',
-                          addForgetPasswordTitle: true,
-                          hintText: 'Your Password',
+                          label: 'New password',
+                          hintText: 'At least 8 characters',
                           isObsure: true,
                           controller: passwordController,
                           inputType: TextInputType.visiblePassword,
-                          onChanged: (value) => value.trim(),
+                          onChanged: (_) => _formKey.currentState?.validate(),
                           autofillHints: const [AutofillHints.password],
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(
                               errorText: 'Please fill out this field',
                             ),
+                            FormBuilderValidators.minLength(
+                              8,
+                              errorText:
+                                  'Please lengthen the text to 8 characters',
+                            ),
+                          ]),
+                        ),
+                        TextFieldBuilder(
+                          label: 'Confirm new password',
+                          hintText: 'Repeat new password',
+                          isObsure: true,
+                          controller: confirmPasswordController,
+                          inputType: TextInputType.visiblePassword,
+                          onChanged: (value) => value.trim(),
+                          autofillHints: const [AutofillHints.newPassword],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Please fill out this field',
+                            ),
+                            (value) {
+                              if (value?.trim() !=
+                                  passwordController.text.trim()) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
                           ]),
                         ),
                       ],
@@ -102,6 +123,20 @@ class LoginFormCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.h),
+                BlocSelector<AuthBloc, AuthState, String?>(
+                  selector: (state) {
+                    if (state is AuthSuccess && state.data is String) {
+                      return state.data as String;
+                    }
+                    return null;
+                  },
+                  builder: (context, message) {
+                    if (message == null) {
+                      return const SizedBox.shrink();
+                    }
+                    return successMessage(context, message);
+                  },
+                ),
                 BlocSelector<AuthBloc, AuthState, String?>(
                   selector: (state) => state is AuthFailed ? state.error : null,
                   builder: (context, errorMessage) {
@@ -123,22 +158,36 @@ class LoginFormCard extends StatelessWidget {
                           passwordController,
                         );
                       },
-                      buttonText: isLoading ? 'Signing in' : 'Sign in',
+                      buttonText: isLoading ? 'Updating' : 'Update password',
                     );
                   },
                 ),
 
                 SizedBox(height: 20.h),
                 const NavigationText(
-                  firstText: 'Don\'t have an account? ',
-                  secondText: 'Sign up',
-                  routeName: AppRoutes.roleScreen,
+                  secondText: 'Back to sign in',
+                  routeName: AppRoutes.loginScreen,
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget successMessage(BuildContext context, String message) {
+    final texttheme = Theme.of(context).textTheme;
+    return Container(
+      padding: EdgeInsets.all(10.w),
+      decoration: BoxDecoration(
+        color: AppColours.lightMintGreen,
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Text(
+        message,
+        style: texttheme.bodySmall!.copyWith(color: AppColours.darkTealAccent),
+      ),
     );
   }
 
@@ -150,10 +199,10 @@ class LoginFormCard extends StatelessWidget {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<AuthBloc>(context).add(
-        Login(
-          loginParams: LoginParams(
+        ResetPassword(
+          resetPasswordParams: ResetPasswordParams(
             email: emailController.text.trim(),
-            password: passwordController.text.trim(),
+            newPassword: passwordController.text.trim(),
           ),
         ),
       );

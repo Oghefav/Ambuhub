@@ -21,23 +21,27 @@ class SubmitButton extends StatelessWidget {
         Expanded(
           child: ElevatedButton(
             onPressed:
-                buttonText == 'Signing in' || buttonText == 'Creating account' || onPressed == null
+                buttonText == 'Signing in' || buttonText == 'Creating account' || onPressed == null || buttonText == 'Updating'
                 ? null
                 : onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColours.blue,
-              padding: EdgeInsets.symmetric(vertical: 10.h),
+              backgroundColor: AppColours.vividTeal,
+              disabledBackgroundColor:
+                  AppColours.vividTeal.withValues(alpha: 0.55),
+              disabledForegroundColor: AppColours.white,
+              foregroundColor: AppColours.white,
+              elevation: 0,
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(10.r),)
               ),
-            ),
             child: Text(
               buttonText,
               style:
                   textStyle ??
                   Theme.of(
                     context,
-                  ).textTheme.titleMedium!.copyWith(color: AppColours.white),
+                  ).textTheme.titleSmall!.copyWith(color: AppColours.white),
             ),
           ),
         ),

@@ -32,6 +32,8 @@ class AppColours {
   static const Color vividBlue = Color.fromRGBO(0, 107, 247, 1.0);
   static const Color veryLightBlue = Color.fromRGBO(0, 181, 222, 1.0);
   static const Color snackBarBackground = Color.fromRGBO(240, 252, 244, 1.0);
+  /// rgb(235, 247, 239) — light mint success background
+  static const Color lightMintGreen = Color.fromRGBO(235, 247, 239, 1.0);
   static const Color snackBarBorder = Color.fromRGBO(188, 247, 209, 1.0);
   static const Color snackBarErrorBackground = Color.fromRGBO(255, 252, 237, 1.0);
   static const Color snackBarErrorBorder = Color.fromRGBO(252, 231, 144, 1.0);
@@ -62,6 +64,8 @@ class AppColours {
   static const Color offWhite = Color.fromARGB(255, 243, 245, 247);
 
   static const Color emeraldGreen = Color.fromRGBO(14, 171, 71, 1.0);
+  /// rgb(46, 120, 103) — sage / success foreground
+  static const Color sageGreen = Color.fromRGBO(46, 120, 103, 1.0);
   static const Color snackBarGreen = Color.fromRGBO(1, 102, 48, 1.0);
   static const Color snackBarBrown = Color.fromRGBO(207, 151, 105, 1.0);
 }

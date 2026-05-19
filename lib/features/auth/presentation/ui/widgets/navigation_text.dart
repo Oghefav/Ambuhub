@@ -3,10 +3,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class NavigationText extends StatelessWidget {
-  final String firstText;
+  final String? firstText;
   final String secondText;
   final String routeName;
-  const NavigationText({super.key, required this.firstText, required this.secondText, required this.routeName});
+  const NavigationText({super.key, this.firstText, required this.secondText, required this.routeName});
 
   @override
   Widget build(BuildContext context) {

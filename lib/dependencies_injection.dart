@@ -3,6 +3,7 @@ import 'package:ambuhub/features/auth/data/data_source/remote/auth_api_service.d
 import 'package:ambuhub/features/auth/data/repository/repo_Implementation.dart';
 import 'package:ambuhub/features/auth/domain/repository/repository.dart';
 import 'package:ambuhub/features/auth/domain/usecases/login.dart';
+import 'package:ambuhub/features/auth/domain/usecases/reset_password.dart';
 import 'package:ambuhub/features/auth/domain/usecases/sign_up.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/cart/data/data_source/remote/cart_api_service.dart';
@@ -60,6 +61,7 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<UpdateServiceUsecase>(
     () => UpdateServiceUsecase(sl()),
   );
+  sl.registerLazySingleton<ResetPasswordUsecase>(() => ResetPasswordUsecase(sl()));
   sl.registerLazySingleton<GetCartUsecase>(() => GetCartUsecase(sl()));
   sl.registerLazySingleton<AddToCartUsecase>(() => AddToCartUsecase(sl()));
   sl.registerLazySingleton<RemoveFromCartUsecase>(
@@ -73,7 +75,7 @@ Future<void> dependeciesInjection() async {
   );
 
   // blocs
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
+  sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<GetProviderServicesBloc>(
     () => GetProviderServicesBloc(sl()),
   );

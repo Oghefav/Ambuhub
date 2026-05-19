@@ -1,5 +1,6 @@
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/ui/login/screen/login_screen.dart';
+import 'package:ambuhub/features/auth/presentation/ui/reset_password/screen/reset_password.dart';
 import 'package:ambuhub/features/auth/presentation/ui/role/screen/role_screen.dart';
 import 'package:ambuhub/features/auth/presentation/ui/sign_up/screen/sign_up_screen.dart';
 import 'package:ambuhub/features/availablity/presentation/ui/screens/availability_screen.dart';
@@ -56,6 +57,7 @@ class AppRoutes {
   static const notificationScreen = '/notificationScreen';
   static const cartScreen = '/cartScreen';
   static const markerScreen = '/markerScreen';
+  static const resetPasswordScreen = '/resetPasswordScreen';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -130,6 +132,8 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => UpdateServiceScreen(service: service),
         );
+      case resetPasswordScreen:
+        return MaterialPageRoute(builder: (_) => ResetPasswordScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

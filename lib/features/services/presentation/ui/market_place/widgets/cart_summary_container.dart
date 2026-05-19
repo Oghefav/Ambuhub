@@ -11,8 +11,15 @@ class CartSummaryContainer extends StatelessWidget {
   const CartSummaryContainer({super.key});
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        final cart = state.cart;
+        if (cart == null || cart.items.isEmpty) {
+          return const SliverToBoxAdapter(child: SizedBox.shrink());
+        }
+        return SliverToBoxAdapter(
+          child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r),
           color: AppColours.verylightTeal,
@@ -29,19 +36,13 @@ class CartSummaryContainer extends StatelessWidget {
                 children: [
                   Text(
                     'Your cart',
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, fontSize: 11.sp),
                   ),
-                  BlocSelector<CartBloc, CartState, String?>(
-                    selector: (state) =>
-                        state is CartSuccess && state.cart!.items.isNotEmpty
-                        ? '${state.cart!.items.length} items · ${formatCurrency(state.cart!.totalPrice)}'
-                        : null,
-                    builder: (context, cart) => Text(
-                      cart ?? '0 items',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  Text(
+                    '${state.totalItemCount} items · ${formatCurrency(cart.totalPrice)}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -51,21 +52,23 @@ class CartSummaryContainer extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(10.h),
                   decoration: BoxDecoration(
-                    color: AppColours.darkVividTeal,
+                    color: AppColours.vividTeal,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
                     'Checkout',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleSmall?.copyWith(color: AppColours.white),
+                    ).textTheme.titleSmall?.copyWith(color: AppColours.white, fontWeight: FontWeight.w600, fontSize: 11.sp),
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

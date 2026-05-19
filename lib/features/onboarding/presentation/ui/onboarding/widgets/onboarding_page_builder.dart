@@ -1,10 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_event.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingPageBuilder extends StatelessWidget {
@@ -63,12 +60,9 @@ class OnboardingPageBuilder extends StatelessWidget {
                 SizedBox(height: 10.h),
                 GestureDetector(
                   onTap: () {
-                    BlocProvider.of<GetMarketplaceServicesBloc>(context).add(
-                      GetMarketplaceServices(categorySlug: category.slug),
-                    );
                     Navigator.pushNamed(
                       context,
-                      AppRoutes.categoryInfoScreen,
+                      AppRoutes.markerScreen,
                       arguments: category,
                     );
                   },

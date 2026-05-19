@@ -24,17 +24,21 @@ void showCustomFlushBar(
     AppFlushBarType.error => (AppColours.snackBarBrown),
   };
 
-  Flushbar(
+  late final Flushbar<void> flushBar;
+  flushBar = Flushbar<void>(
     message: message,
     messageColor: foreground,
-
     borderColor: border,
     backgroundColor: bg,
     duration: const Duration(seconds: 3),
     isDismissible: true,
-    mainButton: IconButton(onPressed: () {}, icon: Icon(Icons.close, color: foreground)),
+    mainButton: IconButton(
+      onPressed: () => flushBar.dismiss(),
+      icon: Icon(Icons.close, color: foreground),
+    ),
     flushbarPosition: FlushbarPosition.TOP,
     margin: EdgeInsets.all(12.w),
-    borderRadius: BorderRadius.circular(15.r), 
-  ).show(context);
+    borderRadius: BorderRadius.circular(15.r),
+  );
+  flushBar.show(context);
 }

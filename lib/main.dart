@@ -4,6 +4,7 @@ import 'package:ambuhub/core/utililty/app_route_observer.dart';
 import 'package:ambuhub/dependencies_injection.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_event.dart';
 import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/conectivity_event.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:ambuhub/features/services/presentation/bloc/add_service/add_serv
 import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_provider_services/get_provider_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,13 +98,13 @@ class _MyAppState extends State<MyApp> {
             create: (_) =>
                 ConnectivityBloc()..add(ConnectivityStartMonitoring()),
           ),
-          BlocProvider<CartBloc>(create: ((context) => sl<CartBloc>())),
-          BlocProvider<GetServiceCategoriesBloc>(create: ((context) => sl<GetServiceCategoriesBloc>())),
+          BlocProvider<CartBloc>(create: ((context) => sl<CartBloc>()..add( const GetCart()))),
+          BlocProvider<GetServiceCategoriesBloc>(create: ((context) => sl<GetServiceCategoriesBloc>()..add(const GetServiceCategories()))),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData,
-          initialRoute: AppRoutes.clientDashBoardScreen,
+          initialRoute: AppRoutes.splashScreen,
           onGenerateRoute: AppRoutes.onGenerateRoute,
           navigatorObservers: [appRouteObserver],
         ),

@@ -15,12 +15,17 @@ class CategoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => selectedCategory.value = value,
-      child: CategorySelector(
-        categoryName: label,
-        isSelected: selectedCategory.value == value,
-      ),
+    return ValueListenableBuilder<String>(
+      valueListenable: selectedCategory,
+      builder: (context, selected, _) {
+        return GestureDetector(
+          onTap: () => selectedCategory.value = value,
+          child: CategorySelector(
+            categoryName: label,
+            isSelected: selected == value,
+          ),
+        );
+      },
     );
   }
 }

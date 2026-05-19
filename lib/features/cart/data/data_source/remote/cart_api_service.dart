@@ -15,7 +15,9 @@ class CartApiService {
   Future<Response<dynamic>> removeFromCart(String itemId) {
     return _dio.delete('/cart/items/$itemId');
   }
-  Future<Response<dynamic>> updateCartItem(String itemId, Map<String, dynamic> data) {
-    return _dio.patch('/cart/items/$itemId', data: data);
+  Future<Response<dynamic>> updateCartItem(Map<String, dynamic> data) {
+    print('Data: ${data}');
+    return _dio.patch('/cart/items/${data['serviceId']}', data: data);
   }
+
 }

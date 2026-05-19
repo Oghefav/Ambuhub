@@ -19,24 +19,68 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // bool _navigated = false;
-
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final connectivityState = context.read<ConnectivityBloc>().state;
+      if (connectivityState is ConnectivityOnline) {
+        context.read<GetServiceCategoriesBloc>().add(const GetServiceCategories());
+      } else if (connectivityState is ConnectivityOffline) {
+        _showConnectionOfflineSnackBar(context);
+      }
+    });
+  }
 
-    final connectivityState = context.read<ConnectivityBloc>().state;
-    if (connectivityState is ConnectivityOnline) {
-      context.read<GetServiceCategoriesBloc>().add(const GetServiceCategories());
+  void _navigateToNext() {
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, AppRoutes.onboardingScreen);
     }
   }
 
-  void _navigateToNext() async {
-    // if (_navigated) return;
-    // _navigated = true;
+  bool _isOffline(BuildContext context) {
+    return context.read<ConnectivityBloc>().state is ConnectivityOffline;
+  }
 
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, AppRoutes.onboardingScreen);
+  void _clearSnackBars(BuildContext context) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+  }
+
+  void _showConnectionOfflineSnackBar(BuildContext context) {
+    _clearSnackBars(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        closeIconColor: Colors.white,
+        persist: true,
+        content: Row(
+          children: [
+            const Icon(LucideIcons.wifi_off, color: Colors.white),
+            SizedBox(width: 10.w),
+            const Text(
+              'You are currently offline',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFailedToRetrieveSnackBar(BuildContext context) {
+    _clearSnackBars(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Failed to retrieve data'),
+      ),
+    );
+  }
+
+  void _fetchCategoriesIfNeeded(BuildContext context) {
+    final serviceState = context.read<GetServiceCategoriesBloc>().state;
+    if (serviceState is GetServiceCategoriesError ||
+        serviceState is GetServiceCategoriesInitial) {
+      context.read<GetServiceCategoriesBloc>().add(const GetServiceCategories());
     }
   }
 
@@ -44,51 +88,39 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColours.white,
-      body: BlocListener<ConnectivityBloc, ConnectivityState>(
-        listenWhen: (previous, current) => previous != current,
-        listener: (context, state) {
-          if (state is ConnectivityOnline) {
-            print('ConnectivityOnline');
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            final serviceState = context.read<GetServiceCategoriesBloc>().state;
-            if (serviceState is GetServiceCategoriesError ||
-                serviceState is GetServiceCategoriesInitial) {
-              context.read<GetServiceCategoriesBloc>().add(
-                const GetServiceCategories(),
-              );
-            }
-          }
-          if (state is ConnectivityOffline) {
-            print('ConnectivityOffline');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                closeIconColor: Colors.white,
-
-                duration: const Duration(seconds: 5),
-                content: Row(
-                  children: [
-                    const Icon(LucideIcons.wifi_off, color: Colors.white),
-                    SizedBox(width: 10.w),
-                    const Text(
-                      'You are currently offline',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-        },
-
-        child: BlocConsumer<GetServiceCategoriesBloc, GetServiceCategoriesState>(
-          listener: (context, state) async {
-            if (state is GetServiceCategoriesSuccess) {
-              print('is is successfully fetched');
-              _navigateToNext();
-            }
-          },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<ConnectivityBloc, ConnectivityState>(
+            listenWhen: (previous, current) => previous != current,
+            listener: (context, state) {
+              if (state is ConnectivityOffline) {
+                _showConnectionOfflineSnackBar(context);
+                return;
+              }
+              if (state is ConnectivityOnline) {
+                _clearSnackBars(context);
+                _fetchCategoriesIfNeeded(context);
+              }
+            },
+          ),
+          BlocListener<GetServiceCategoriesBloc, GetServiceCategoriesState>(
+            listenWhen: (previous, current) =>
+                current is GetServiceCategoriesSuccess ||
+                current is GetServiceCategoriesError,
+            listener: (context, state) {
+              if (state is GetServiceCategoriesSuccess) {
+                _clearSnackBars(context);
+                _navigateToNext();
+                return;
+              }
+              if (state is GetServiceCategoriesError && !_isOffline(context)) {
+                _showFailedToRetrieveSnackBar(context);
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<GetServiceCategoriesBloc, GetServiceCategoriesState>(
           builder: (context, state) {
-            print('state: $state');
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

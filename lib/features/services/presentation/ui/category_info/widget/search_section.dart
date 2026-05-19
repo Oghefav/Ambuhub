@@ -57,20 +57,23 @@ class SearchSection extends StatelessWidget {
         SizedBox(height: 10.h),
         Text(
             'Search Listings',
-            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, color: AppColours.white),
+            style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w500, color: AppColours.white,),
           ),
         TextFormField(
           controller: searchController,
           decoration: InputDecoration(
+            fillColor: AppColours.white,
+            isDense: true,
+            filled: true,
             hintText: 'Search title, description, listing type, price, etc.',
             hintStyle: textTheme.bodyMedium!.copyWith(color: AppColours.white,),
-            prefixIcon: Icon(LucideIcons.search, color: AppColours.white, size: 15.sp),
+            prefixIcon: Icon(LucideIcons.search, color: AppColours.veryLightGrey, size: 15.sp),
           ),
         ),
         SizedBox(height: 10.h),
         SearchDropContainer( items: depts, onChanged: onChangeDept, title: 'Department',),
         SizedBox(height: 10.h),
-        SearchDropContainer( items: listingTypes, onChanged: onChangeListingType, title: 'Listing Type',)
+        SearchDropContainer( items: listingTypes, onChanged: onChangeListingType, title: 'Listing type',)
         ],
       ),
     );

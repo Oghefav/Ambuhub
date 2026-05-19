@@ -1,9 +1,8 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/extensions/pyramid_text_extension.dart';
+import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -30,12 +29,11 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        BlocProvider.of<GetMarketplaceServicesBloc>(context).add(
-          GetMarketplaceServices(categorySlug: category.slug),
-        );
+        BlocProvider.of<NavigationCubit>(context).setPage('');
         Navigator.pushNamed(
           context,
-          AppRoutes.markerScreen, arguments: category,
+          AppRoutes.markerScreen,
+          arguments: category,
         );
       },
       child: Card(

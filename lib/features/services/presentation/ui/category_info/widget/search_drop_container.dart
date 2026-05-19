@@ -21,18 +21,39 @@ class SearchDropContainer extends StatelessWidget {
       children: [
         Text(
           title,
-          style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, color: AppColours.white),
+          style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w500, color: AppColours.white),
         ),
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
+
+          isExpanded: true,
           initialValue: items.first,
           items: items
-              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .map(
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.bodyMedium,
+                  ),
+                ),
+              )
               .toList(),
           onChanged: onChanged,
           dropdownColor: AppColours.white,
-          style: textTheme.bodyMedium!.copyWith(color: AppColours.white),
-          decoration: const InputDecoration(),
+          style: textTheme.bodyMedium,
+          iconEnabledColor: AppColours.grey,
+          decoration: InputDecoration(
+            fillColor: AppColours.white,
+            isDense: true,
+            filled: true,
+            hintText: 'Select $title',
+            hintStyle: textTheme.bodyMedium!.copyWith(
+              color: AppColours.veryLightGrey,
+            ),
+          ),
         ),
       ],
     );

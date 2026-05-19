@@ -30,7 +30,11 @@ class LoginFormCard extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
+          if (state.data.role == 'provider') {
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.clientDashBoardScreen, (route) => false);
+          }
         }
       },
       builder: (context, state) {

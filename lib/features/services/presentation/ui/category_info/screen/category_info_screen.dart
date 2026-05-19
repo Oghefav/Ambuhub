@@ -41,6 +41,22 @@ class CategoryInfoScreen extends HookWidget {
     final searchText = useValueListenable(searchController);
 
     useEffect(() {
+      final marketplaceBloc = context.read<GetMarketplaceServicesBloc>();
+      final currentState = marketplaceBloc.state;
+      if (currentState is GetMarketplaceServicesSuccess &&
+          currentState.categorySlug == category.slug) {
+        final data = currentState.services ?? [];
+        services.value = data;
+        filteredServices.value = data;
+      } else {
+        services.value = [];
+        filteredServices.value = [];
+      }
+      marketplaceBloc.add(GetMarketplaceServices(categorySlug: category.slug));
+      return null;
+    }, [category.slug]);
+
+    useEffect(() {
       final query = searchText.text.toLowerCase().trim();
       final intQuery = int.tryParse(query);
       filteredServices.value = services.value.where((service) {
@@ -76,7 +92,7 @@ class CategoryInfoScreen extends HookWidget {
       }).toList();
 
       return null;
-    }, [searchText, deptValue.value, listingTypeValue.value]);
+    }, [searchText, deptValue.value, listingTypeValue.value, services.value]);
 
     return Scaffold(
       backgroundColor: AppColours.white,

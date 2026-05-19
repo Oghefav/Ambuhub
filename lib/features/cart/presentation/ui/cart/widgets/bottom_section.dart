@@ -1,4 +1,5 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_state.dart';
@@ -16,8 +17,15 @@ class BottomSection extends StatelessWidget {
       builder: (context, state) {
         final totalPrice = state.cart?.totalPrice ?? 0;
         return Container(
+          decoration: BoxDecoration(
+            color: AppColours.lighterTeal,
+            border: Border.all(color: AppColours.veryLightVividTeal, width: 1.5.w),
+            borderRadius: BorderRadius.circular(15.r),
+          ),
           padding: EdgeInsets.all(15.w),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 5.h,
                 children: [
                   Text(
                     'Total (NGN)',
@@ -36,32 +44,44 @@ class BottomSection extends StatelessWidget {
   }
 
   Widget _paymentButton(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.all(15.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.r),
-        color: AppColours.vividTeal,
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BlocSelector<CartBloc, CartState, bool>(
-                selector: (state) => state is CartLoading,
-                builder: (context, isPaymentLoading) {
-                  return isPaymentLoading
-                      ? const CupertinoActivityIndicator()
-                      : const SizedBox.shrink();
-                },
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        final isLoading = state is CartLoading;
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: isLoading ? null : () => Navigator.pushNamed(context, AppRoutes.clientDashBoardScreen),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColours.vividTeal,
+              disabledBackgroundColor:
+                  AppColours.vividTeal.withValues(alpha: 0.55),
+              disabledForegroundColor: AppColours.white,
+              foregroundColor: AppColours.white,
+              elevation: 0,
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
               ),
-              Text('Pay with Paystck (simuated)', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColours.white)),
-            ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isLoading) ...[
+                  const CupertinoActivityIndicator(color: AppColours.white),
+                  SizedBox(width: 8.w),
+                ],
+                Text(
+                  'Pay with Paystck (simuated)',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColours.white,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

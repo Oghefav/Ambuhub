@@ -39,7 +39,7 @@ class ClientSignupFormCard extends HookWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.clientDashBoardScreen, (route) => false);
         }
         if (state is AuthFailed) {
           print('auth is not successfull');

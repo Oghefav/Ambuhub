@@ -14,6 +14,7 @@ class ServiceModel extends ServiceEntity {
     super.stock,
     super.price,
     super.available,
+    super.pricePeriod,
   });
 
   static Map<String, dynamic> toJson(
@@ -30,6 +31,7 @@ class ServiceModel extends ServiceEntity {
       'listingType': serviceParams.listingType?.toLowerCase(),
       'stock': serviceParams.stock,
       'price': serviceParams.price,
+      // 'pricePeriod': serviceParams.pricePeriod,
     };
   }
 
@@ -37,7 +39,7 @@ class ServiceModel extends ServiceEntity {
     return ServiceModel(
       id: json['_id'] ?? json['id'] ?? json['serviceId'],
       dept: json['departmentName'] ?? json['departmentSlug'],
-      description: json['description'],
+      description: json['description'] ?? '',
       photoUrls: (json['photoUrls'] as List? ?? [])
           .map((url) => url.toString())
           .toList(),
@@ -50,6 +52,7 @@ class ServiceModel extends ServiceEntity {
       stock: json['stock'],
       price: json['price'],
       available: json['available'],
+      pricePeriod: json['pricePeriod'],
     );
   }
   // factory ServiceModel.fromEnitity(ServiceParams service) {

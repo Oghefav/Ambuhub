@@ -18,7 +18,7 @@ class AuthLoading extends AuthState {
 }
 
 class AuthSuccess extends AuthState {
-  const AuthSuccess({super.data});
+  const AuthSuccess({required super.data});
 }
 
 class AuthFailed extends AuthState {

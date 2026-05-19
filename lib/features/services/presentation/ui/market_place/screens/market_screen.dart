@@ -1,27 +1,26 @@
 import 'package:ambuhub/config/app_colour.dart';
-import 'package:ambuhub/core/widgets/dotted_border_container.dart';
-import 'package:ambuhub/features/auth/presentation/ui/role/widget/top_section.dart';
+import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_state.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_state.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
-import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_event.dart';
 import 'package:ambuhub/features/services/presentation/ui/listing/widgets/error_widget.dart';
 import 'package:ambuhub/features/services/presentation/ui/category_info/widget/dept_section_builder.dart';
 import 'package:ambuhub/features/services/presentation/ui/category_info/widget/search_section.dart';
 import 'package:ambuhub/features/services/presentation/ui/market_place/widgets/cart_summary_container.dart';
+import 'package:ambuhub/features/services/presentation/ui/market_place/widgets/custom_snack_bar.dart';
 import 'package:ambuhub/features/services/presentation/ui/market_place/widgets/empty_service_builder.dart';
+import 'package:ambuhub/features/services/presentation/ui/market_place/widgets/login_prompt_container.dart';
 import 'package:ambuhub/features/services/presentation/ui/widgets/category_filter_section.dart';
 import 'package:ambuhub/features/services/presentation/ui/widgets/market_place_top_section.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MarketplaceScreen extends HookWidget {
   final ServiceCategoryEntity category;
@@ -29,15 +28,10 @@ class MarketplaceScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> depts = category.departments
-        .map((dept) => dept.name)
-        .toList();
     final categories = context
         .read<GetServiceCategoriesBloc>()
         .state
         .serviceCategories;
-    final cart = context.read<CartBloc>().state.cart;
-    depts.insert(0, 'All Departments');
     final List<String> listingTypes = [
       'All Types',
       'Sale',
@@ -46,17 +40,56 @@ class MarketplaceScreen extends HookWidget {
       'Not Specified',
     ];
     final searchController = useTextEditingController();
-    final selectedCategorySlug = useState<String>(category.slug);
-    final selectedCategory = useState<String>('All Categories');
+    final selectedCategory = useState<String>(category.slug);
     final deptValue = useState<String>('All Departments');
     final listingTypeValue = useState<String>('All Types');
     final filteredServices = useState<List<ServiceEntity>>([]);
     final services = useState<List<ServiceEntity>>([]);
-
+    final isLoggedIn = context.read<AuthBloc>().state.data != null;
+    final selectedCategoryEntity = useState<ServiceCategoryEntity>(category);
     final searchText = useValueListenable(searchController);
+
+    final depts = useMemoized(() {
+      final names = selectedCategoryEntity.value.departments
+          .map((dept) => dept.name)
+          .toList();
+      names.insert(0, 'All Departments');
+      return names;
+    }, [selectedCategoryEntity.value]);
+
     useEffect(() {
-      context.read<GetMarketplaceServicesBloc>().add(GetMarketplaceServices(categorySlug: selectedCategorySlug.value));
-    }, [selectedCategorySlug.value]);
+      selectedCategory.value = category.slug;
+      selectedCategoryEntity.value = category;
+      return null;
+    }, [category.slug]);
+
+    useEffect(() {
+      final slug = selectedCategory.value;
+      final matchedCategory = categories
+          ?.where((c) => c.slug == slug)
+          .firstOrNull;
+      if (matchedCategory != null) {
+        selectedCategoryEntity.value = matchedCategory;
+      }
+      deptValue.value = 'All Departments';
+      listingTypeValue.value = 'All Types';
+      searchController.clear();
+
+      final marketplaceBloc = context.read<GetMarketplaceServicesBloc>();
+      final currentState = marketplaceBloc.state;
+      if (currentState is GetMarketplaceServicesSuccess &&
+          currentState.categorySlug == slug) {
+        final data = currentState.services ?? [];
+        services.value = data;
+        filteredServices.value = data;
+      } else {
+        services.value = [];
+        filteredServices.value = [];
+      }
+
+      marketplaceBloc.add(GetMarketplaceServices(categorySlug: slug));
+      return null;
+    }, [selectedCategory.value]);
 
     useEffect(() {
       final query = searchText.text.toLowerCase().trim();
@@ -94,7 +127,7 @@ class MarketplaceScreen extends HookWidget {
       }).toList();
 
       return null;
-    }, [searchText, deptValue.value, listingTypeValue.value]);
+    }, [searchText, deptValue.value, listingTypeValue.value, services.value]);
 
     return Scaffold(
       backgroundColor: AppColours.white,
@@ -105,7 +138,8 @@ class MarketplaceScreen extends HookWidget {
               GetMarketplaceServicesState
             >(
               listener: (context, state) {
-                if (state is GetMarketplaceServicesSuccess) {
+                if (state is GetMarketplaceServicesSuccess &&
+                    state.categorySlug == selectedCategory.value) {
                   final data = state.services;
                   services.value = data ?? [];
                   filteredServices.value = services.value;
@@ -125,52 +159,104 @@ class MarketplaceScreen extends HookWidget {
                         );
                       }
                       if (state is GetMarketplaceServicesFailure) {
-                        return Center(
-                          child: SliverFillRemaining(
-                            child: Center(
-                              child: ErrorSection(
-                                onPressed: () => context
-                                    .read<GetMarketplaceServicesBloc>()
-                                    .add(
-                                      GetMarketplaceServices(
-                                        categorySlug: category.slug,
-                                      ),
-                                    ),
-                                errorMessage: state.errorMessage!,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      if (state is GetMarketplaceServicesSuccess) {
                         return CustomScrollView(
                           slivers: [
-                            SliverMainAxisGroup(
-                              slivers: [
-                                MarketplaceTopSection(category: category),
-                                CategoryFilterSection(categories: categories!, selectedCategory: selectedCategory,),
-                                SliverToBoxAdapter(
-                                  child: SearchSection(
-                                    onReset: () {
-                                      searchController.clear();
-                                      deptValue.value = 'All Departments';
-                                      listingTypeValue.value = 'All Types';
-                                    },
-                                    listingTypes: listingTypes,
-                                    searchController: searchController,
-                                    depts: depts,
-                                    onChangeDept: (value) =>
-                                        deptValue.value = value!,
-                                    onChangeListingType: (value) =>
-                                        listingTypeValue.value = value!,
-                                  ),
+                            SliverFillRemaining(
+                              child: Center(
+                                child: ErrorSection(
+                                  onPressed: () => context
+                                      .read<GetMarketplaceServicesBloc>()
+                                      .add(
+                                        GetMarketplaceServices(
+                                          categorySlug: selectedCategory.value,
+                                        ),
+                                      ),
+                                  errorMessage: state.errorMessage!,
                                 ),
-                                if (cart != null || (cart?.items.isNotEmpty ?? false)) const CartSummaryContainer(),
-                                if (filteredServices.value.isEmpty)
-                                  const EmptyServiceBuilder(),
-                              ],
+                              ),
                             ),
                           ],
+                        );
+                      }
+                      if (state is GetMarketplaceServicesSuccess &&
+                          state.categorySlug == selectedCategory.value) {
+                        return BlocListener<CartBloc, CartState>(
+                          listenWhen: (previous, current) =>
+                              current is CartSuccess &&
+                              previous is CartLoading &&
+                              previous.isAddingToCart,
+                          listener: (context, state) {
+                            if (state is CartSuccess) {
+                              showCustomFlushBar(
+                                context,
+                                message: 'Added to cart',
+                                title: 'Success',
+                                type: AppFlushBarType.success,
+                              );
+                            }
+                            if (state is CartFailure) {
+                              showCustomFlushBar(
+                                context,
+                                message: 'Failed to add to cart',
+                                title: 'Error',
+                                type: AppFlushBarType.error,
+                              );
+                            }
+                          },
+                          child: CustomScrollView(
+                            slivers: [
+                              SliverMainAxisGroup(
+                                slivers: [
+                                  MarketplaceTopSection(
+                                    category: selectedCategoryEntity.value,
+                                  ),
+                                  if (!isLoggedIn) const LoginPromptContainer(),
+                                  CategoryFilterSection(
+                                    categories: categories!,
+                                    selectedCategory: selectedCategory,
+                                  ),
+                                  SliverToBoxAdapter(
+                                    child: SearchSection(
+                                      onReset: () {
+                                        searchController.clear();
+                                        deptValue.value = 'All Departments';
+                                        listingTypeValue.value = 'All Types';
+                                      },
+                                      listingTypes: listingTypes,
+                                      searchController: searchController,
+                                      depts: depts,
+                                      onChangeDept: (value) =>
+                                          deptValue.value = value!,
+                                      onChangeListingType: (value) =>
+                                          listingTypeValue.value = value!,
+                                    ),
+                                  ),
+                                  const CartSummaryContainer(),
+                                  ...selectedCategoryEntity.value.departments
+                                      .map((dept) {
+                                        final List<ServiceEntity> deptServices =
+                                            filteredServices.value
+                                                .where(
+                                                  (e) => e.dept == dept.name,
+                                                )
+                                                .toList();
+                                        if (deptServices.isEmpty) {
+                                          return const SliverToBoxAdapter(
+                                            child: SizedBox.shrink(),
+                                          );
+                                        }
+                                        return DeptSectionBuilder(
+                                          deptName: dept.name,
+                                          services: deptServices,
+                                        );
+                                      }),
+
+                                  if (filteredServices.value.isEmpty)
+                                    const EmptyServiceBuilder(),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       }
                       return const SizedBox.shrink();

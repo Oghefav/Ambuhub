@@ -11,6 +11,7 @@ class ServiceEntity extends Equatable {
   final int? stock;
   final int? price;
   final bool? available;
+  final String? pricePeriod;
 
   const ServiceEntity({
     required this.id,
@@ -19,6 +20,7 @@ class ServiceEntity extends Equatable {
     required this.photoUrls,
     required this.serviceCategory,
     required this.title,
+    this.pricePeriod,
     this.listingType,
     this.stock,
     this.price,

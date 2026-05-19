@@ -8,5 +8,6 @@ abstract class AuthRepository {
   Future<DataState<dynamic>> login(LoginParams params);
 
   Future<DataState<ClientEntity>> signUpClient(ClientSignUpParams params);
+  // Future<DataSta
   Future<DataState<ServiceProviderEntity>> signUpServiceProvider(ServiceProviderSignUpParams params);
 }

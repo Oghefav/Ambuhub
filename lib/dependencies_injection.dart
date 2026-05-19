@@ -9,6 +9,7 @@ import 'package:ambuhub/features/cart/data/data_source/remote/cart_api_service.d
 import 'package:ambuhub/features/cart/data/repository/cart_rep_implementation.dart';
 import 'package:ambuhub/features/cart/domain/repository/cart_repo.dart';
 import 'package:ambuhub/features/cart/domain/usecases/add_to_cart.dart';
+import 'package:ambuhub/features/cart/domain/usecases/change_cart_item_quantity.dart';
 import 'package:ambuhub/features/cart/domain/usecases/get_cart.dart';
 import 'package:ambuhub/features/cart/domain/usecases/remove_from_cart.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
@@ -47,11 +48,15 @@ Future<void> dependeciesInjection() async {
     () => ClientSignUpUsecase(sl()),
   );
   sl.registerLazySingleton<ServiceProviderSignUpUsecase>(
-      () => ServiceProviderSignUpUsecase(sl()),
-    );
-    sl.registerLazySingleton<GetProviderServicesUsecase>(() => GetProviderServicesUsecase(sl()));
+    () => ServiceProviderSignUpUsecase(sl()),
+  );
+  sl.registerLazySingleton<GetProviderServicesUsecase>(
+    () => GetProviderServicesUsecase(sl()),
+  );
   sl.registerLazySingleton<AddServiceUsecase>(() => AddServiceUsecase(sl()));
-  sl.registerLazySingleton<GetMarketplaceServicesUsecase>(() => GetMarketplaceServicesUsecase(sl()));
+  sl.registerLazySingleton<GetMarketplaceServicesUsecase>(
+    () => GetMarketplaceServicesUsecase(sl()),
+  );
   sl.registerLazySingleton<UpdateServiceUsecase>(
     () => UpdateServiceUsecase(sl()),
   );
@@ -60,14 +65,25 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<RemoveFromCartUsecase>(
     () => RemoveFromCartUsecase(sl()),
   );
-  sl.registerLazySingleton<GetServiceCategoriesUsecase>(() => GetServiceCategoriesUsecase(sl()));
+  sl.registerLazySingleton<ChangeCartItemQuantityUsecase>(
+    () => ChangeCartItemQuantityUsecase(sl()),
+  );
+  sl.registerLazySingleton<GetServiceCategoriesUsecase>(
+    () => GetServiceCategoriesUsecase(sl()),
+  );
 
   // blocs
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl()));
-  sl.registerFactory<GetProviderServicesBloc>(() => GetProviderServicesBloc(sl(),));
+  sl.registerFactory<GetProviderServicesBloc>(
+    () => GetProviderServicesBloc(sl()),
+  );
   sl.registerFactory<AddServiceBloc>(() => AddServiceBloc(sl()));
   sl.registerFactory<UpdateServiceBloc>(() => UpdateServiceBloc(sl()));
-  sl.registerFactory<GetMarketplaceServicesBloc>(() => GetMarketplaceServicesBloc(sl(),));
-  sl.registerFactory<CartBloc>(() => CartBloc(sl(), sl(), sl()));
-  sl.registerFactory<GetServiceCategoriesBloc>(() => GetServiceCategoriesBloc(sl()));
+  sl.registerFactory<GetMarketplaceServicesBloc>(
+    () => GetMarketplaceServicesBloc(sl()),
+  );
+  sl.registerFactory<CartBloc>(() => CartBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory<GetServiceCategoriesBloc>(
+    () => GetServiceCategoriesBloc(sl()),
+  );
 }

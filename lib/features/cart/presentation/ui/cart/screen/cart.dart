@@ -1,9 +1,12 @@
+import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/widgets/client_app_scaffold.dart';
 import 'package:ambuhub/core/widgets/empty_content_page_builder.dart';
+import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_event.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_state.dart';
+import 'package:ambuhub/features/cart/presentation/ui/cart/widgets/bottom_section.dart';
 import 'package:ambuhub/features/cart/presentation/ui/cart/widgets/cart_item_builder.dart';
 import 'package:ambuhub/features/services/presentation/ui/listing/widgets/error_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,12 +21,15 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return ClientAppScaffold(
+      backgroundColor: AppColours.white,
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          if (state is CartLoading) {
+          if (state is CartLoading && state.pendingServiceId == null) {
             return const Center(child: CupertinoActivityIndicator());
           }
-          if (state is CartSuccess) {
+          if (state is CartSuccess ||
+              (state is CartFailure && state.cart != null) ||
+              (state is CartLoading && state.pendingServiceId != null)) {
             if (state.cart?.items.isEmpty ?? true) {
               return EmptyContentPageBuilder(
                 heading: 'Checkout',
@@ -37,15 +43,32 @@ class CartScreen extends StatelessWidget {
                 placeholderText: 'Your cart is empty',
               );
             } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Checkout', style: textTheme.displayLarge),
-                  SizedBox(height: 15.h),
-                  Text('Paystack is not connected yet. Completing payment runs a temporary simulation only.', style: textTheme.bodyMedium),
-                  SizedBox(height: 25.h),
-                  CartItemsBuilder(cartItems: state.cart!.items),
-                ],
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Checkout', style: textTheme.displayLarge),
+                    SizedBox(height: 15.h),
+                    Text(
+                      'Paystack is not connected yet. Completing payment runs a temporary simulation only.',
+                      style: textTheme.bodyMedium,
+                    ),
+                    if (state is CartFailure)
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.h),
+                        child: ErrorMessageContainer(
+                          addBorder: true,
+                          errorMessage:
+                              state.errorMessage ?? 'Failed to load cart',
+                        ),
+                      ),
+                    SizedBox(height: 25.h),
+                    CartItemsBuilder(cartItems: state.cart!.items),
+                    SizedBox(height: 20.h),
+                    const BottomSection(),
+                  ],
+                ),
               );
             }
           }

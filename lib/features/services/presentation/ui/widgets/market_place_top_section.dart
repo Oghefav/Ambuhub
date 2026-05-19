@@ -42,7 +42,7 @@ class MarketplaceTopSection extends StatelessWidget {
             ),
             SizedBox(height: 15.h),
             Text(category.name, style: textTheme.titleLarge),
-            Text(category.note, style: textTheme.bodyLarge),
+            Text(category.note, style: textTheme.bodySmall),
           ],
         ),
       ),

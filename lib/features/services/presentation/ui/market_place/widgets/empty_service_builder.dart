@@ -11,7 +11,7 @@ class EmptyServiceBuilder extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w),
+        padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 15.h),
         child: Column(
           children: [
             SizedBox(height: 25.h),

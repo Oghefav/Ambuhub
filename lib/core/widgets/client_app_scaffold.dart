@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 
 class ClientAppScaffold extends StatelessWidget {
   final Widget body;
-  const ClientAppScaffold({super.key, required this.body});
+  final Color? backgroundColor;
+  const ClientAppScaffold({super.key, required this.body, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    return _DrawerBlurWrapper(
-      child: Scaffold(drawer: const ClientDrawer(), body: body),
-    );
+    return _DrawerBlurWrapper(body: body, backgroundColor: backgroundColor);
   }
 }
 
 class _DrawerBlurWrapper extends StatefulWidget {
-  final Widget child;
-  const _DrawerBlurWrapper({required this.child});
+  final Color? backgroundColor;
+  final Widget body;
+  const _DrawerBlurWrapper({required this.body, this.backgroundColor});
 
   @override
   State<_DrawerBlurWrapper> createState() => _DrawerBlurWrapperState();
@@ -30,6 +30,7 @@ class _DrawerBlurWrapperState extends State<_DrawerBlurWrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
       drawer: const ClientDrawer(),
       onDrawerChanged: (isOpen) => setState(() => _isDrawerOpen = isOpen),
       appBar: const PreferredSize(
@@ -37,9 +38,10 @@ class _DrawerBlurWrapperState extends State<_DrawerBlurWrapper> {
         child:  ClientAppBar(),
       ),
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          const GradientBackground(),
-          widget.child,
+          if (widget.backgroundColor == null) const GradientBackground(),
+          Positioned.fill(child: widget.body),
           if (_isDrawerOpen)
             Positioned.fill(
               child: BackdropFilter(

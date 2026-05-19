@@ -3,11 +3,10 @@ import 'package:intl/intl.dart';
 
   // Formats: 1000 -> 1,000 or 1000.5 -> 1,000.50
   String formatCurrency(dynamic amount, {String symbol = "₦"}) {
-    if (amount == null) return "0.00";
+    if (amount == null) return "";
 
     final formatter = NumberFormat.currency(
-      symbol: symbol,
-      decimalDigits: 2, // Remove if you don't want kobo/cents
+      symbol: symbol, 
     );
 
     // Handle both String and Number inputs safely

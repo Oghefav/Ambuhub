@@ -19,29 +19,28 @@ class ProviderDrawer extends StatelessWidget {
       builder: (context, selectedPage) {
         final provider = context.read<NavigationCubit>();
         return Drawer(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.sizeOf(context).height,
-            ),
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                border: Border(
-                  right: BorderSide(color: AppColours.penBlue, width: 2),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColours.penBlue,
-                    AppColours.veryDarkBlue,
-                    AppColours.veryDarkBlue,
-                  ],
-                  stops: [0.0, 0.2, 1.0],
-                ),
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              border: Border(
+                right: BorderSide(color: AppColours.penBlue, width: 2),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AppColours.penBlue,
+                  AppColours.veryDarkBlue,
+                  AppColours.veryDarkBlue,
+                ],
+                stops: [0.0, 0.2, 1.0],
+              ),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
                   SizedBox(height: 10.h),
                   const AppDrawerHeader(),
                   SizedBox(height: 15.w),
@@ -144,30 +143,32 @@ class ProviderDrawer extends StatelessWidget {
                     title: 'Settings',
                     isSelected: selectedPage == 'settings',
                   ),
-                  SizedBox(height: 290.h),
-                  Divider(color: AppColours.penBlue, height: 2.h),
-                  SizedBox(height: 10.h),
-                  GestureDetector(
-                    onTap: () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.loginScreen,
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 20.w),
-
-                        const Icon(LucideIcons.log_out, color: AppColours.white),
-                        SizedBox(width: 10.w),
-                        Text(
-                          'Sign out',
-                          style: Theme.of(context).textTheme.bodyLarge!
-                              .copyWith(color: AppColours.white),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 24.h),
+                Divider(color: AppColours.penBlue, height: 2.h),
+                SizedBox(height: 10.h),
+                GestureDetector(
+                  onTap: () => Navigator.pushReplacementNamed(
+                    context,
+                    AppRoutes.loginScreen,
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 20.w),
+                      const Icon(LucideIcons.log_out, color: AppColours.white),
+                      SizedBox(width: 10.w),
+                      Text(
+                        'Sign out',
+                        style: Theme.of(context).textTheme.bodyLarge!
+                            .copyWith(color: AppColours.white),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+              ],
             ),
           ),
         );

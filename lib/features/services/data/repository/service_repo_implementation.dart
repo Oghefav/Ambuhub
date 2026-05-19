@@ -75,9 +75,7 @@ class ServiceRepoImplementation implements ServiceRepo {
   Future<DataState<List<ServiceCategoryEntity>>> getServiceCategories() async {
     try {
       final httpResponse = await _serviceApiService.getServiceCategories();
-      print('httpResponse: $httpResponse');
       if (httpResponse.statusCode == 200) {
-        print('httpResponse: $httpResponse');
         final List<dynamic> data = httpResponse.data['serviceCategories'];
         final List<ServiceCategoryEntity> serviceCategories = data
             .map((e) => ServiceCategoryModel.fromJson(e))

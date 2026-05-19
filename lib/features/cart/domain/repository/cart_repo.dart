@@ -5,4 +5,5 @@ abstract class CartRepo {
   Future<DataState<CartEntity>> addToCart(CartItemEntity item);
   Future<DataState<CartEntity>> getCart();
   Future<DataState<CartEntity>> removeFromCart(CartItemEntity item);
+  Future<DataState<CartEntity>> changeCartItemQuantity(int quantity, String serviceId);
 }

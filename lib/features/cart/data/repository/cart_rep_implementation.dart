@@ -29,8 +29,8 @@ class CartRepoImplementation implements CartRepo {
           error: dioException,
         );
       }
-    } catch (e) {
-      return DataFailed(e.toString());
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 
@@ -38,6 +38,7 @@ class CartRepoImplementation implements CartRepo {
   Future<DataState<CartEntity>> addToCart(CartItemEntity item) async {
     try {
       final data = {'serviceId': item.service.id, 'quantity': item.quantity};
+      print('Data: ${data}');
       final httpResponse = await _cartApiService.addToCart(data);
       if (httpResponse.statusCode == 200) {
         final data = httpResponse.data['cart'];
@@ -54,8 +55,36 @@ class CartRepoImplementation implements CartRepo {
           error: dioException,
         );
       }
-    } catch (e) {
-      return DataFailed(e.toString());
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
+  @override
+  Future<DataState<CartEntity>> changeCartItemQuantity(int quantity, String serviceId) async {
+    try {
+      final data = {'quantity': quantity,'serviceId': serviceId};
+      final httpResponse = await _cartApiService.updateCartItem(
+        data,
+      );
+      print('HttpResponse: ${httpResponse.data}');
+      if (httpResponse.statusCode == 200) {
+        final data = httpResponse.data['cart'];
+        final cart = CartModel.fromJson(data);
+        return DataSuccess(data: cart);
+      } else {
+        final DioException dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
+        return DataFailed(
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 
@@ -80,8 +109,8 @@ class CartRepoImplementation implements CartRepo {
           error: dioException,
         );
       }
-    } catch (e) {
-      return DataFailed(e.toString());
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 }

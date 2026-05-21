@@ -114,10 +114,9 @@ class ServiceButtonSection extends StatelessWidget {
           AddCartItem(item: CartItemEntity(service: service, quantity: 1)),
         );
       } else if (service.listingType?.toLowerCase() == 'hire') {
-        // TODO: Implement hire logic
         Navigator.pushNamed(
           context,
-          AppRoutes.serviceDetailScreen,
+          AppRoutes.hireCheckoutScreen,
           arguments: service,
         );
       } else if (service.listingType?.toLowerCase() == 'book') {

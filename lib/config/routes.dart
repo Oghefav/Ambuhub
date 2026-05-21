@@ -10,6 +10,8 @@ import 'package:ambuhub/features/client_dashboard/presentation/ui/screens/client
 import 'package:ambuhub/features/client_notification/presentation/ui/screen/customer_notification_screen.dart';
 import 'package:ambuhub/features/client_profile/presentation/ui/screen/client_profile_screen.dart';
 import 'package:ambuhub/features/favorite/presentation/ui/screen/favorite_screen.dart';
+import 'package:ambuhub/features/hire/presentation/bloc/hire/hire_bloc.dart';
+import 'package:ambuhub/features/hire/presentation/ui/screen/hire_checkout.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
 import 'package:ambuhub/features/order/presentation/ui/screen/order_screen.dart';
 import 'package:ambuhub/features/provider_main_dashboard/presentation/ui/screens/provider_dash_board_screen.dart';
@@ -58,6 +60,7 @@ class AppRoutes {
   static const cartScreen = '/cartScreen';
   static const markerScreen = '/markerScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
+  static const hireCheckoutScreen = '/hireCheckoutScreen';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -117,13 +120,13 @@ class AppRoutes {
       case categoryInfoScreen:
         final category = settings.arguments as ServiceCategoryEntity;
         return MaterialPageRoute(
-          builder: (_) =>
-              CategoryInfoScreen(category: category,),
+          builder: (_) => CategoryInfoScreen(category: category),
         );
+
       case markerScreen:
         final category = settings.arguments as ServiceCategoryEntity;
         return MaterialPageRoute(
-          builder: (_) => MarketplaceScreen(category: category,),
+          builder: (_) => MarketplaceScreen(category: category),
         );
       case providerProfileScreen:
         return MaterialPageRoute(builder: (_) => const ProviderProfileScreen());
@@ -133,7 +136,15 @@ class AppRoutes {
           builder: (_) => UpdateServiceScreen(service: service),
         );
       case resetPasswordScreen:
-        return MaterialPageRoute(builder: (_) => ResetPasswordScreen());
+        return MaterialPageRoute(builder: (_) => const ResetPasswordScreen());
+      case hireCheckoutScreen:
+        final service = settings.arguments as ServiceEntity;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<HireBloc>(
+            create: (_) => sl<HireBloc>(),
+            child: HireCheckoutScreen(service: service),
+          ),
+        );
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

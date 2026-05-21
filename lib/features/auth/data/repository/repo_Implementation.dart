@@ -82,6 +82,7 @@ class AuthRepoImplementation implements AuthRepository {
 
       if (httpResponse.statusCode == 200) {
         final Map<String, dynamic> userData = httpResponse.data;
+        print('userData: ${userData['user']['role']}');
         if (userData['user']['role'] == 'patient') {
           final user = ClientModel.fromJson(userData['user']);
           return DataSuccess(data: user);

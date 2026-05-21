@@ -18,12 +18,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // TODO 1: and number if needed
 // TODO 1: make dashboard persistis use token is token is the active kjkjk;
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await initializeDateFormatting('en');
   await dependeciesInjection();
   runApp(const MyApp());
 }

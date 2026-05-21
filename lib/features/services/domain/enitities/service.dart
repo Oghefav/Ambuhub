@@ -1,4 +1,34 @@
+import 'package:ambuhub/core/utililty/locale_display_utils.dart';
 import 'package:equatable/equatable.dart';
+
+/// Shared shape for [ServiceEntity.hireReturnWindow] and [ServiceEntity.bookingWindow].
+class WeeklyTimeWindowEntity extends Equatable {
+  final List<int> daysOfWeek;
+  final String timeStart;
+  final String timeEnd;
+
+  const WeeklyTimeWindowEntity({
+    required this.daysOfWeek,
+    required this.timeStart,
+    required this.timeEnd,
+  });
+
+  factory WeeklyTimeWindowEntity.fromJson(Map<String, dynamic> json) {
+    return WeeklyTimeWindowEntity(
+      daysOfWeek: (json['daysOfWeek'] as List? ?? [])
+          .map((e) => (e as num).toInt())
+          .toList(),
+      timeStart: json['timeStart'] as String? ?? '',
+      timeEnd: json['timeEnd'] as String? ?? '',
+    );
+  }
+
+  @override
+  List<Object?> get props => [daysOfWeek, timeStart, timeEnd];
+
+  /// e.g. `Mon - Fri`, `Mon - Tue, Thu - Fri`, or `Tue, Fri`
+  String get formattedDaysOfWeek => formatDaysOfWeek(daysOfWeek);
+}
 
 class ServiceEntity extends Equatable {
   final String id;
@@ -12,6 +42,13 @@ class ServiceEntity extends Equatable {
   final int? price;
   final bool? available;
   final String? pricePeriod;
+  final String? country;
+  final String? stateProvince;
+  final String? stateProvinceName;
+  final String? officeAddress;
+  final WeeklyTimeWindowEntity? hireReturnWindow;
+  final WeeklyTimeWindowEntity? bookingWindow;
+  final int? bookingGapMinutes;
 
   const ServiceEntity({
     required this.id,
@@ -25,8 +62,34 @@ class ServiceEntity extends Equatable {
     this.stock,
     this.price,
     this.available,
+    this.country,
+    this.stateProvince,
+    this.stateProvinceName,
+    this.officeAddress,
+    this.hireReturnWindow,
+    this.bookingWindow,
+    this.bookingGapMinutes,
   });
 
   @override
-  List<Object> get props => [id, title, description, photoUrls];
+  List<Object?> get props => [
+        id,
+        title,
+        description,
+        serviceCategory,
+        dept,
+        photoUrls,
+        listingType,
+        stock,
+        price,
+        available,
+        pricePeriod,
+        country,
+        stateProvince,
+        stateProvinceName,
+        officeAddress,
+        hireReturnWindow,
+        bookingWindow,
+        bookingGapMinutes,
+      ];
 }

@@ -14,6 +14,11 @@ import 'package:ambuhub/features/cart/domain/usecases/change_cart_item_quantity.
 import 'package:ambuhub/features/cart/domain/usecases/get_cart.dart';
 import 'package:ambuhub/features/cart/domain/usecases/remove_from_cart.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ambuhub/features/hire/data/repository/hire_repo_implementation.dart';
+import 'package:ambuhub/features/hire/domain/repository/hire_repo.dart';
+import 'package:ambuhub/features/hire/domain/usecases/place_hire.dart';
+import 'package:ambuhub/features/hire/presentation/bloc/hire/hire_bloc.dart';
+import 'package:ambuhub/features/order/data/data_source/remote/order_api_service.dart';
 import 'package:ambuhub/features/services/data/data_source/service_api_service.dart';
 import 'package:ambuhub/features/services/data/repository/service_repo_implementation.dart';
 import 'package:ambuhub/features/services/domain/repository/service_repo.dart';
@@ -37,11 +42,13 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<AuthApiService>(() => AuthApiService(sl()));
   sl.registerLazySingleton<ServiceApiService>(() => ServiceApiService(sl()));
   sl.registerLazySingleton<CartApiService>(() => CartApiService(sl()));
+  sl.registerLazySingleton<OrderApiService>(() => OrderApiService(sl()));
 
   // repo
   sl.registerLazySingleton<AuthRepository>(() => AuthRepoImplementation(sl()));
   sl.registerLazySingleton<ServiceRepo>(() => ServiceRepoImplementation(sl()));
   sl.registerLazySingleton<CartRepo>(() => CartRepoImplementation(sl()));
+  sl.registerLazySingleton<HireRepo>(() => HireRepoImplementation(sl()));
 
   // usecases
   sl.registerLazySingleton<LoginUsecase>(() => LoginUsecase(sl()));
@@ -73,6 +80,7 @@ Future<void> dependeciesInjection() async {
   sl.registerLazySingleton<GetServiceCategoriesUsecase>(
     () => GetServiceCategoriesUsecase(sl()),
   );
+  sl.registerLazySingleton<PlaceHireUsecase>(() => PlaceHireUsecase(sl()));
 
   // blocs
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl(), sl(), sl(), sl()));
@@ -88,4 +96,5 @@ Future<void> dependeciesInjection() async {
   sl.registerFactory<GetServiceCategoriesBloc>(
     () => GetServiceCategoriesBloc(sl()),
   );
+  sl.registerFactory<HireBloc>(() => HireBloc(sl()));
 }

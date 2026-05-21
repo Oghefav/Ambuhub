@@ -18,6 +18,7 @@ class AppColours {
   static const Color veryLightBrandBlue = Color.fromRGBO(243, 248, 252, 1.0);
   static const Color blue = Color.fromRGBO(21, 101, 192, 1.0);
   static const Color lighterTeal = Color.fromRGBO(248, 251, 253, 1.0);
+
   /// #eff8ff — light frost blue
   static const Color frostBlue = Color.fromRGBO(239, 248, 255, 1.0);
   static const Color veryLightVividRed = Color.fromRGBO(254, 242, 242, 1.0);
@@ -32,10 +33,16 @@ class AppColours {
   static const Color vividBlue = Color.fromRGBO(0, 107, 247, 1.0);
   static const Color veryLightBlue = Color.fromRGBO(0, 181, 222, 1.0);
   static const Color snackBarBackground = Color.fromRGBO(240, 252, 244, 1.0);
+
   /// rgb(235, 247, 239) — light mint success background
   static const Color lightMintGreen = Color.fromRGBO(235, 247, 239, 1.0);
   static const Color snackBarBorder = Color.fromRGBO(188, 247, 209, 1.0);
-  static const Color snackBarErrorBackground = Color.fromRGBO(255, 252, 237, 1.0);
+  static const Color snackBarErrorBackground = Color.fromRGBO(
+    255,
+    252,
+    237,
+    1.0,
+  );
   static const Color snackBarErrorBorder = Color.fromRGBO(252, 231, 144, 1.0);
   static const Color softBlue = Color.fromRGBO(122, 143, 191, 1.0);
   static const Color softTeal = Color.fromRGBO(107, 173, 199, 1.0);
@@ -61,9 +68,173 @@ class AppColours {
   static const Color brightBlue = Color.fromRGBO(9, 82, 227, 1.0);
   static const Color cyanBlue = Color.fromRGBO(0, 146, 186, 1.0);
 
+  /// Hire / cyan palette (design RGB). Use full strength or tune alpha:
+  /// - const: `Color.fromRGBO(r, g, b, 0.35)`
+  /// - runtime: `hireCyanBright.withOpacity(0.35)` or `withAlpha((0.35 * 255).round())`
+  static const Color hireCyanBright = Color.fromRGBO(
+    0,
+    167,
+    209,
+    1.0,
+  ); // rgb(0, 167, 209)
+  static const Color hireCyanDeep = Color.fromRGBO(
+    0,
+    119,
+    179,
+    1.0,
+  ); // rgb(0, 119, 179)
+  static const Color hireCyanMid = Color.fromRGBO(
+    12,
+    137,
+    204,
+    1.0,
+  ); // rgb(12, 137, 204)
+  static const Color hireCyanMuted = Color.fromRGBO(
+    111,
+    160,
+    209,
+    1.0,
+  ); // rgb(111, 160, 209)
+  static const Color hireCyanTeal = Color.fromRGBO(
+    0,
+    187,
+    196,
+    1.0,
+  ); 
+  static const Color hireCyanSky = Color.fromRGBO(0, 172, 235, 1.0);
+  static const Color hireCyanIce = Color.fromRGBO(
+    138,
+    235,
+    249,
+    1.0,
+  ); // #8aebf9
+  static const Color hireCyanOcean = Color.fromRGBO(
+    16,
+    136,
+    188,
+    1.0,
+  ); // #1088bc
+  static const Color hireCyanGlow = Color.fromRGBO(
+    109,
+    227,
+    247,
+    1.0,
+  ); // rgb(109, 227, 247) #6DE3F7
+  static const Color hireNavyBlue = Color.fromRGBO(
+    11,
+    73,
+    115,
+    1.0,
+  ); // rgb(11, 73, 115) #0B4973
+  static const Color hireCyanAccent = Color.fromRGBO(
+    29,
+    161,
+    194,
+    1.0,
+  ); // rgb(29, 161, 194) #1DA1C2
+  static const Color hireBlueGrey = Color.fromRGBO(
+    157,
+    180,
+    194,
+    1.0,
+  ); // rgb(157, 180, 194) #9DB4C2
+
+  /// Hire / mint–forest greens (design RGB)
+  static const Color hireMintWash = Color.fromRGBO(
+    208,
+    242,
+    236,
+    1.0,
+  ); // rgb(208, 242, 236) #D0F2EC
+  static const Color hireMintFoam = Color.fromRGBO(
+    208,
+    242,
+    235,
+    1.0,
+  ); // rgb(208, 242, 235) #D0F2EB
+  static const Color hireForest = Color.fromRGBO(
+    40,
+    105,
+    79,
+    1.0,
+  ); // rgb(40, 105, 79) #28694F
+  static const Color hireTealInk = Color.fromRGBO(
+    2,
+    46,
+    51,
+    1.0,
+  ); // rgb(2, 46, 51) #022E33
+  static const Color hireSageMuted = Color.fromRGBO(
+    138,
+    166,
+    158,
+    1.0,
+  ); // rgb(138, 166, 158) #8AA69E
+
+  /// Hire / lavender–indigo (design RGB)
+  static const Color hireLavenderWash = Color.fromRGBO(
+    222,
+    224,
+    255,
+    1.0,
+  ); // rgb(222, 224, 255) #DEE0FF
+  static const Color hireIndigo = Color.fromRGBO(
+    102,
+    85,
+    224,
+    1.0,
+  ); // rgb(102, 85, 224) #6655E0
+
+  /// Hire / warm gold–ivory (design RGB)
+  static const Color hireButtercream = Color.fromRGBO(
+    252,
+    234,
+    182,
+    1.0,
+  ); // rgb(252, 234, 182) #FCEAB6
+  static const Color hireSienna = Color.fromRGBO(
+    148,
+    87,
+    40,
+    1.0,
+  ); // rgb(148, 87, 40) #945728
+  static const Color hireLemonCream = Color.fromRGBO(
+    252,
+    235,
+    167,
+    1.0,
+  ); // rgb(252, 235, 167) #FCEBA7
+  static const Color hireParchment = Color.fromRGBO(
+    252,
+    250,
+    240,
+    1.0,
+  ); // rgb(252, 250, 240) #FCFAF0
+
+  /// Hire / violet–magenta (design RGB)
+  static const Color hireVioletBright = Color.fromRGBO(
+    157,
+    46,
+    255,
+    1.0,
+  ); // rgb(157, 46, 255) #9D2EFF
+  static const Color hireMagenta = Color.fromRGBO(
+    216,
+    45,
+    250,
+    1.0,
+  ); // rgb(216, 45, 250) #D82DFA
+  static const Color hirePurpleDeep = Color.fromRGBO(
+    46,
+    13,
+    105,
+    1.0,
+  ); // rgb(46, 13, 105) #2E0D69
+
   static const Color offWhite = Color.fromARGB(255, 243, 245, 247);
 
   static const Color emeraldGreen = Color.fromRGBO(14, 171, 71, 1.0);
+
   /// rgb(46, 120, 103) — sage / success foreground
   static const Color sageGreen = Color.fromRGBO(46, 120, 103, 1.0);
   static const Color snackBarGreen = Color.fromRGBO(1, 102, 48, 1.0);

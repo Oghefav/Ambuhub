@@ -1,4 +1,4 @@
-import 'package:ambuhub/core/utililty/app_formatter.dart';
+import 'package:ambuhub/core/utililty/locale_display_utils.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
 
@@ -15,6 +15,13 @@ class ServiceModel extends ServiceEntity {
     super.price,
     super.available,
     super.pricePeriod,
+    super.country,
+    super.stateProvince,
+    super.stateProvinceName,
+    super.officeAddress,
+    super.hireReturnWindow,
+    super.bookingWindow,
+    super.bookingGapMinutes,
   });
 
   static Map<String, dynamic> toJson(
@@ -36,6 +43,11 @@ class ServiceModel extends ServiceEntity {
   }
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
+    final countryRaw = json['country']?.toString().trim();
+    final countryDisplay = countryRaw == null || countryRaw.isEmpty
+        ? null
+        : (countryCodeToCountryName(countryRaw) ?? countryRaw);
+
     return ServiceModel(
       id: json['_id'] ?? json['id'] ?? json['serviceId'],
       dept: json['departmentName'] ?? json['departmentSlug'],
@@ -45,23 +57,26 @@ class ServiceModel extends ServiceEntity {
           .toList(),
       serviceCategory: json['category']?['name'] ?? json['serviceCategoryId'],
       title: json['title'],
-      listingType: json['listingType'] != null
-          ? (json['listingType'] as String)
-                .toTitleCase() // ← 'sale' → 'Sale'
-          : null,
+      listingType: json['listingType'] ,
       stock: json['stock'],
       price: json['price'],
       available: json['available'],
       pricePeriod: json['pricePeriod'],
+      country: countryDisplay,
+      stateProvince: json['stateProvince'],
+      stateProvinceName: json['stateProvinceName'] ,
+      officeAddress: json['officeAddress'],
+      hireReturnWindow: json['hireReturnWindow'] != null
+          ? WeeklyTimeWindowEntity.fromJson(
+              Map<String, dynamic>.from(json['hireReturnWindow'] as Map),
+            )
+          : null,
+      bookingWindow: json['bookingWindow'] != null
+          ? WeeklyTimeWindowEntity.fromJson(
+              Map<String, dynamic>.from(json['bookingWindow'] as Map),
+            )
+          : null,
+      bookingGapMinutes: (json['bookingGapMinutes'] as num?)?.toInt(),
     );
   }
-  // factory ServiceModel.fromEnitity(ServiceParams service) {
-  //   return ServiceModel(
-  //     dept: service.dept,
-  //     description: service.dept,
-  //     photoUrls: service.photoUrls,
-  //     serviceCategory: service.serviceCategory,
-  //     title: service.title,
-  //   );
-  // }
 }

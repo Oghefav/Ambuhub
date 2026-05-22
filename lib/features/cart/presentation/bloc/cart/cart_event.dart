@@ -13,8 +13,12 @@ class GetCart extends CartEvent {
   const GetCart();
 }
 
-  class AddCartItem extends CartEvent {
+/// Clears local cart state after a successful checkout.
+class ClearCart extends CartEvent {
+  const ClearCart();
+}
 
+class AddCartItem extends CartEvent {
   const AddCartItem({required super.item});
 }
 

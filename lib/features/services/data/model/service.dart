@@ -49,7 +49,7 @@ class ServiceModel extends ServiceEntity {
         : (countryCodeToCountryName(countryRaw) ?? countryRaw);
 
     return ServiceModel(
-      id: json['_id'] ?? json['id'] ?? json['serviceId'],
+      id: (json['_id'] ?? json['id'] ?? json['serviceId']).toString(),
       dept: json['departmentName'] ?? json['departmentSlug'],
       description: json['description'] ?? '',
       photoUrls: (json['photoUrls'] as List? ?? [])

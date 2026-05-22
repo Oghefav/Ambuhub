@@ -13,6 +13,9 @@ class AppColours {
 
   /// rgb(0, 106, 181) — primary brand blue
   static const Color brandBlue = Color.fromRGBO(0, 106, 181, 1.0);
+
+  /// rgb(0, 112, 181)
+  static const Color actionBlue = Color.fromRGBO(0, 112, 181, 1.0);
   static const Color darkBrandBlue = Color.fromRGBO(0, 74, 124, 1.0);
   static const Color lightBrandBlue = Color.fromRGBO(212, 231, 254, 1.0);
   static const Color veryLightBrandBlue = Color.fromRGBO(243, 248, 252, 1.0);
@@ -71,12 +74,10 @@ class AppColours {
   /// Hire / cyan palette (design RGB). Use full strength or tune alpha:
   /// - const: `Color.fromRGBO(r, g, b, 0.35)`
   /// - runtime: `hireCyanBright.withOpacity(0.35)` or `withAlpha((0.35 * 255).round())`
-  static const Color hireCyanBright = Color.fromRGBO(
-    0,
-    167,
-    209,
-    1.0,
-  ); // rgb(0, 167, 209)
+  static const Color hireCyanBright = Color.fromRGBO(0, 167, 209, 1.0);
+
+  /// rgb(0, 208, 245)
+  static const Color hireCyanElectric = Color.fromRGBO(0, 208, 245, 1.0);
   static const Color hireCyanDeep = Color.fromRGBO(
     0,
     119,
@@ -95,12 +96,7 @@ class AppColours {
     209,
     1.0,
   ); // rgb(111, 160, 209)
-  static const Color hireCyanTeal = Color.fromRGBO(
-    0,
-    187,
-    196,
-    1.0,
-  ); 
+  static const Color hireCyanTeal = Color.fromRGBO(0, 187, 196, 1.0);
   static const Color hireCyanSky = Color.fromRGBO(0, 172, 235, 1.0);
   static const Color hireCyanIce = Color.fromRGBO(
     138,
@@ -224,12 +220,21 @@ class AppColours {
     250,
     1.0,
   ); // rgb(216, 45, 250) #D82DFA
+  static const Color hireMagentaRose = Color.fromRGBO(
+    226,
+    42,
+    250,
+    1.0,
+  ); // rgb(226, 42, 250) #E22AFA
   static const Color hirePurpleDeep = Color.fromRGBO(
     46,
     13,
     105,
     1.0,
   ); // rgb(46, 13, 105) #2E0D69
+
+  /// rgb(250, 95, 152) — rose accent (favourites, hearts, etc.)
+  static const Color rosePink = Color.fromRGBO(250, 95, 152, 1.0);
 
   static const Color offWhite = Color.fromARGB(255, 243, 245, 247);
 

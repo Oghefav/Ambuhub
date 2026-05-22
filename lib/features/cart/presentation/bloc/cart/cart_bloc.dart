@@ -24,6 +24,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<RemoveCartItem>(_onRemoveCartItem);
     on<CartItemDecrement>(_onCartItemDecrement);
     on<CartItemIncrement>(_onCartItemIncrement);
+    on<ClearCart>((event, emit) {
+      emit(const CartSuccess(cart: CartEntity.empty));
+    });
   }
 
   Future<void> _onGetCart(GetCart event, Emitter<CartState> emit) async {

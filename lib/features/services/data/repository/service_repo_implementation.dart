@@ -122,6 +122,43 @@ class ServiceRepoImplementation implements ServiceRepo {
       return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
+
+  ServiceEntity _parseMarketplaceService(dynamic raw) {
+    if (raw is Map<String, dynamic>) {
+      final nested = raw['service'];
+      if (nested is Map<String, dynamic>) {
+        return ServiceModel.fromJson(nested);
+      }
+      return ServiceModel.fromJson(raw);
+    }
+    throw const FormatException('Invalid marketplace service response');
+  }
+
+  @override
+  Future<DataState<ServiceEntity>> getMarketplaceServiceById(
+    String serviceId,
+  ) async {
+    try {
+      final httpResponse =
+          await _serviceApiService.getMarketplaceServiceById(serviceId);
+      if (httpResponse.statusCode == 200) {
+        return DataSuccess(data: _parseMarketplaceService(httpResponse.data));
+      }
+      final dioException = DioException(
+        requestOptions: httpResponse.requestOptions,
+        type: DioExceptionType.badResponse,
+        error: httpResponse.statusMessage,
+        response: httpResponse,
+      );
+      return DataFailed(
+        ErrorHandler.getErrorMessage(dioException),
+        error: dioException,
+      );
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
   @override
   Future<DataState<List<ServiceEntity>>> getProviderServices() async {
     try{

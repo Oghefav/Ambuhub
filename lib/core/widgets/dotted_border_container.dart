@@ -6,7 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DottedBorderContainer extends StatelessWidget {
   final Widget child;
   final Color? color;
-  const DottedBorderContainer({super.key, required this.child, this.color});
+  final Color? borderColor;
+
+  const DottedBorderContainer({
+    super.key,
+    required this.child,
+    this.color,
+    this.borderColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,7 @@ class DottedBorderContainer extends StatelessWidget {
       options: RoundedRectDottedBorderOptions(
         strokeWidth: 2,
         dashPattern: [6, 3],
-        color: AppColours.veryLightVividTeal,
+        color: borderColor ?? AppColours.veryLightVividTeal,
         radius: Radius.circular(15.r),
       ),
       child: Container(

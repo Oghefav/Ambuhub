@@ -1,9 +1,11 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
-import 'package:ambuhub/features/hire/presentation/bloc/hire/hire_bloc.dart';
-import 'package:ambuhub/features/hire/presentation/bloc/hire/hire_state.dart';
+  import 'package:ambuhub/features/hire/domain/entities/hire_params.dart';
 import 'package:ambuhub/features/hire/presentation/ui/widgets/icon_non_gradient_container.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_bloc.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_event.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_state.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ class TotalPriceAndPayment extends StatelessWidget {
   final ValueNotifier<int> quantity;
   final ValueNotifier<String?> errorText;
   final ValueNotifier<int?> billingUnits;
+  final DateTime hireStartDate;
+  final DateTime hireEndDate;
 
   const TotalPriceAndPayment({
     super.key,
@@ -23,6 +27,8 @@ class TotalPriceAndPayment extends StatelessWidget {
     required this.quantity,
     required this.errorText,
     required this.billingUnits,
+    required this.hireStartDate,
+    required this.hireEndDate,
   });
 
   String _totalPriceLabel(int qty, int? units) {
@@ -87,6 +93,7 @@ class TotalPriceAndPayment extends StatelessWidget {
                                     fontSize: 10.sp,
                                   ),
                                 ),
+                                
                                 Text(
                                   priceLabel,
                                   style: textTheme.titleSmall?.copyWith(
@@ -97,7 +104,7 @@ class TotalPriceAndPayment extends StatelessWidget {
                             ),
                           ],
                         ),
-                        _hirePaymentButton(context, units),
+                        _hirePaymentButton(context, units, qty, priceLabel, hireStartDate, hireEndDate),
                       ],
                     ),
                   ),
@@ -110,22 +117,34 @@ class TotalPriceAndPayment extends StatelessWidget {
     );
   }
 
-  Widget _hirePaymentButton(BuildContext context, int? units) {
-    return BlocBuilder<HireBloc, HireState>(
+  Widget _hirePaymentButton(
+    BuildContext context,
+    int? units,
+    int quantity,
+    String priceLabel,
+    DateTime hireStartDate,
+    DateTime hireEndDate,
+  ) {
+    return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        final isLoading = state is HireLoading;
+        final isLoading = state is OrderLoading;
         final isDisabled =
-            isLoading || errorText.value != null || units == null;
-
+            isLoading || errorText.value != null;
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             onPressed: isDisabled
                 ? null
-                : () => Navigator.pushNamed(
-                      context,
-                      AppRoutes.clientDashBoardScreen,
+                : () => BlocProvider.of<OrderBloc>(context).add(
+                    CheckoutHire(
+                      params: HireParams(
+                        serviceId: service.id,
+                        quantity: quantity,
+                        hireStart: hireStartDate,
+                        hireEnd: hireEndDate,
+                      ),
                     ),
+                  ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColours.white,
               disabledBackgroundColor: AppColours.hireBlueGrey,
@@ -147,9 +166,9 @@ class TotalPriceAndPayment extends StatelessWidget {
                 Text(
                   'Pay with Paystck (simuated)',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColours.penBlue,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: AppColours.penBlue,
+                  ),
                 ),
               ],
             ),

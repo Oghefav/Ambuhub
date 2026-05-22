@@ -15,6 +15,10 @@ class ServiceApiService {
     return _dio.get('/services/marketplace', queryParameters: params);
   }
 
+  Future<Response<dynamic>> getMarketplaceServiceById(String serviceId) {
+    return _dio.get('/services/marketplace/$serviceId');
+  }
+
   Future<Response<dynamic>> addServices(Map<String, dynamic> data) {
     return _dio.post('/services', data: data);
   }

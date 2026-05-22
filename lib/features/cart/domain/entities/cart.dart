@@ -10,6 +10,9 @@ class CartEntity extends Equatable {
     // required this.id,
      required this.items, required this.totalPrice});
 
+  static const CartEntity empty =
+      CartEntity(items: [], totalPrice: 0);
+
   @override
   List<Object?> get props => [items, totalPrice];
 }

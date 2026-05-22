@@ -45,6 +45,7 @@ class ShadowedContainer extends StatelessWidget {
         boxShadow: [BoxShadow(color: shadowColor, blurRadius: 10.r)],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [

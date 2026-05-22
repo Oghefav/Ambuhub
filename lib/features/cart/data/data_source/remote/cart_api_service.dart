@@ -19,5 +19,4 @@ class CartApiService {
     print('Data: ${data}');
     return _dio.patch('/cart/items/${data['serviceId']}', data: data);
   }
-
 }

@@ -3,6 +3,9 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_state.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_bloc.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_event.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,13 +47,13 @@ class BottomSection extends StatelessWidget {
   }
 
   Widget _paymentButton(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        final isLoading = state is CartLoading;
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, orderState) {
+        final isLoading = orderState is OrderLoading;
         return SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: isLoading ? null : () => Navigator.pushNamed(context, AppRoutes.clientDashBoardScreen),
+            onPressed: isLoading ? null : () => BlocProvider.of<OrderBloc>(context).add(const CheckoutCart()),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColours.vividTeal,
               disabledBackgroundColor:

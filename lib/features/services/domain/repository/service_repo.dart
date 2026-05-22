@@ -10,5 +10,6 @@ abstract class ServiceRepo {
   Future<DataState<List<ServiceEntity>>> getMarketplaceServices(
     String categorySlug,
   );
+  Future<DataState<ServiceEntity>> getMarketplaceServiceById(String serviceId);
   Future<DataState<ServiceEntity>> updateService(ServiceParams service);
 }

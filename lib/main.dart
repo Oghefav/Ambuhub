@@ -3,8 +3,15 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_route_observer.dart';
 import 'package:ambuhub/dependencies_injection.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_event.dart';
+import 'package:ambuhub/features/favorite/presentation/bloc/favorite/favorite_bloc.dart';
+import 'package:ambuhub/features/favorite/presentation/bloc/favorite/favorite_event.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_bloc.dart';
+import 'package:ambuhub/features/order/presentation/bloc/order/order_event.dart';
+import 'package:ambuhub/features/reviews/presentation/bloc/review/review_bloc.dart';
+import 'package:ambuhub/features/reviews/presentation/bloc/review/review_event.dart';
 import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/conectivity_event.dart';
 import 'package:ambuhub/features/onboarding/presentation/blocs/connectivity_bloc.dart';
@@ -101,14 +108,36 @@ class _MyAppState extends State<MyApp> {
                 ConnectivityBloc()..add(ConnectivityStartMonitoring()),
           ),
           BlocProvider<CartBloc>(create: ((context) => sl<CartBloc>()..add( const GetCart()))),
+          BlocProvider<FavoriteBloc>(
+            create: ((context) => sl<FavoriteBloc>()),
+          ),
+          BlocProvider<OrderBloc>(create: ((context) => sl<OrderBloc>()..add(const GetOrders())),),
+          BlocProvider<ReviewBloc>(
+            create: ((context) => sl<ReviewBloc>()),
+          ),
           BlocProvider<GetServiceCategoriesBloc>(create: ((context) => sl<GetServiceCategoriesBloc>()..add(const GetServiceCategories()))),
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.themeData,
-          initialRoute: AppRoutes.splashScreen,
-          onGenerateRoute: AppRoutes.onGenerateRoute,
-          navigatorObservers: [appRouteObserver],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            final favorites = context.read<FavoriteBloc>();
+            final reviews = context.read<ReviewBloc>();
+            if (state is AuthSuccess) {
+              favorites.add(const GetFavorites());
+              reviews
+                ..add(const GetAwaitingReviews())
+                ..add(const GetWrittenReviews());
+            } else if (state is AuthInitial) {
+              favorites.add(const FavoriteReset());
+              reviews.add(const ReviewReset());
+            }
+          },
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.themeData,
+            initialRoute: AppRoutes.loginScreen,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
+            navigatorObservers: [appRouteObserver],
+          ),
         ),
       ),
     );

@@ -51,6 +51,85 @@ String? formatDateTimeclockTime(
   return DateFormat(' h:mm a', locale).format(dt);
 }
 
+/// Review date only, e.g. `May 22, 2026`.
+String? formatReviewDateOrNull(
+  dynamic value, {
+  String locale = 'en',
+  bool toLocal = true,
+}) {
+  final parsed = tryParseDateTime(value);
+  if (parsed == null) return null;
+  final dt = toLocal ? parsed.toLocal() : parsed;
+  return DateFormat('MMMM d, y', locale).format(dt);
+}
+
+/// Review timestamp, e.g. `May 22, 2026, 12:25 PM`.
+String? formatReviewDateTimeOrNull(
+  dynamic value, {
+  String locale = 'en',
+  bool toLocal = true,
+}) {
+  final parsed = tryParseDateTime(value);
+  if (parsed == null) return null;
+  final dt = toLocal ? parsed.toLocal() : parsed;
+  return DateFormat('MMMM d, y, h:mm a', locale).format(dt);
+}
+
+/// Short US-style label, e.g. `5/21/2026, 9:13:54 PM`.
+String formatDateTimeShort(
+  dynamic value, {
+  String locale = 'en',
+  bool toLocal = true,
+}) {
+  final parsed = tryParseDateTime(value);
+  if (parsed == null) return '';
+  final dt = toLocal ? parsed.toLocal() : parsed;
+  return DateFormat('M/d/yyyy, h:mm:ss a', locale).format(dt);
+}
+
+/// Office region line for display, e.g. `Bayelsa, Nigeria`.
+String formatLocationRegionLine({
+  String? stateProvinceName,
+  String? stateProvince,
+  String? country,
+}) {
+  final stateRaw = _firstNonEmptyTrimmed([stateProvinceName, stateProvince]);
+  final state = stateRaw == null ? null : _formatPlaceLabel(stateRaw);
+
+  final countryRaw = country?.trim();
+  final countryName = (countryRaw == null || countryRaw.isEmpty)
+      ? null
+      : _formatPlaceLabel(
+          countryCodeToCountryName(countryRaw) ?? countryRaw,
+        );
+
+  if (state != null && countryName != null) {
+    return '$state, $countryName';
+  }
+  return state ?? countryName ?? '';
+}
+
+String? _firstNonEmptyTrimmed(List<String?> values) {
+  for (final value in values) {
+    final trimmed = value?.trim();
+    if (trimmed != null && trimmed.isNotEmpty) return trimmed;
+  }
+  return null;
+}
+
+String _formatPlaceLabel(String value) {
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) return trimmed;
+  if (trimmed.length <= 2) return trimmed.toUpperCase();
+  return trimmed
+      .split(RegExp(r'\s+'))
+      .map((word) {
+        if (word.isEmpty) return word;
+        return word[0].toUpperCase() + word.substring(1).toLowerCase();
+      })
+      .join(' ');
+}
+
 /// Resolves ISO 3166-1 alpha-2 [code] (e.g. `"NG"`) to the picker’s display name.
 /// Returns null if [code] is empty or unknown.
 String? countryCodeToCountryName(String? code) {

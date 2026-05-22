@@ -2,6 +2,8 @@ import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ambuhub/features/cart/presentation/bloc/cart/cart_state.dart';
+import 'package:ambuhub/features/favorite/presentation/bloc/favorite/favorite_bloc.dart';
+import 'package:ambuhub/features/favorite/presentation/bloc/favorite/favorite_state.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_marketplace_services/get_marketplace_services_bloc.dart';
@@ -180,29 +182,47 @@ class MarketplaceScreen extends HookWidget {
                       }
                       if (state is GetMarketplaceServicesSuccess &&
                           state.categorySlug == selectedCategory.value) {
-                        return BlocListener<CartBloc, CartState>(
-                          listenWhen: (previous, current) =>
-                              current is CartSuccess &&
-                              previous is CartLoading &&
-                              previous.isAddingToCart,
-                          listener: (context, state) {
-                            if (state is CartSuccess) {
-                              showCustomFlushBar(
-                                context,
-                                message: 'Added to cart',
-                                title: 'Success',
-                                type: AppFlushBarType.success,
-                              );
-                            }
-                            if (state is CartFailure) {
-                              showCustomFlushBar(
-                                context,
-                                message: 'Failed to add to cart',
-                                title: 'Error',
-                                type: AppFlushBarType.error,
-                              );
-                            }
-                          },
+                        return MultiBlocListener(
+                          listeners: [
+                            BlocListener<CartBloc, CartState>(
+                              listenWhen: (previous, current) =>
+                                  current is CartSuccess &&
+                                  previous is CartLoading &&
+                                  previous.isAddingToCart,
+                              listener: (context, state) {
+                                if (state is CartSuccess) {
+                                  showCustomFlushBar(
+                                    context,
+                                    message: 'Added to cart',
+                                    title: 'Success',
+                                    type: AppFlushBarType.success,
+                                  );
+                                }
+                                if (state is CartFailure) {
+                                  showCustomFlushBar(
+                                    context,
+                                    message: 'Failed to add to cart',
+                                    title: 'Error',
+                                    type: AppFlushBarType.error,
+                                  );
+                                }
+                              },
+                            ),
+                            BlocListener<FavoriteBloc, FavoriteState>(
+                              listenWhen: (previous, current) =>
+                                  current.lastAddedServiceId != null &&
+                                  current.lastAddedServiceId !=
+                                      previous.lastAddedServiceId,
+                              listener: (context, state) {
+                                showCustomFlushBar(
+                                  context,
+                                  message: 'Added to favorites',
+                                  title: 'Success',
+                                  type: AppFlushBarType.success,
+                                );
+                              },
+                            ),
+                          ],
                           child: CustomScrollView(
                             slivers: [
                               SliverMainAxisGroup(

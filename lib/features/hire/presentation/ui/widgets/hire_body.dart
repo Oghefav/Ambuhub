@@ -45,13 +45,15 @@ class HireBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Padding(
-      padding:  EdgeInsets.all(15.r),
+      padding: EdgeInsets.all(15.r),
       child: Column(
         spacing: 20.h,
         children: [
-          HireServiceDetailsCard(service: service, billingPeriod: _billingPeriod),
+          HireServiceDetailsCard(
+            service: service,
+            billingPeriod: _billingPeriod,
+          ),
           HireQuantityContainer(service: service, quantity: quantity),
           HirePeriodCard(
             service: service,
@@ -68,6 +70,8 @@ class HireBody extends StatelessWidget {
             quantity: quantity,
             errorText: errorText,
             billingUnits: billingUnits,
+            hireStartDate: selectedStartDate.value ?? DateTime.now(),
+            hireEndDate: selectedEndDate.value ?? DateTime.now(),
           ),
         ],
       ),

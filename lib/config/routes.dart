@@ -10,9 +10,11 @@ import 'package:ambuhub/features/client_dashboard/presentation/ui/screens/client
 import 'package:ambuhub/features/client_notification/presentation/ui/screen/customer_notification_screen.dart';
 import 'package:ambuhub/features/client_profile/presentation/ui/screen/client_profile_screen.dart';
 import 'package:ambuhub/features/favorite/presentation/ui/screen/favorite_screen.dart';
-import 'package:ambuhub/features/hire/presentation/bloc/hire/hire_bloc.dart';
 import 'package:ambuhub/features/hire/presentation/ui/screen/hire_checkout.dart';
 import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
+import 'package:ambuhub/features/order/domain/entities/order_entity.dart';
+import 'package:ambuhub/features/order/presentation/ui/order_receipt_args.dart';
+import 'package:ambuhub/features/order/presentation/ui/screen/order_receipt.dart';
 import 'package:ambuhub/features/order/presentation/ui/screen/order_screen.dart';
 import 'package:ambuhub/features/provider_main_dashboard/presentation/ui/screens/provider_dash_board_screen.dart';
 import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/onboarding_screen.dart';
@@ -25,6 +27,10 @@ import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/ui/add_service/screen/add_service_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/listing/screen/listings_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/market_place/screens/market_screen.dart';
+import 'package:ambuhub/features/services/presentation/bloc/marketplace_service_detail/marketplace_service_detail_bloc.dart';
+import 'package:ambuhub/features/services/presentation/bloc/marketplace_service_detail/marketplace_service_detail_event.dart';
+import 'package:ambuhub/features/services/presentation/ui/market_place/service_detail/market_place_service_detail_args.dart';
+import 'package:ambuhub/features/services/presentation/ui/market_place/service_detail/screen/service_detail.dart';
 import 'package:ambuhub/features/services/presentation/ui/service_detail/service_detail_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/category_info/screen/category_info_screen.dart';
 import 'package:ambuhub/features/services/presentation/ui/update_service/update_service_screen.dart';
@@ -37,6 +43,7 @@ class AppRoutes {
   static const loginScreen = '/loginScreen';
   static const roleScreen = '/roleScreen';
   static const signUpScreen = '/signUpScreen';
+  static const marketPlaceServiceDetailScreen = '/marketPlaceServiceDetailScreen';
   static const providerDashBoardScreen = '/providerDashBoardScreen';
   static const bookingScreen = '/bookingScreen';
   static const availabilityScreen = '/availabilityScreen';
@@ -61,6 +68,7 @@ class AppRoutes {
   static const markerScreen = '/markerScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
   static const hireCheckoutScreen = '/hireCheckoutScreen';
+  static const orderReceiptScreen = '/orderReceiptScreen';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -140,9 +148,34 @@ class AppRoutes {
       case hireCheckoutScreen:
         final service = settings.arguments as ServiceEntity;
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<HireBloc>(
-            create: (_) => sl<HireBloc>(),
-            child: HireCheckoutScreen(service: service),
+          builder: (_) => HireCheckoutScreen(service: service),
+        );
+      case orderReceiptScreen:
+        final args = settings.arguments;
+        final receiptArgs = args is OrderReceiptArgs
+            ? args
+            : OrderReceiptArgs.fromOrder(args as OrderEntity);
+        return MaterialPageRoute(
+          builder: (_) => OrderReceiptScreen(args: receiptArgs),
+        );
+      case marketPlaceServiceDetailScreen:
+        final rawArgs = settings.arguments;
+        final detailArgs = rawArgs is MarketPlaceServiceDetailArgs
+            ? rawArgs
+            : MarketPlaceServiceDetailArgs.fromService(
+                rawArgs as ServiceEntity,
+              );
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => sl<MarketplaceServiceDetailBloc>()
+              ..add(
+                LoadMarketplaceServiceDetail(serviceId: detailArgs.serviceId),
+              ),
+            child: MarketPlaceServiceDetailScreen(
+              backLabel: detailArgs.resolveBackLabel(
+                service: rawArgs is ServiceEntity ? rawArgs : null,
+              ),
+            ),
           ),
         );
       default:

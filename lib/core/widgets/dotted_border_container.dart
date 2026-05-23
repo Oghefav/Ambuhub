@@ -19,7 +19,7 @@ class DottedBorderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return DottedBorder(
       options: RoundedRectDottedBorderOptions(
-        strokeWidth: 2,
+        strokeWidth: 1,
         dashPattern: [6, 3],
         color: borderColor ?? AppColours.veryLightVividTeal,
         radius: Radius.circular(15.r),

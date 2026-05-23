@@ -152,7 +152,7 @@ class _ReceiptContent extends StatelessWidget {
           ItemsBuilders(items: order.lines),
           ReceiptSubTotalContainer(subtotalNgn: order.subtotalNgn),
           PaymentReferenceContainer(order: order),
-          const SaveReceiptContainer(),
+          SaveReceiptContainer(order: order),
           const ContinueShoppingContainer(),
         ],
       ),

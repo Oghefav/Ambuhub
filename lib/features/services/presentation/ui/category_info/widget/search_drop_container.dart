@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SearchDropContainer extends StatelessWidget {
   final String title;
   final List<String> items;
+  final String value;
   final Function(String?) onChanged;
   const SearchDropContainer({
     super.key,
     required this.title,
     required this.items,
+    required this.value,
     required this.onChanged,
   });
 
@@ -25,9 +27,8 @@ class SearchDropContainer extends StatelessWidget {
         ),
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
-
           isExpanded: true,
-          initialValue: items.first,
+          value: items.contains(value) ? value : items.first,
           items: items
               .map(
                 (item) => DropdownMenuItem(

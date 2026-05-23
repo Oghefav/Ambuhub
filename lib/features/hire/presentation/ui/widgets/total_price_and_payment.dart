@@ -1,7 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
-import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
-  import 'package:ambuhub/features/hire/domain/entities/hire_params.dart';
+import 'package:ambuhub/features/hire/domain/entities/hire_params.dart';
+import 'package:ambuhub/features/hire/presentation/ui/widgets/utils.dart';
 import 'package:ambuhub/features/hire/presentation/ui/widgets/icon_non_gradient_container.dart';
 import 'package:ambuhub/features/order/presentation/bloc/order/order_bloc.dart';
 import 'package:ambuhub/features/order/presentation/bloc/order/order_event.dart';
@@ -31,9 +31,11 @@ class TotalPriceAndPayment extends StatelessWidget {
     required this.hireEndDate,
   });
 
-  String _totalPriceLabel(int qty, int? units) {
-    if (units == null) return '—';
-    return formatCurrency((service.price ?? 0) * qty * units);
+  String? _totalPriceLabel(int qty, int? units, String? error) {
+    if (!isHirePeriodReady(errorText: error, billingUnits: units)) {
+      return null;
+    }
+    return formatCurrency((service.price ?? 0) * qty * units!);
   }
 
   @override
@@ -48,8 +50,8 @@ class TotalPriceAndPayment extends StatelessWidget {
           builder: (context, qty, __) {
             return ValueListenableBuilder<String?>(
               valueListenable: errorText,
-              builder: (context, _, ___) {
-                final priceLabel = _totalPriceLabel(qty, units);
+              builder: (context, error, ___) {
+                final priceLabel = _totalPriceLabel(qty, units, error);
 
                 return Container(
                   decoration: BoxDecoration(
@@ -94,17 +96,32 @@ class TotalPriceAndPayment extends StatelessWidget {
                                   ),
                                 ),
                                 
-                                Text(
-                                  priceLabel,
-                                  style: textTheme.titleSmall?.copyWith(
-                                    color: AppColours.white,
+                                if (priceLabel != null)
+                                  Text(
+                                    priceLabel,
+                                    style: textTheme.titleSmall?.copyWith(
+                                      color: AppColours.white,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    '—',
+                                    style: textTheme.titleSmall?.copyWith(
+                                      color: AppColours.white,
+                                      fontSize: 10.sp,
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ],
                         ),
-                        _hirePaymentButton(context, units, qty, priceLabel, hireStartDate, hireEndDate),
+                        _hirePaymentButton(
+                          context,
+                          units,
+                          qty,
+                          hireStartDate,
+                          hireEndDate,
+                        ),
                       ],
                     ),
                   ),
@@ -121,7 +138,6 @@ class TotalPriceAndPayment extends StatelessWidget {
     BuildContext context,
     int? units,
     int quantity,
-    String priceLabel,
     DateTime hireStartDate,
     DateTime hireEndDate,
   ) {

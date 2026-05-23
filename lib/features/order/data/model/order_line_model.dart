@@ -32,7 +32,7 @@ class OrderLineModel extends OrderLineEntity {
       categoryName: json['categoryName'] as String? ?? '',
       categorySlug: json['categorySlug'] as String? ?? '',
       departmentName: json['departmentName'] as String? ?? '',
-      imageUrls: _imageUrlsFromJson(json['imageUrls']),
+      imageUrls: _parseImageUrls(json),
       hireStart: tryParseDateTime(json['hireStart']),
       hireEnd: tryParseDateTime(json['hireEnd']),
       pricingPeriod: json['pricingPeriod'] as String?,
@@ -40,7 +40,34 @@ class OrderLineModel extends OrderLineEntity {
     );
   }
 
-  static List<String>? _imageUrlsFromJson(dynamic raw) {
+  /// Prefer `imageUrls`; fall back to `photoUrls` and nested service snapshots.
+  static List<String>? _parseImageUrls(Map<String, dynamic> json) {
+    final direct =
+        _urlsFromJsonValue(json['imageUrls']) ??
+        _urlsFromJsonValue(json['photoUrls']);
+    if (direct != null) return direct;
+
+    for (final key in ['service', 'serviceSnapshot', 'listing']) {
+      final nested = json[key];
+      if (nested is Map) {
+        final map = Map<String, dynamic>.from(nested);
+        final nestedUrls =
+            _urlsFromJsonValue(map['imageUrls']) ??
+            _urlsFromJsonValue(map['photoUrls']);
+        if (nestedUrls != null) return nestedUrls;
+      }
+    }
+
+    final single = json['imageUrl'] ?? json['photoUrl'];
+    if (single != null) {
+      final url = single.toString().trim();
+      if (url.isNotEmpty) return [url];
+    }
+
+    return null;
+  }
+
+  static List<String>? _urlsFromJsonValue(dynamic raw) {
     if (raw == null) return null;
     if (raw is! List) return null;
     final urls = raw

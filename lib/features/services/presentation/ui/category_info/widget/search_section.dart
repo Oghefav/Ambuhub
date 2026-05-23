@@ -8,10 +8,22 @@ class SearchSection extends StatelessWidget {
   final TextEditingController searchController;
   final List<String> depts;
   final List<String> listingTypes;
+  final String deptValue;
+  final String listingTypeValue;
   final Function(String?) onChangeDept;
   final Function() onReset;
   final Function(String?) onChangeListingType;
-  const SearchSection({super.key,required this.listingTypes, required this.searchController, required this.depts, required this.onChangeDept, required this.onChangeListingType, required this.onReset});
+  const SearchSection({
+    super.key,
+    required this.listingTypes,
+    required this.searchController,
+    required this.depts,
+    required this.deptValue,
+    required this.listingTypeValue,
+    required this.onChangeDept,
+    required this.onChangeListingType,
+    required this.onReset,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +83,19 @@ class SearchSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.h),
-        SearchDropContainer( items: depts, onChanged: onChangeDept, title: 'Department',),
+        SearchDropContainer(
+          items: depts,
+          value: deptValue,
+          onChanged: onChangeDept,
+          title: 'Department',
+        ),
         SizedBox(height: 10.h),
-        SearchDropContainer( items: listingTypes, onChanged: onChangeListingType, title: 'Listing type',)
+        SearchDropContainer(
+          items: listingTypes,
+          value: listingTypeValue,
+          onChanged: onChangeListingType,
+          title: 'Listing type',
+        ),
         ],
       ),
     );

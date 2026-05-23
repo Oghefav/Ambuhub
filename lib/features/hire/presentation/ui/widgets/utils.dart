@@ -5,9 +5,11 @@ void hireOnChange(
   ServiceEntity service,
   ValueNotifier<String?> errorText,
   ValueNotifier<DateTime?> selectedStartDate,
-  ValueNotifier<DateTime?> selectedEndDate,
-) {
+  ValueNotifier<DateTime?> selectedEndDate, {
+  ValueNotifier<int?>? billingUnits,
+}) {
   if (selectedStartDate.value == null || selectedEndDate.value == null) {
+    billingUnits?.value = null;
     return;
   }
 
@@ -27,8 +29,27 @@ void hireOnChange(
     errorText.value = 'Return must be on an allowed day (${service.hireReturnWindow?.formattedDaysOfWeek} WAT).';
   } else {
     errorText.value = null;
-  } 
+  }
+
+  if (billingUnits != null) {
+    if (errorText.value != null) {
+      billingUnits.value = null;
+    } else {
+      billingUnits.value = hirePeriodUnitCount(
+        start: selectedStartDate.value!,
+        end: selectedEndDate.value!,
+        pricePeriod: hireEffectivePricePeriod(service.pricePeriod),
+      );
+    }
+  }
 }
+
+/// True when hire dates are set, pass validation, and billing units are known.
+bool isHirePeriodReady({
+  required String? errorText,
+  required int? billingUnits,
+}) =>
+    errorText == null && billingUnits != null;
 
 /// Calendar date only (ignores clock), for stable day comparisons.
 DateTime hireCalendarDate(DateTime date) =>
@@ -44,10 +65,50 @@ int hireInclusiveDays(DateTime start, DateTime end) {
   return e.difference(s).inDays + 1;
 }
 
+/// Hire listings without [pricePeriod] are billed weekly.
+const String hireDefaultPricePeriod = 'week';
+
+/// Canonical period key: `hour`, `day`, `week`, `month`, or `year`.
+String hireEffectivePricePeriod(String? pricePeriod) {
+  switch (_normalizePricePeriod(pricePeriod)) {
+    case _HirePricePeriod.hour:
+      return 'hour';
+    case _HirePricePeriod.day:
+      return 'day';
+    case _HirePricePeriod.week:
+      return 'week';
+    case _HirePricePeriod.month:
+      return 'month';
+    case _HirePricePeriod.year:
+      return 'year';
+    case _HirePricePeriod.unknown:
+      return hireDefaultPricePeriod;
+  }
+}
+
+/// UI label for billing chips (e.g. `weekly`, `daily`).
+String hireBillingPeriodLabel(String? pricePeriod) {
+  switch (hireEffectivePricePeriod(pricePeriod)) {
+    case 'hour':
+      return 'hourly';
+    case 'day':
+      return 'daily';
+    case 'week':
+      return 'weekly';
+    case 'month':
+      return 'monthly';
+    case 'year':
+      return 'yearly';
+    default:
+      return 'weekly';
+  }
+}
+
 /// Billing units for a hire span from [service.pricePeriod].
 ///
 /// Rounds up partial periods (e.g. 8 days with `week` → 2 weeks).
-/// Returns `null` when [end] is before [start] or [pricePeriod] is unknown.
+/// Returns `null` when [end] is before [start].
+/// Missing or unknown [pricePeriod] defaults to weekly.
 ///
 /// Supports: `hour`, `day`, `week`, `month`, `year` (and `*ly` aliases).
 int? hirePeriodUnitCount({
@@ -70,7 +131,7 @@ int? hirePeriodUnitCount({
     case _HirePricePeriod.year:
       return _inclusiveYearUnits(_calendarDate(start), _calendarDate(end));
     case _HirePricePeriod.unknown:
-      return null;
+      return (days + 6) ~/ 7;
   }
 }
 
@@ -95,7 +156,7 @@ _HirePricePeriod _normalizePricePeriod(String? pricePeriod) {
     case 'yearly':
       return _HirePricePeriod.year;
     default:
-      return _HirePricePeriod.unknown;
+      return _HirePricePeriod.week;
   }
 }
 

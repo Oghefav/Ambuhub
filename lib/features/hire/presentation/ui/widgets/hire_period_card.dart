@@ -117,6 +117,7 @@ class HirePeriodCard extends StatelessWidget {
                 errorText,
                 selectedStartDate,
                 selectedEndDate,
+                billingUnits: billingUnits,
               ),
               style: TextStyle(
               fontSize: 11.sp,
@@ -138,6 +139,7 @@ class HirePeriodCard extends StatelessWidget {
                       errorText,
                       selectedStartDate,
                       selectedEndDate,
+                      billingUnits: billingUnits,
                     );
                   },
                   icon: Icon(LucideIcons.calendar, size: 15.sp),
@@ -169,6 +171,7 @@ class HirePeriodCard extends StatelessWidget {
                 errorText,
                 selectedStartDate,
                 selectedEndDate,
+                billingUnits: billingUnits,
               ),
               style: TextStyle(
               fontSize: 11.sp,
@@ -189,6 +192,7 @@ class HirePeriodCard extends StatelessWidget {
                       errorText,
                       selectedStartDate,
                       selectedEndDate,
+                      billingUnits: billingUnits,
                     );
                   },
                   icon: Icon(LucideIcons.calendar, size: 15.sp),
@@ -244,7 +248,7 @@ class HirePeriodCard extends StatelessWidget {
                 text1Widget: RichText(text: 
                  TextSpan(children: [
                   TextSpan(text: ' Billing units (${billingPeriod.toTitleCase()}):', style: textTheme.bodySmall?.copyWith(color: AppColours.hireForest, fontSize: 11.sp)),
-                  TextSpan(text: ' ${billingUnits.value ?? 'pricing period was not set'}', style: textTheme.titleSmall?.copyWith(color: AppColours.hirePurpleDeep, fontSize: 11.sp)),
+                  TextSpan(text: ' ${billingUnits.value ?? '—'}', style: textTheme.titleSmall?.copyWith(color: AppColours.hirePurpleDeep, fontSize: 11.sp)),
                   ]),
                 ),
                 color: Color.lerp(AppColours.hireCyanTeal, Colors.white, 0.8)!,

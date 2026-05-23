@@ -147,6 +147,8 @@ class CategoryInfoScreen extends HookWidget {
                             listingTypes: listingTypes,
                             searchController: searchController,
                             depts: depts,
+                            deptValue: deptValue.value,
+                            listingTypeValue: listingTypeValue.value,
                             onChangeDept: (value) => deptValue.value = value!,
                             onChangeListingType: (value) =>
                                 listingTypeValue.value = value!,

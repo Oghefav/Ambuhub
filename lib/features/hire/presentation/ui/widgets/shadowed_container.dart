@@ -30,6 +30,14 @@ class ShadowedContainer extends StatelessWidget {
     final topColors = topGradientColors ?? [AppColours.white, AppColours.white];
     final bodyColors =
         bodyGradientColors ?? [AppColours.white, AppColours.white];
+    final resolvedBodyStops =
+        bodyStops != null && bodyStops!.length == bodyColors.length
+            ? bodyStops
+            : null;
+    final resolvedTopStops =
+        topStops != null && topStops!.length == topColors.length
+            ? topStops
+            : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -40,7 +48,7 @@ class ShadowedContainer extends StatelessWidget {
           colors: bodyColors,
           begin: begin ?? Alignment.topCenter,
           end: end ?? Alignment.bottomCenter,
-          stops: bodyStops,
+          stops: resolvedBodyStops,
         ),
         boxShadow: [BoxShadow(color: shadowColor, blurRadius: 10.r)],
       ),
@@ -60,7 +68,7 @@ class ShadowedContainer extends StatelessWidget {
                       colors: topColors,
                       begin: begin ?? Alignment.centerLeft,
                       end: end ?? Alignment.centerRight,
-                      stops: topStops,
+                      stops: resolvedTopStops,
                     ),
                   ),
                 ),

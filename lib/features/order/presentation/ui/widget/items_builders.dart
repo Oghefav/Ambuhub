@@ -1,31 +1,15 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/core/utililty/locale_display_utils.dart';
+import 'package:ambuhub/features/order/core/util/order_line_format.dart';
 import 'package:ambuhub/features/order/domain/entities/order_line_entity.dart';
+import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-/// Sale: `2 × ₦50,000`. Hire/book: adds billable units and pricing period.
-String formatOrderLineQuantityDetail(OrderLineEntity item) {
-  final base = '${item.quantity} × ${formatCurrency(item.unitPriceNgn)}';
-  final listingType = item.lineKind.toLowerCase();
-
-  if (listingType == 'sale') return base;
-
-  if (listingType == 'hire' || listingType == 'book') {
-    final units = item.hireBillableUnits;
-    final period = item.pricingPeriod?.trim();
-    if (units != null && period != null && period.isNotEmpty) {
-      return '$base × $units $period';
-    }
-    if (units != null) return '$base × $units';
-    if (period != null && period.isNotEmpty) return '$base × $period';
-  }
-
-  return base;
-}
 
 class ItemsBuilders extends StatelessWidget {
   final List<OrderLineEntity> items;
@@ -89,11 +73,11 @@ class ItemsBuilders extends StatelessWidget {
                       width: 170.w,
                        child: Text(
                         maxLines: 2,
-                                           item.title.toTitleCase(),
-                                           overflow: TextOverflow.ellipsis,
-                                           style: textTheme.titleSmall?.copyWith(
-                                           fontSize: 12.sp),
-                                         ),
+                          item.title.toTitleCase(),
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.titleSmall?.copyWith(
+                          fontSize: 12.sp),
+                        ),
                      ),
                   SizedBox(
                     width: 170.w,
@@ -130,30 +114,43 @@ class ItemsBuilders extends StatelessWidget {
               ),
             ),
           ),
-          Text('Leave a review', style: textTheme.titleSmall!.copyWith(
-            color: AppColours.darkVividTeal,
-            fontSize: 12.sp),)
+          GestureDetector(
+            onTap: () {
+             context.read<NavigationCubit>().setPage('reviews');
+             Navigator.pushReplacementNamed(context, AppRoutes.reviewsScreen);
+            },
+            child: Text('Leave a review', style: textTheme.titleSmall!.copyWith(
+              color: AppColours.darkVividTeal,
+              fontSize: 12.sp),),
+          )
         ],
       ),
     );
   }
 
   Widget _lineImage(OrderLineEntity item) {
-    final url = item.imageUrls?.first;
+    final url = item.primaryImageUrl;
+    final size = Size(72.w, 72.h);
     if (url == null) {
       return SizedBox(
-        width: 72.w,
-        height: 72.h,
+        width: size.width,
+        height: size.height,
         child: const Icon(Icons.image_not_supported_outlined),
       );
     }
-    return CachedNetworkImage(
-      imageUrl: url,
-      width: 72.w,
-      height: 72.h,
-      fit: BoxFit.cover,
-      progressIndicatorBuilder: (_, __, ___) =>
-          const Center(child: CupertinoActivityIndicator()),
+    return SizedBox(
+      width: size.width,
+      height: size.height,
+      child: CachedNetworkImage(
+        imageUrl: url,
+        width: size.width,
+        height: size.height,
+        fit: BoxFit.cover,
+        progressIndicatorBuilder: (_, __, ___) =>
+            const Center(child: CupertinoActivityIndicator()),
+        errorWidget: (_, __, ___) =>
+            const Icon(Icons.broken_image_outlined),
+      ),
     );
   }
 }

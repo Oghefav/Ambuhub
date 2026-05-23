@@ -3,6 +3,7 @@ import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/features/auth/domain/entities/login_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
+import 'package:ambuhub/features/auth/data/utils/auth_role_utils.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/navigation_text.dart';
@@ -30,7 +31,7 @@ class LoginFormCard extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          if (state.data.role == 'service_provider') {
+          if (isServiceProviderRole(state.data.role)) {
             Navigator.pushNamedAndRemoveUntil(context, AppRoutes.providerDashBoardScreen, (route) => false);
           } else {
             Navigator.pushNamedAndRemoveUntil(context, AppRoutes.clientDashBoardScreen, (route) => false);

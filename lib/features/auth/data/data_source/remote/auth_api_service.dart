@@ -16,4 +16,12 @@ class AuthApiService {
   Future<Response<dynamic>> resetPassword(Map<String, dynamic> data) {
     return _dio.post('/auth/forgot-password', data: data);
   }
+
+  Future<Response<dynamic>> updateProfile(Map<String, dynamic> data) {
+    return _dio.patch('/auth/me', data: data);
+  }
+
+  Future<Response<dynamic>> changePassword(Map<String, dynamic> data) {
+    return _dio.post('/auth/change-password', data: data);
+  }
 }

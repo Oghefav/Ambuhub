@@ -18,7 +18,29 @@ class AuthLoading extends AuthState {
 }
 
 class AuthSuccess extends AuthState {
-  const AuthSuccess({required super.data});
+  final String? profileError;
+  final String? passwordError;
+  final bool isProfileUpdating;
+  final bool isPasswordUpdating;
+
+  const AuthSuccess({
+    required super.data,
+    super.error,
+    this.profileError,
+    this.passwordError,
+    this.isProfileUpdating = false,
+    this.isPasswordUpdating = false,
+  });
+
+  @override
+  List<Object?> get props => [
+        data,
+        error,
+        profileError,
+        passwordError,
+        isProfileUpdating,
+        isPasswordUpdating,
+      ];
 }
 
 class AuthFailed extends AuthState {

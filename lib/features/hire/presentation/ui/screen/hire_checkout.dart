@@ -35,15 +35,13 @@ class HireCheckoutScreen extends HookWidget {
       text: selectedEndDate.value?.toString().split(' ')[0] ?? '',
     );
     useEffect(() {
-      final start = selectedStartDate.value;
-      final end = selectedEndDate.value;
-      if (start != null && end != null) {
-        billingUnits.value = hirePeriodUnitCount(
-          start: start,
-          end: end,
-          pricePeriod: service.pricePeriod,
-        );
-      }
+      hireOnChange(
+        service,
+        errorText,
+        selectedStartDate,
+        selectedEndDate,
+        billingUnits: billingUnits,
+      );
       return null;
     }, [selectedStartDate.value, selectedEndDate.value]);
     final textTheme = Theme.of(context).textTheme;

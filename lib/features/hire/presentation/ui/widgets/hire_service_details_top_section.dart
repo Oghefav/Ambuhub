@@ -1,6 +1,7 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/features/hire/presentation/ui/widgets/hire_text_gradient_container.dart';
+import 'package:ambuhub/features/hire/presentation/ui/widgets/utils.dart';
 import 'package:ambuhub/features/hire/presentation/ui/widgets/icon_container.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -99,7 +100,7 @@ class HireServiceDetailsTopSection extends StatelessWidget {
           children: [
            HireTextGradientContainer(
           text1: formatCurrency(service.price),
-          text2: ' per ${service.pricePeriod ?? 'week'}',
+          text2: ' per ${hireEffectivePricePeriod(service.pricePeriod)}',
           textColor: AppColours.white,
         ),
         HireTextGradientContainer(

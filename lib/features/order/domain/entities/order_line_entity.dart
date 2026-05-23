@@ -38,6 +38,17 @@ class OrderLineEntity extends Equatable {
 
   bool get isHire => lineKind.toLowerCase() == 'hire';
 
+  /// First non-empty URL from [imageUrls], if any.
+  String? get primaryImageUrl {
+    final urls = imageUrls;
+    if (urls == null || urls.isEmpty) return null;
+    for (final url in urls) {
+      final trimmed = url.trim();
+      if (trimmed.isNotEmpty) return trimmed;
+    }
+    return null;
+  }
+
   @override
   List<Object?> get props => [
         serviceId,

@@ -1,5 +1,8 @@
 import 'package:ambuhub/core/widgets/client_app_scaffold.dart';
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/features/auth/domain/entities/client.dart';
+import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
 import 'package:ambuhub/features/client_dashboard/presentation/ui/widgets/category_card.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_event.dart';
@@ -67,7 +70,7 @@ class ClientDashBoardScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello there!',
+                            _dashboardGreeting(context),
                             style: textTheme.titleMedium!.copyWith(
                               color: AppColours.vividTeal,
                             ),
@@ -187,4 +190,17 @@ List<Widget> _buildCategoryCards({
   }
 
   return cards;
+}
+
+String _dashboardGreeting(BuildContext context) {
+  final authState = context.watch<AuthBloc>().state;
+  if (authState is AuthSuccess && authState.data is ClientEntity) {
+    final client = authState.data as ClientEntity;
+    final firstName = client.firstName.trim();
+    final lastName = client.lastName.trim();
+    if (firstName.isNotEmpty && lastName.isNotEmpty) {
+      return 'Hello, $firstName $lastName';
+    }
+  }
+  return 'Hello, there';
 }

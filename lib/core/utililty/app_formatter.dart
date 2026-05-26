@@ -18,7 +18,16 @@ import 'package:intl/intl.dart';
   }
 
 
+/// Uppercases only the first character; leaves the rest of [text] unchanged.
+String capitalizeFirstLetter(String text) {
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1);
+}
+
 extension StringExtensions on String {
+  /// Uppercases only the first character; leaves the rest unchanged.
+  String capitalizeFirst() => capitalizeFirstLetter(this);
+
   String toTitleCase() {
     if (isEmpty) return this;
 

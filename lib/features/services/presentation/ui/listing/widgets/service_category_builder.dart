@@ -1,3 +1,4 @@
+import 'package:ambuhub/core/utililty/app_formatter.dart';
 import 'package:ambuhub/core/widgets/dotted_border_container.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/presentation/ui/listing/widgets/service_container.dart';
@@ -13,22 +14,30 @@ class ServiceCategoryBuilder extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedCategory = useState<String>('all');
-    final filteredServices = useState<List<ServiceEntity>>(services);
 
-    useEffect(() {
-      if (selectedCategory.value == 'all') {
-        filteredServices.value = services;
-      } else {
-        filteredServices.value = services
+    final categoryNames = useMemoized(
+      () {
+        final names = services.map((s) => s.serviceCategory.trim()).toSet();
+        final sorted = names.toList()..sort();
+        return sorted;
+      },
+      [services],
+    );
+
+    final filteredServices = useMemoized(
+      () {
+        if (selectedCategory.value == 'all') return services;
+        final key = selectedCategory.value.toLowerCase();
+        return services
             .where(
               (service) =>
-                  service.serviceCategory.toLowerCase() ==
-                  selectedCategory.value.toLowerCase(),
+                  service.serviceCategory.trim().toLowerCase() == key,
             )
             .toList();
-      }
-      return null;
-    }, [selectedCategory.value]);
+      },
+      [services, selectedCategory.value],
+    );
+
     return SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(
@@ -51,25 +60,12 @@ class ServiceCategoryBuilder extends HookWidget {
                           value: 'all',
                           selectedCategory: selectedCategory,
                         ),
-                        CategoryTab(
-                          label: 'Medical Transport',
-                          value: 'medical transport',
-                          selectedCategory: selectedCategory,
-                        ),
-                        CategoryTab(
-                          label: 'Ambulance Personnel',
-                          value: 'ambulance personnel',
-                          selectedCategory: selectedCategory,
-                        ),
-                        CategoryTab(
-                          label: 'Ambulance Servicing',
-                          value: 'ambulance servicing',
-                          selectedCategory: selectedCategory,
-                        ),
-                        CategoryTab(
-                          label: 'Ambulance Equipment',
-                          value: 'ambulance equipment',
-                          selectedCategory: selectedCategory,
+                        ...categoryNames.map(
+                          (name) => CategoryTab(
+                            label: name.capitalizeFirst(),
+                            value: name.toLowerCase(),
+                            selectedCategory: selectedCategory,
+                          ),
                         ),
                       ],
                     ),
@@ -80,13 +76,13 @@ class ServiceCategoryBuilder extends HookWidget {
             ],
           ),
         ),
-        if (filteredServices.value.isNotEmpty)
+        if (filteredServices.isNotEmpty)
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) => ServiceContainer(
-                serviceEntity: filteredServices.value[index],
+                serviceEntity: filteredServices[index],
               ),
-              childCount: filteredServices.value.length,
+              childCount: filteredServices.length,
             ),
           )
         else

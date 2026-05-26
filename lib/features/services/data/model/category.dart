@@ -14,9 +14,11 @@ class ServiceCategoryModel extends ServiceCategoryEntity {
 
   factory ServiceCategoryModel.fromJson(Map<String, dynamic> json) {
     return ServiceCategoryModel(
-      id: json['id'],
-      name: json['name'],
-      slug: json['slug'],
+      id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
+      name: (json['name'] ?? json['categoryName'] ?? json['title'] ?? '')
+          .toString()
+          .trim(),
+      slug: (json['slug'] ?? json['categorySlug'] ?? '').toString(),
       departments: (json['departments'] as List? ?? [])
           .map((e) => ServiceDeptModel.fromJson(e))
           .toList(),

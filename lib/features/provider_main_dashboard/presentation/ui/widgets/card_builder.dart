@@ -12,12 +12,14 @@ class CardBuilder extends StatelessWidget {
   final int cardNumber;
   final int? numberValue;
   final bool isWalletBalance;
+  final bool isWalletLoading;
   const CardBuilder({
     super.key,
     required this.firstText,
     required this.secondText,
     this.secondTextFontSize,
     this.isWalletBalance = false,
+    this.isWalletLoading = false,
     this.numberValue,
     this.amountValue,
     required this.cardNumber,
@@ -110,8 +112,13 @@ class CardBuilder extends StatelessWidget {
                     ),
                     SizedBox(width: 10.w),
                     Text(
-                      formatCurrency(amountValue),
-                      style: textTheme.titleLarge!.copyWith(color: AppColours.white),
+                      isWalletLoading
+                          ? 'Loading wallet...'
+                          : formatCurrency(amountValue ?? 0),
+                      style: textTheme.titleLarge!.copyWith(
+                        color: AppColours.white,
+                        fontSize: isWalletLoading ? 16.sp : null,
+                      ),
                     ),
                   ],
                 )

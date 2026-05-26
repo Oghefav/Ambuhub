@@ -130,6 +130,32 @@ String _formatPlaceLabel(String value) {
       .join(' ');
 }
 
+/// Relative label from [dateTime] to now, e.g. `6h ago`, `2d ago`.
+String formatTimeAgo(
+  DateTime dateTime, {
+  DateTime? now,
+  bool toLocal = true,
+}) {
+  final reference = now ?? DateTime.now();
+  final dt = toLocal ? dateTime.toLocal() : dateTime;
+  final diff = reference.difference(dt);
+  if (diff.isNegative) return 'Just now';
+  if (diff.inMinutes < 1) return 'Just now';
+  if (diff.inHours < 1) return '${diff.inMinutes}m ago';
+  if (diff.inHours < 24) return '${diff.inHours}h ago';
+  if (diff.inDays < 7) return '${diff.inDays}d ago';
+  return formatDateTimeShort(dt, toLocal: false);
+}
+
+/// Normalizes [code] to uppercase ISO 3166-1 alpha-2 (e.g. `ng` → `NG`).
+/// Returns null when [code] is empty or not two letters.
+String? normalizeIso3166Alpha2(String? code) {
+  if (code == null) return null;
+  final upper = code.trim().toUpperCase();
+  if (!RegExp(r'^[A-Z]{2}$').hasMatch(upper)) return null;
+  return upper;
+}
+
 /// Resolves ISO 3166-1 alpha-2 [code] (e.g. `"NG"`) to the picker’s display name.
 /// Returns null if [code] is empty or unknown.
 String? countryCodeToCountryName(String? code) {

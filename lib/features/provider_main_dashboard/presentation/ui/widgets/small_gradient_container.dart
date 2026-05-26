@@ -5,11 +5,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SmallGradientContainer extends StatelessWidget {
   final IconData iconData;
   final String title;
-  const SmallGradientContainer({super.key, required this.iconData, required this.title});
+  final VoidCallback? onTap;
+
+  const SmallGradientContainer({
+    super.key,
+    required this.iconData,
+    required this.title,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final child = Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: 
         [AppColours.vividBlue, AppColours.veryLightBlue],
@@ -26,6 +33,15 @@ class SmallGradientContainer extends StatelessWidget {
         Text(title, style: Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColours.white),),
       ],)
       ),
+    );
+
+    if (onTap == null) {
+      return child;
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: child,
     );
   }
 }

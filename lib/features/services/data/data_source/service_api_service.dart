@@ -46,4 +46,18 @@ class ServiceApiService {
   Future<Response<dynamic>> updateService(Map<String, dynamic> data) {
     return _dio.put('/services/${data['id']}', data: data);
   }
+
+  Future<Response<dynamic>> updateServiceAvailability({
+    required String serviceId,
+    required bool isAvailable,
+  }) {
+    return _dio.patch(
+      '/services/$serviceId/availability',
+      data: {'isAvailable': isAvailable},
+    );
+  }
+
+  Future<Response<dynamic>> deleteService(String serviceId) {
+    return _dio.delete('/services/$serviceId');
+  }
 }

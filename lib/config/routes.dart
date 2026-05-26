@@ -11,7 +11,7 @@ import 'package:ambuhub/features/client_notification/presentation/ui/screen/cust
 import 'package:ambuhub/features/client_profile/presentation/ui/screen/client_profile_screen.dart';
 import 'package:ambuhub/features/favorite/presentation/ui/screen/favorite_screen.dart';
 import 'package:ambuhub/features/hire/presentation/ui/screen/hire_checkout.dart';
-import 'package:ambuhub/features/message/presentation/ui/screen/message_screen.dart';
+import 'package:ambuhub/features/provider_notifications/presentation/ui/screen/provider_notifications_screen.dart';
 import 'package:ambuhub/features/order/domain/entities/order_entity.dart';
 import 'package:ambuhub/features/order/presentation/ui/order_receipt_args.dart';
 import 'package:ambuhub/features/order/presentation/ui/screen/order_receipt.dart';
@@ -19,7 +19,7 @@ import 'package:ambuhub/features/order/presentation/ui/screen/order_screen.dart'
 import 'package:ambuhub/features/provider_main_dashboard/presentation/ui/screens/provider_dash_board_screen.dart';
 import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/onboarding_screen.dart';
 import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/splash_screen.dart';
-import 'package:ambuhub/features/provider_profile/presentation/ui/screen/profile_screen.dart';
+import 'package:ambuhub/features/provider_profile/presentation/ui/screen/provider_profile_screen.dart';
 import 'package:ambuhub/features/referral/presentation/ui/screen/referrak_screen.dart';
 import 'package:ambuhub/features/reviews/presentation/ui/screen/reviews_screen.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
@@ -47,7 +47,7 @@ class AppRoutes {
   static const providerDashBoardScreen = '/providerDashBoardScreen';
   static const bookingScreen = '/bookingScreen';
   static const availabilityScreen = '/availabilityScreen';
-  static const messageScreen = '/messageScreen';
+  static const providerNotificationsScreen = '/providerNotificationsScreen';
   static const providerProfileScreen = '/providerProfileScreen';
   static const clientProfileScreen = '/clientProfileScreen';
   static const settingScreen = '/settingScreen';
@@ -117,8 +117,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ListingsScreen());
       case settingScreen:
         return MaterialPageRoute(builder: (_) => const SettingScreen());
-      case messageScreen:
-        return MaterialPageRoute(builder: (_) => const MessageScreen());
+      case providerNotificationsScreen:
+        return MaterialPageRoute(
+          builder: (_) => const ProviderNotificationsScreen(),
+        );
       case availabilityScreen:
         return MaterialPageRoute(builder: (_) => const AvailabilityScreen());
       case bookingScreen:
@@ -137,7 +139,9 @@ class AppRoutes {
           builder: (_) => MarketplaceScreen(category: category),
         );
       case providerProfileScreen:
-        return MaterialPageRoute(builder: (_) => const ProviderProfileScreen());
+        return MaterialPageRoute(
+          builder: (_) => const ProviderProfileScreen(),
+        );
       case updateServiceScreen:
         final service = settings.arguments as ServiceEntity;
         return MaterialPageRoute(

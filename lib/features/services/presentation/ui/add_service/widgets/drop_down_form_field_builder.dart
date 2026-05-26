@@ -1,18 +1,19 @@
 import 'package:ambuhub/config/app_colour.dart';
+import 'package:ambuhub/features/services/presentation/ui/add_service/utils/add_service_form_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class DropDownFormFieldBuilder extends StatelessWidget {
   final String hintText;
   final List<String>? items;
-  final Function(String?) onChanged;
+  final ValueChanged<String?> onChanged;
   final String title;
   final String value;
   final String placeHolder;
   final String? initialValue;
   final bool isEnabled;
   final String? notEnabledhintText;
+
   const DropDownFormFieldBuilder({
     super.key,
     required this.value,
@@ -26,61 +27,53 @@ class DropDownFormFieldBuilder extends StatelessWidget {
     this.initialValue,
   });
 
+  String? get _resolvedValue {
+    if (!isEnabled) return null;
+    final selected = value.isNotEmpty ? value : (initialValue ?? '');
+    if (selected.isEmpty || selected == placeHolder) return null;
+    final menu = items ?? [];
+    if (menu.isEmpty || !menu.contains(selected)) return null;
+    return selected;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final hintStyle = AddServiceFormStyles.hint(textTheme);
+    final menuItems = items ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: textTheme.titleSmall!.copyWith(
-            fontWeight: FontWeight.w600,
-            fontSize: 13.sp,
-          ),
-        ),
-
+        Text(title, style: AddServiceFormStyles.label(textTheme)),
         SizedBox(height: 5.h),
         DropdownButtonFormField<String>(
-          initialValue: initialValue?.isEmpty ?? true ? null : initialValue!,
+          value: _resolvedValue,
           isExpanded: true,
           decoration: InputDecoration(
-            fillColor: (!isEnabled)
-                ? AppColours.veryLightVividTeal
-                : Colors.transparent,
-            hintText: (isEnabled) ? hintText : notEnabledhintText,
-            hintStyle: textTheme.bodySmall,
+            fillColor:
+                isEnabled ? Colors.transparent : AppColours.veryLightVividTeal,
+            hintText: isEnabled ? hintText : notEnabledhintText,
+            hintStyle: hintStyle,
           ),
-          style: textTheme.bodyLarge,
-          items: (isEnabled)
-              ? [
-                  DropdownMenuItem<String>(
-                    value: null,
-                    enabled: true,
-                    child: Text(
-                      placeHolder,
-                      style: textTheme.bodyLarge,
-                    ),
-                  ),
-                  ...items!.map((item) {
-                    return DropdownMenuItem(
+          style: hintStyle,
+          iconEnabledColor: AppColours.grey,
+          items: isEnabled && menuItems.isNotEmpty
+              ? menuItems
+                  .map(
+                    (item) => DropdownMenuItem<String>(
                       value: item,
                       child: Text(
                         item,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodyLarge,
+                        style: hintStyle,
                       ),
-                    );
-                  }),
-                ]
+                    ),
+                  )
+                  .toList()
               : null,
-          onChanged: (isEnabled) ? onChanged : null,
-          validator: isEnabled
-              ? FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                ])
-              : null,
+          onChanged: isEnabled ? onChanged : null,
         ),
       ],
     );

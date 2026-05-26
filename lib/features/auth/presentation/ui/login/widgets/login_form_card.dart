@@ -150,6 +150,7 @@ class LoginFormCard extends StatelessWidget {
   ) {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
+      print(passwordController.text.trim());
       BlocProvider.of<AuthBloc>(context).add(
         Login(
           loginParams: LoginParams(

@@ -6,6 +6,8 @@ import 'package:ambuhub/features/auth/data/model/login.dart';
 import 'package:ambuhub/features/auth/data/model/reset_password.dart';
 import 'package:ambuhub/features/auth/data/model/sign_up.dart';
 import 'package:ambuhub/features/auth/data/model/update_profile.dart';
+import 'package:ambuhub/features/auth/data/model/update_provider_profile.dart';
+import 'package:ambuhub/features/auth/domain/entities/update_provider_profile_params.dart';
 import 'package:ambuhub/features/auth/data/model/user.dart';
 import 'package:ambuhub/features/auth/data/utils/auth_role_utils.dart';
 import 'package:ambuhub/features/auth/domain/entities/change_password_params.dart';
@@ -168,15 +170,46 @@ class AuthRepoImplementation implements AuthRepository {
   }
 
   @override
-  Future<DataState<String>> changePassword(
-    ChangePasswordParams params,
+  Future<DataState<ServiceProviderEntity>> updateProviderProfile(
+    UpdateProviderProfileParams params,
   ) async {
+    final data = UpdateProviderProfileModel.fromParams(params);
+    try {
+      final httpResponse =
+          await _authApiService.updateProfile(data.toJson());
+
+      if (httpResponse.statusCode == 200) {
+        final Map<String, dynamic> responseData = httpResponse.data;
+        final userJson = responseData['user'] ?? responseData;
+        final user = ServiceProviderModel.fromJson(
+          userJson as Map<String, dynamic>,
+        );
+        return DataSuccess(data: user);
+      } else {
+        final dioException = DioException(
+          requestOptions: httpResponse.requestOptions,
+          error: httpResponse.statusMessage,
+          type: DioExceptionType.badResponse,
+        );
+        return DataFailed(
+          ErrorHandler.getErrorMessage(dioException),
+          error: dioException,
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
+  @override
+  Future<DataState<String>> changePassword(ChangePasswordParams params) async {
     final data = ChangePasswordModel.fromParams(params);
     try {
       final httpResponse = await _authApiService.changePassword(data.toJson());
 
       if (httpResponse.statusCode == 200) {
-        final message = httpResponse.data['message'] as String? ??
+        final message =
+            httpResponse.data['message'] as String? ??
             'Password updated successfully';
         return DataSuccess(data: message);
       } else {

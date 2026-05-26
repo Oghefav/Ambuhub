@@ -3,6 +3,7 @@ import 'package:ambuhub/features/auth/domain/entities/login_params.dart';
 import 'package:ambuhub/features/auth/domain/entities/reset_password_params.dart';
 import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ambuhub/features/auth/domain/entities/update_profile_params.dart';
+import 'package:ambuhub/features/auth/domain/entities/update_provider_profile_params.dart';
 
 abstract class AuthEvent {
   final LoginParams? loginParams;
@@ -10,6 +11,7 @@ abstract class AuthEvent {
   final ServiceProviderSignUpParams? serviceProviderSignUpParams;
   final ResetPasswordParams? resetPasswordParams;
   final UpdateProfileParams? updateProfileParams;
+  final UpdateProviderProfileParams? updateProviderProfileParams;
   final ChangePasswordParams? changePasswordParams;
 
   const AuthEvent({
@@ -18,6 +20,7 @@ abstract class AuthEvent {
     this.serviceProviderSignUpParams,
     this.resetPasswordParams,
     this.updateProfileParams,
+    this.updateProviderProfileParams,
     this.changePasswordParams,
   });
 }
@@ -44,6 +47,10 @@ class AuthReset extends AuthEvent {
 
 class UpdateProfile extends AuthEvent {
   const UpdateProfile({required super.updateProfileParams});
+}
+
+class UpdateProviderProfile extends AuthEvent {
+  const UpdateProviderProfile({required super.updateProviderProfileParams});
 }
 
 class ChangePassword extends AuthEvent {

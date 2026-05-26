@@ -1,7 +1,6 @@
 import 'package:ambuhub/core/resources/data_state.dart';
 import 'package:ambuhub/core/resources/error_handler.dart';
 import 'package:ambuhub/features/booking/domain/entities/booking_checkout_params.dart';
-import 'package:ambuhub/features/cart/domain/entities/cart_checkout_params.dart';
 import 'package:ambuhub/features/hire/domain/entities/hire_params.dart';
 import 'package:ambuhub/features/order/data/data_source/remote/order_api_service.dart';
 import 'package:ambuhub/features/order/data/model/order_model.dart';

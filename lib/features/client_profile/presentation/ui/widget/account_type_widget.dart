@@ -1,9 +1,6 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/features/auth/domain/entities/client.dart';
-import 'package:ambuhub/features/hire/presentation/ui/widgets/icon_non_gradient_container.dart';
-import 'package:ambuhub/features/services/presentation/ui/market_place/widgets/shadow_container_template.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AccountTypeWidget extends StatelessWidget {

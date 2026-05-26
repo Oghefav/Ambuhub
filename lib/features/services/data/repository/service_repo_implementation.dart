@@ -8,6 +8,7 @@ import 'package:ambuhub/features/services/data/model/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
 import 'package:ambuhub/features/services/domain/enitities/service_params.dart';
+import 'package:ambuhub/features/services/domain/enitities/update_service_availability_params.dart';
 import 'package:ambuhub/features/services/domain/repository/service_repo.dart';
 import 'package:dio/dio.dart';
 
@@ -250,6 +251,68 @@ class ServiceRepoImplementation implements ServiceRepo {
       }
     } catch (e) {
       return DataFailed("An unexpected error occurred: ${e.toString()}");
+    }
+  }
+
+  ServiceEntity _parseServiceResponse(dynamic raw) {
+    if (raw is Map<String, dynamic>) {
+      final nested = raw['service'];
+      if (nested is Map<String, dynamic>) {
+        return ServiceModel.fromJson(nested);
+      }
+      return ServiceModel.fromJson(raw);
+    }
+    throw const FormatException('Invalid service response');
+  }
+
+  @override
+  Future<DataState<ServiceEntity>> updateServiceAvailability(
+    UpdateServiceAvailabilityParams params,
+  ) async {
+    try {
+      final httpResponse = await _serviceApiService.updateServiceAvailability(
+        serviceId: params.serviceId,
+        isAvailable: params.isAvailable,
+      );
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        return DataSuccess(data: _parseServiceResponse(httpResponse.data));
+      }
+      final dioException = DioException(
+        requestOptions: httpResponse.requestOptions,
+        error: httpResponse.statusMessage,
+        type: DioExceptionType.badResponse,
+        response: httpResponse,
+      );
+      return DataFailed(
+        ErrorHandler.getErrorMessage(dioException),
+        error: dioException,
+      );
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
+    }
+  }
+
+  @override
+  Future<DataState<void>> deleteService(String serviceId) async {
+    try {
+      final httpResponse = await _serviceApiService.deleteService(serviceId);
+      if (httpResponse.statusCode == 200 ||
+          httpResponse.statusCode == 204 ||
+          httpResponse.statusCode == 202) {
+        return const DataSuccess(data: null);
+      }
+      final dioException = DioException(
+        requestOptions: httpResponse.requestOptions,
+        error: httpResponse.statusMessage,
+        type: DioExceptionType.badResponse,
+        response: httpResponse,
+      );
+      return DataFailed(
+        ErrorHandler.getErrorMessage(dioException),
+        error: dioException,
+      );
+    } on DioException catch (e) {
+      return DataFailed(ErrorHandler.getErrorMessage(e), error: e);
     }
   }
 }

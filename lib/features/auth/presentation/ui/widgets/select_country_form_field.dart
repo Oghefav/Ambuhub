@@ -12,6 +12,7 @@ class SelectCountryFormField extends StatelessWidget {
   final ValueNotifier<Country?> value;
   final Function(Country?) onChanged;
   final List<Country> countries;
+  final TextStyle? hintStyle;
 
   const SelectCountryFormField({
     super.key,
@@ -22,6 +23,7 @@ class SelectCountryFormField extends StatelessWidget {
     required this.value,
     required this.onChanged,
     required this.countries,
+    this.hintStyle,
   });
 
   @override
@@ -46,8 +48,8 @@ class SelectCountryFormField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
-              hint: Text(hintText),
-              style: textTheme.bodyMedium,
+              hint: Text(hintText, style: hintStyle ?? textTheme.bodySmall),
+              style: hintStyle ?? textTheme.bodySmall,
 
               // FIX 2: Use DropdownMenuItem2 (standard for this package)
               items: countries

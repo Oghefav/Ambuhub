@@ -63,6 +63,7 @@ dependencies:
   printing: ^5.14.3
   share_plus: ^13.1.0
   path_provider: ^2.1.5
+  country_state_city: ^0.1.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

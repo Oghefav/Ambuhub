@@ -175,6 +175,9 @@ class _NetworkPhoto extends StatelessWidget {
         fit: BoxFit.cover,
         progressIndicatorBuilder: (_, __, ___) =>
             const Center(child: CupertinoActivityIndicator()),
+        errorWidget: (_, __, ___) => const Center(
+          child: Icon(Icons.broken_image, color: Colors.grey),
+        ),
       ),
     );
   }

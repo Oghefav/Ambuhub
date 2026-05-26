@@ -49,6 +49,8 @@ class ServiceEntity extends Equatable {
   final WeeklyTimeWindowEntity? hireReturnWindow;
   final WeeklyTimeWindowEntity? bookingWindow;
   final int? bookingGapMinutes;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const ServiceEntity({
     required this.id,
@@ -69,6 +71,8 @@ class ServiceEntity extends Equatable {
     this.hireReturnWindow,
     this.bookingWindow,
     this.bookingGapMinutes,
+    this.createdAt,
+    this.updatedAt,
   });
 
   @override
@@ -91,5 +95,7 @@ class ServiceEntity extends Equatable {
         hireReturnWindow,
         bookingWindow,
         bookingGapMinutes,
+        createdAt,
+        updatedAt,
       ];
 }

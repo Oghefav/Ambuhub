@@ -62,7 +62,13 @@ class TextFieldBuilder extends HookWidget {
                   onTap: () {
                     Navigator.pushNamed(context, AppRoutes.resetPasswordScreen);
                   },
-                  child: Text('Forget password?', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColours.vividTeal, fontSize: 12.sp)),
+                  child: Text(
+                    'Forget password?',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColours.vividTeal,
+                      fontSize: 12.sp,
+                    ),
+                  ),
                 ),
             ],
           ),

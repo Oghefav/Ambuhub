@@ -10,6 +10,7 @@ class ShadowedContainer extends StatelessWidget {
   final List<double>? bodyStops;
   final List<double>? topStops;
   final Widget body;
+  final double? topHeight;
   final Color shadowColor;
   final Color borderColor;
   const ShadowedContainer({
@@ -23,6 +24,7 @@ class ShadowedContainer extends StatelessWidget {
     required this.body,
     required this.shadowColor,
     required this.borderColor,
+    this.topHeight,
   });
 
   @override
@@ -59,7 +61,7 @@ class ShadowedContainer extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  height: 8.h,
+                  height: topHeight ?? 8.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(10.r),

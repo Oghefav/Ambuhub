@@ -108,16 +108,16 @@ class ProviderDrawer extends StatelessWidget {
                     isSelected: selectedPage == 'availability',
                   ),
                   DrawerTileBuilder(
-                    iconData: LucideIcons.message_square,
+                    iconData: LucideIcons.bell,
                     onTap: () {
-                      provider.setPage('messages');
+                      provider.setPage('provider_notifications');
                       Navigator.pushReplacementNamed(
                         context,
-                        AppRoutes.messageScreen,
+                        AppRoutes.providerNotificationsScreen,
                       );
                     },
-                    title: 'Messages',
-                    isSelected: selectedPage == 'messages',
+                    title: 'Notifications',
+                    isSelected: selectedPage == 'provider_notifications',
                   ),
                   DrawerTileBuilder(
                     iconData: LucideIcons.building_2,

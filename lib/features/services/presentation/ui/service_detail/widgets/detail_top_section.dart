@@ -1,8 +1,10 @@
 import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_formatter.dart';
+import 'package:ambuhub/core/utililty/locale_display_utils.dart';
 import 'package:ambuhub/features/provider_main_dashboard/presentation/cubit/navigation_cubit.dart';
 import 'package:ambuhub/features/services/domain/enitities/service.dart';
+import 'package:ambuhub/features/services/presentation/ui/service_detail/widgets/delete_listing_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -10,6 +12,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailTopSection extends StatelessWidget {
   final ServiceEntity service;
+
+  static const Color _hiddenMarketplaceTextColor = Color(0xFFF8F1C6);
+
   const DetailTopSection({super.key, required this.service});
 
   @override
@@ -41,19 +46,22 @@ class DetailTopSection extends StatelessWidget {
                 SizedBox(height: 10.h),
                 _textContainer(context, service.dept),
 
-                if (service.listingType != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10.h),
-                      _textContainer(
-                        context,
-                        service.listingType!.toTitleCase(),
-                        fillColor: AppColours.oceanBlue,
-                        //  borderColor: Colors.grey.withAlpha(100),
-                      ),
-                    ],
+                if (service.listingType != null) ...[
+                  SizedBox(height: 10.h),
+                  _textContainer(
+                    context,
+                    service.listingType!.toTitleCase(),
+                    fillColor: AppColours.oceanBlue,
                   ),
+                ],
+                if (_isHiddenFromMarketplace(service)) ...[
+                  SizedBox(height: 10.h),
+                  _textContainer(
+                    context,
+                    'Hidden from marketplace',
+                    textColor: _hiddenMarketplaceTextColor,
+                  ),
+                ],
                 SizedBox(height: 10.h),
                 Text(
                   service.title.toTitleCase(),
@@ -64,39 +72,44 @@ class DetailTopSection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 15.h),
-                Row(
-                  children: [
-                    Icon(
-                      LucideIcons.calendar,
-                      color: AppColours.veryLightGrey,
-                      size: 15.sp,
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      'Created Apr 24, 2026',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                if (_createdLabel(service) != null) ...[
+                  Row(
+                    children: [
+                      Icon(
+                        LucideIcons.calendar,
                         color: AppColours.veryLightGrey,
+                        size: 12.sp,
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Row(
-                  children: [
-                    Icon(
-                      LucideIcons.calendar,
-                      color: AppColours.veryLightGrey,
-                      size: 15.sp,
-                    ),
-                    SizedBox(width: 5.w),
-                    Text(
-                      'Updated Apr 25, 2026',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      SizedBox(width: 5.w),
+                      Text(
+                        _createdLabel(service)!,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColours.veryLightGrey,
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                ],
+                if (_updatedLabel(service) != null)
+                  Row(
+                    children: [
+                      Icon(
+                        LucideIcons.calendar_clock,
                         color: AppColours.veryLightGrey,
+                        size: 12.sp,
                       ),
-                    ),
-                  ],
-                ),
+                      SizedBox(width: 5.w),
+                      Text(
+                        _updatedLabel(service)!,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColours.veryLightGrey,
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ],
+                  ),
                 SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,13 +130,17 @@ class DetailTopSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10.w),
-                    _buttonContainer(
-                      context,
-                      text: 'Delete',
-                      icon: LucideIcons.trash_2,
-                      borderColor: AppColours.mauve,
-                      backgroundColor: AppColours.darkPurple,
-                      foregroundColor: AppColours.white,
+                    GestureDetector(
+                      onTap: () =>
+                          DeleteListingDialog.show(context, service),
+                      child: _buttonContainer(
+                        context,
+                        text: 'Delete',
+                        icon: LucideIcons.trash_2,
+                        borderColor: AppColours.mauve,
+                        backgroundColor: AppColours.darkPurple,
+                        foregroundColor: AppColours.white,
+                      ),
                     ),
                   ],
                 ),
@@ -140,6 +157,7 @@ class DetailTopSection extends StatelessWidget {
     String text, {
     Color? borderColor,
     Color? fillColor,
+    Color? textColor,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
@@ -151,12 +169,18 @@ class DetailTopSection extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-          color: fillColor != null
-              ? AppColours.white
-              : AppColours.veryLightGrey,
+          fontSize: 10.sp,
+          color: textColor ??
+              (fillColor != null
+                  ? AppColours.white
+                  : AppColours.veryLightGrey),
         ),
       ),
     );
+  }
+
+  bool _isHiddenFromMarketplace(ServiceEntity service) {
+    return service.available != true;
   }
 
   Widget _buttonContainer(
@@ -182,7 +206,7 @@ class DetailTopSection extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 15.sp,
+                size: 13.sp,
                 color: foregroundColor ?? AppColours.penBlue,
               ),
               SizedBox(width: 5.w),
@@ -197,5 +221,17 @@ class DetailTopSection extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? _createdLabel(ServiceEntity service) {
+    final formatted = formatReviewDateOrNull(service.createdAt);
+    if (formatted == null) return null;
+    return 'Created $formatted';
+  }
+
+  String? _updatedLabel(ServiceEntity service) {
+    final formatted = formatReviewDateOrNull(service.updatedAt);
+    if (formatted == null) return null;
+    return 'Updated $formatted';
   }
 }

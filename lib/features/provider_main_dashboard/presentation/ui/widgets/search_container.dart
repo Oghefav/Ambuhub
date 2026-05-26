@@ -5,7 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchContainer extends StatelessWidget {
   final TextEditingController searchController;
-  const SearchContainer({super.key, required this.searchController});
+  final String hintText;
+
+  const SearchContainer({
+    super.key,
+    required this.searchController,
+    this.hintText = 'Search listings, notifications, and bookings...',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +19,8 @@ class SearchContainer extends StatelessWidget {
       color: AppColours.veryDarkBlue,
       elevation: 4,
       shadowColor: AppColours.penBlue,
-      
-      shape: RoundedRectangleBorder(   
-          borderRadius: BorderRadius.circular(15.r),
-      ),
+
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
       child: Padding(
         padding: EdgeInsets.all(12.r),
         child: Container(
@@ -32,10 +36,11 @@ class SearchContainer extends StatelessWidget {
             controller: searchController,
             decoration: InputDecoration(
               hintText: 'Search listings, messages, and bookings...',
-              hintStyle: Theme.of(
-                context,
-              ).textTheme.bodyMedium,
-              contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              hintStyle: Theme.of(context).textTheme.bodyMedium,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 5.h,
+              ),
               prefixIcon: Icon(
                 LucideIcons.search,
                 color: AppColours.grey,

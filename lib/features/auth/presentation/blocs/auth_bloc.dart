@@ -1,11 +1,13 @@
 import 'package:ambuhub/core/resources/data_state.dart';
 import 'package:ambuhub/features/auth/data/model/user.dart';
 import 'package:ambuhub/features/auth/domain/entities/client.dart';
+import 'package:ambuhub/features/auth/domain/entities/service_provider.dart';
 import 'package:ambuhub/features/auth/domain/usecases/change_password.dart';
 import 'package:ambuhub/features/auth/domain/usecases/login.dart';
 import 'package:ambuhub/features/auth/domain/usecases/reset_password.dart';
 import 'package:ambuhub/features/auth/domain/usecases/sign_up.dart';
 import 'package:ambuhub/features/auth/domain/usecases/update_profile.dart';
+import 'package:ambuhub/features/auth/domain/usecases/update_provider_profile.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ServiceProviderSignUpUsecase _serviceProviderSignUpUsecase;
   final ResetPasswordUsecase _resetPasswordUsecase;
   final UpdateProfileUsecase _updateProfileUsecase;
+  final UpdateProviderProfileUsecase _updateProviderProfileUsecase;
   final ChangePasswordUsecase _changePasswordUsecase;
 
   AuthBloc(
@@ -24,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._serviceProviderSignUpUsecase,
     this._resetPasswordUsecase,
     this._updateProfileUsecase,
+    this._updateProviderProfileUsecase,
     this._changePasswordUsecase,
   ) : super(const AuthInitial()) {
     on<Login>(_onLogin);
@@ -31,6 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ServiceProviderSignUp>(_onServiceProviderSignUp);
     on<ResetPassword>(_onResetPassword);
     on<UpdateProfile>(_onUpdateProfile);
+    on<UpdateProviderProfile>(_onUpdateProviderProfile);
     on<ChangePassword>(_onChangePassword);
     on<AuthReset>(_onAuthReset);
   }
@@ -39,6 +44,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final current = state;
     if (current is AuthSuccess && current.data is ClientEntity) {
       return current.data as ClientEntity;
+    }
+    return null;
+  }
+
+  ServiceProviderEntity? get _currentServiceProvider {
+    final current = state;
+    if (current is AuthSuccess && current.data is ServiceProviderEntity) {
+      return current.data as ServiceProviderEntity;
+    }
+    return null;
+  }
+
+  dynamic get _signedInUser {
+    final current = state;
+    if (current is AuthSuccess) {
+      return current.data;
     }
     return null;
   }
@@ -173,22 +194,74 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onChangePassword(
-    ChangePassword event,
+  Future<void> _onUpdateProviderProfile(
+    UpdateProviderProfile event,
     Emitter<AuthState> emit,
   ) async {
-    if (_isPasswordUpdating) return;
+    if (_isProfileUpdating) return;
 
-    final client = _currentClient;
-    final (previousProfileError, _) = _sectionErrorsFrom(state);
-    if (client == null) {
+    final previousProvider = _currentServiceProvider;
+    final (_, previousPasswordError) = _sectionErrorsFrom(state);
+    if (previousProvider == null) {
       emit(AuthFailed(error: 'Not signed in'));
       return;
     }
 
     emit(
       AuthSuccess(
-        data: client,
+        data: previousProvider,
+        isProfileUpdating: true,
+        isPasswordUpdating: _isPasswordUpdating,
+        passwordError: previousPasswordError,
+      ),
+    );
+
+    final dataState = await _updateProviderProfileUsecase(
+      params: event.updateProviderProfileParams,
+    );
+
+    if (dataState is DataSuccess) {
+      final parsed = dataState.data as ServiceProviderModel;
+      final params = event.updateProviderProfileParams!;
+      emit(
+        AuthSuccess(
+          data: parsed.mergedFromUpdate(
+            submitted: params,
+            previous: previousProvider,
+          ),
+          profileError: null,
+          passwordError: previousPasswordError,
+          isPasswordUpdating: _isPasswordUpdating,
+        ),
+      );
+    } else {
+      emit(
+        AuthSuccess(
+          data: previousProvider,
+          profileError: dataState.errorMessage,
+          passwordError: previousPasswordError,
+          isPasswordUpdating: _isPasswordUpdating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onChangePassword(
+    ChangePassword event,
+    Emitter<AuthState> emit,
+  ) async {
+    if (_isPasswordUpdating) return;
+
+    final user = _signedInUser;
+    final (previousProfileError, _) = _sectionErrorsFrom(state);
+    if (user == null) {
+      emit(AuthFailed(error: 'Not signed in'));
+      return;
+    }
+
+    emit(
+      AuthSuccess(
+        data: user,
         isPasswordUpdating: true,
         isProfileUpdating: _isProfileUpdating,
         profileError: previousProfileError,
@@ -202,7 +275,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (dataState is DataSuccess) {
       emit(
         AuthSuccess(
-          data: client,
+          data: user,
           profileError: previousProfileError,
           passwordError: null,
           isProfileUpdating: _isProfileUpdating,
@@ -211,7 +284,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(
         AuthSuccess(
-          data: client,
+          data: user,
           profileError: previousProfileError,
           passwordError: dataState.errorMessage,
           isProfileUpdating: _isProfileUpdating,

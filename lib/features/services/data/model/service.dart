@@ -22,12 +22,15 @@ class ServiceModel extends ServiceEntity {
     super.hireReturnWindow,
     super.bookingWindow,
     super.bookingGapMinutes,
+    super.createdAt,
+    super.updatedAt,
   });
 
   static Map<String, dynamic> toJson(
     ServiceParams serviceParams,
     List<String> photoUrls,
   ) {
+    final countryCode = normalizeIso3166Alpha2(serviceParams.country);
     return {
       'id': serviceParams.id,
       'title': serviceParams.title,
@@ -38,12 +41,22 @@ class ServiceModel extends ServiceEntity {
       'listingType': serviceParams.listingType?.toLowerCase(),
       'stock': serviceParams.stock,
       'price': serviceParams.price,
-      // 'pricePeriod': serviceParams.pricePeriod,
+      'pricePeriod': serviceParams.pricePeriod,
+      if (countryCode != null) 'countryCode': countryCode,
+      'stateProvince': serviceParams.stateProvince,
+      'stateProvinceName': serviceParams.stateProvinceName,
+      'officeAddress': serviceParams.officeAddress,
+      if (serviceParams.hireReturnWindow != null)
+        'hireReturnWindow': {
+          'daysOfWeek': serviceParams.hireReturnWindow!.daysOfWeek,
+          'timeStart': serviceParams.hireReturnWindow!.timeStart,
+          'timeEnd': serviceParams.hireReturnWindow!.timeEnd,
+        },
     };
   }
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
-    final countryRaw = json['country']?.toString().trim();
+    final countryRaw = (json['countryCode'] ?? json['country'])?.toString().trim();
     final countryDisplay = countryRaw == null || countryRaw.isEmpty
         ? null
         : (countryCodeToCountryName(countryRaw) ?? countryRaw);
@@ -57,14 +70,14 @@ class ServiceModel extends ServiceEntity {
           .toList(),
       serviceCategory: json['category']?['name'] ?? json['serviceCategoryId'],
       title: json['title'],
-      listingType: json['listingType'] ,
+      listingType: json['listingType'],
       stock: json['stock'],
       price: json['price'],
-      available: json['available'],
-      pricePeriod: json['pricePeriod'],
+      available: json['isAvailable'] ?? json['available'],
+      pricePeriod: json['pricePeriod'] ?? json['pricingPeriod'],
       country: countryDisplay,
       stateProvince: json['stateProvince'],
-      stateProvinceName: json['stateProvinceName'] ,
+      stateProvinceName: json['stateProvinceName'],
       officeAddress: json['officeAddress'],
       hireReturnWindow: json['hireReturnWindow'] != null
           ? WeeklyTimeWindowEntity.fromJson(
@@ -77,6 +90,8 @@ class ServiceModel extends ServiceEntity {
             )
           : null,
       bookingGapMinutes: (json['bookingGapMinutes'] as num?)?.toInt(),
+      createdAt: tryParseDateTime(json['createdAt']),
+      updatedAt: tryParseDateTime(json['updatedAt']),
     );
   }
 }

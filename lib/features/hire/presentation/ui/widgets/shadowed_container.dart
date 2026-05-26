@@ -32,14 +32,13 @@ class ShadowedContainer extends StatelessWidget {
     final topColors = topGradientColors ?? [AppColours.white, AppColours.white];
     final bodyColors =
         bodyGradientColors ?? [AppColours.white, AppColours.white];
-    final resolvedBodyStops =
-        bodyStops != null && bodyStops!.length == bodyColors.length
-            ? bodyStops
-            : null;
-    final resolvedTopStops =
-        topStops != null && topStops!.length == topColors.length
-            ? topStops
-            : null;
+    List<double>? resolvedStops(List<Color> colors, List<double>? stops) {
+      if (stops == null || stops.length != colors.length) return null;
+      return stops;
+    }
+
+    final resolvedBodyStops = resolvedStops(bodyColors, bodyStops);
+    final resolvedTopStops = resolvedStops(topColors, topStops);
 
     return Container(
       decoration: BoxDecoration(

@@ -14,15 +14,10 @@ class IconContainer extends StatelessWidget {
       height: isSelected ? 55 : 50,
       duration: const Duration(microseconds: 300),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(isSelected ? 10.r : 8.r),
-        gradient: const LinearGradient(
-          colors: [AppColours.veryDarkBlue, AppColours.blue],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
+        color: AppColours.primaryColor,
+        borderRadius: BorderRadius.circular(isSelected ? 10.r : 8.r),),
       child: Center(
-        child: Icon(icon, color: Colors.white, size: 25.sp),
+        child: Icon(icon, color: AppColours.white, size: 25.sp),
       ),
     );
     

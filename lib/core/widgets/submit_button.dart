@@ -17,7 +17,7 @@ class SubmitButton extends StatelessWidget {
   });
 
   static bool isLoadingLabel(String buttonText) {
-    return buttonText == 'Signing in' ||
+    return buttonText == 'Logging in' ||
         buttonText == 'Creating account' ||
         buttonText == 'Updating' ||
         buttonText == 'Saving';
@@ -28,8 +28,8 @@ class SubmitButton extends StatelessWidget {
     final button = ElevatedButton(
       onPressed: isLoadingLabel(buttonText) || onPressed == null ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColours.vividTeal,
-        disabledBackgroundColor: AppColours.vividTeal.withValues(alpha: 0.55),
+        backgroundColor: AppColours.primaryColor,
+        disabledBackgroundColor: AppColours.secondaryBlue,
         disabledForegroundColor: AppColours.white,
         foregroundColor: AppColours.white,
         elevation: 0,
@@ -43,7 +43,7 @@ class SubmitButton extends StatelessWidget {
         style: textStyle ??
             Theme.of(context)
                 .textTheme
-                .titleSmall!
+                .titleLarge!
                 .copyWith(color: AppColours.white),
       ),
     );

@@ -22,7 +22,7 @@ class RoleCard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
       margin: EdgeInsets.only(bottom: 15.h),
-      padding: EdgeInsetsGeometry.all(10.h),
+      padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
         border: Border.all(
           // width:isSelected? 0.5 : 1.0,
@@ -36,26 +36,28 @@ class RoleCard extends StatelessWidget {
             : AppColours.lighterTeal,
       ),
       child: Row(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 250.w,
+          IconContainer(isSelected: isSelected, icon: icon),
+          SizedBox(width: 10.w),
+          Expanded(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'I\'m a $role',
-                  maxLines: 3,
-                  style: textTheme.titleSmall,
+                  style: textTheme.titleMedium,
                 ),
-                SizedBox(height: 10.h),
                 Text(
                   roleDescription,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: textTheme.bodyMedium,
                 ),
               ],
             ),
           ),
-          IconContainer(isSelected: isSelected, icon: icon),
         ],
       ),
     );

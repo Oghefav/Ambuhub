@@ -1,83 +1,70 @@
 import 'package:ambuhub/config/app_colour.dart';
-import 'package:ambuhub/config/routes.dart';
-import 'package:ambuhub/features/services/domain/enitities/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingPageBuilder extends StatelessWidget {
-  final ServiceCategoryEntity category;
-  const OnboardingPageBuilder({super.key, required this.category});
+  final Widget title;
+  final Widget description;
+  final String image;
+  final Widget firstChip;
+  final Widget secondChip;
+  final Widget thirdChip;
 
-  String getImage(String categorySlug) {
-    switch (categorySlug) {
-      case final String slug when slug.contains('equipment'):
-        return 'assets/images/equipment.webp';
-      case final String slug when slug.contains('personnel'):
-        return 'assets/images/personnel.webp';
-      case final String slug when slug.contains('transport'):
-        return 'assets/images/transport.webp';
-      default:
-        return 'assets/images/servicing.webp';
-    }
-  }
+  const OnboardingPageBuilder({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.image,
+    required this.firstChip,
+    required this.secondChip,
+    required this.thirdChip,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColours.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.r),
-        side: const BorderSide(color: AppColours.veryLightVividTeal),
-      ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.r),
-              topRight: Radius.circular(10.r),
-            ),
-            child: AspectRatio(
-              aspectRatio: 3 / 4,
-              child: Image.asset(getImage(category.slug), fit: BoxFit.cover),
-            ),
-          ),
-          SizedBox(height: 15.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  category.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                SizedBox(height: 15.h),
-                Text(
-                  category.note,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-
-                SizedBox(height: 10.h),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.markerScreen,
-                      arguments: category,
-                    );
-                  },
-                  child: Text(
-                    'View services',
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColours.blue,
-                      fontSize: 12.sp,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15.w),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  title,
+                  SizedBox(height: 12.h),
+                 description,
+                  SizedBox(height: 15.h),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: AspectRatio(
+                      aspectRatio: 3 / 4,
+                      child: ColoredBox(
+                        color: AppColours.onboardingWhite,
+                        child: Image.asset(
+                          image,
+                          fit: BoxFit.contain,
+                          width: double.infinity,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 15.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        firstChip,
+                      secondChip,
+                      thirdChip,
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

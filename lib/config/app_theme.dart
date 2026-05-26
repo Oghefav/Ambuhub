@@ -6,9 +6,8 @@ class AppTheme {
   static ThemeData get themeData {
     return ThemeData(
       fontFamily: 'inter',
-
-      // TODO: Add page trasition theme.
-      scaffoldBackgroundColor: AppColours.verylightTeal,
+      canvasColor: AppColours.warmWhite,
+      scaffoldBackgroundColor: AppColours.white,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColours.veryDarkBlue,
         actionsIconTheme: IconThemeData(color: AppColours.white),
@@ -44,11 +43,11 @@ class AppTheme {
           color: AppColours.grey,
           fontWeight: FontWeight.w500,
         ),
-        titleSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 15.sp),
-        titleMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 18.sp),
-        titleLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 20.sp),
+        titleSmall: TextStyle(fontWeight: FontWeight.w700, fontSize: 8.sp),
+        titleMedium: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.sp),
+        titleLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp),
         bodySmall: TextStyle(
-          fontSize: 12.sp,
+          fontSize: 9.sp,
           color: AppColours.grey,
           fontWeight: FontWeight.w500,
         ),
@@ -61,11 +60,11 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColours.veryLightVividTeal),
+          borderSide: const BorderSide(color: AppColours.secondaryBlue),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColours.vividTeal),
+          borderSide: const BorderSide(color: AppColours.primaryColor),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -73,7 +72,7 @@ class AppTheme {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColours.veryLightVividTeal),),
+          borderSide: const BorderSide(color: AppColours.secondaryBlue),),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColours.vividOrange),

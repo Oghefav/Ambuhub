@@ -16,11 +16,16 @@ class RoleSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 25.h),
-          Text(
-            'How would you be using Ambuhub?',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          SizedBox(height: 25.h),
+            Text(
+              'How would you like to continue?',
+              style: Theme.of(context).textTheme.displayMedium,
+            ),
+            SizedBox(height: 25.h),
+            Text(
+              'Select your role that best describes you',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            SizedBox(height: 25.h),
           GestureDetector(
             onTap: () {
               roleSelected.value = 'patient';

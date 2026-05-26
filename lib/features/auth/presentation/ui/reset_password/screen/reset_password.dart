@@ -3,7 +3,7 @@ import 'package:ambuhub/core/utililty/app_route_observer.dart';
 import 'package:ambuhub/core/widgets/gradient_background.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
-import 'package:ambuhub/features/auth/presentation/ui/reset_password/widgets/reset_password_form_card.dart';
+import 'package:ambuhub/features/auth/presentation/ui/reset_password/widgets/reset_password_body.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/bottom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +38,7 @@ class ResetPasswordScreen extends HookWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ResetPasswordFormCard(
+                ResetPasswordBody(
                   confirmPasswordController: confirmPasswordController,
                   emailController: emailController,
                   passwordController: passwordController,

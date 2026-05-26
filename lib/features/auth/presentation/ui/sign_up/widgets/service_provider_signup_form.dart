@@ -3,7 +3,6 @@ import 'package:ambuhub/features/auth/domain/entities/sign_up_params.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_event.dart';
 import 'package:ambuhub/features/auth/presentation/blocs/auth_state.dart';
-import 'package:ambuhub/features/auth/presentation/ui/role/widget/top_section.dart';
 import 'package:ambuhub/features/auth/presentation/ui/widgets/error_message_container.dart';
 import 'package:ambuhub/core/widgets/submit_button.dart';
 import 'package:ambuhub/core/widgets/text_field_builder.dart';
@@ -15,10 +14,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class ServiceProviderSignupFormCard extends HookWidget {
+class ServiceProviderSignupBody extends HookWidget {
   final String role;
   final _formKey = GlobalKey<FormState>();
-  ServiceProviderSignupFormCard({super.key, required this.role});
+  ServiceProviderSignupBody({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +45,9 @@ class ServiceProviderSignupFormCard extends HookWidget {
       },
       builder: (context, state) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TopSection(),
+            IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
               child: Column(

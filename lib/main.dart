@@ -1,3 +1,4 @@
+import 'package:ambuhub/config/app_colour.dart';
 import 'package:ambuhub/config/app_theme.dart';
 import 'package:ambuhub/config/routes.dart';
 import 'package:ambuhub/core/utililty/app_route_observer.dart';
@@ -30,60 +31,47 @@ import 'package:ambuhub/features/services/presentation/bloc/get_service_categori
 import 'package:ambuhub/features/services/presentation/bloc/get_service_categories/get_service_category_event.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service/update_service_bloc.dart';
 import 'package:ambuhub/features/services/presentation/bloc/update_service_availability/update_service_availability_bloc.dart';
+import 'package:ambuhub/features/onboarding/presentation/ui/onboarding/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'dart:async';
 
 // TODO 1: and number if needed
 // TODO 1: make dashboard persistis use token is token is the active kjkjk;
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('en');
-  await dependeciesInjection();
-  runApp(const MyApp());
+  runApp(const BootstrapApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+/// Shows the animated splash immediately while DI runs in the background.
+class BootstrapApp extends StatefulWidget {
+  const BootstrapApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<BootstrapApp> createState() => _BootstrapAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  bool _precached = false;
+class _BootstrapAppState extends State<BootstrapApp> {
+  bool _diReady = false;
+  bool _splashAnimDone = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    unawaited(
+      dependeciesInjection().whenComplete(() {
+        if (mounted) setState(() => _diReady = true);
+      }),
+    );
+  }
 
-    if (!_precached) {
-      _precached = true;
-      Future.wait([
-        precacheImage(const AssetImage('assets/images/logo.png'), context),
-        precacheImage(
-          const AssetImage('assets/images/equipment.webp'),
-          context,
-        ),
-        precacheImage(
-          const AssetImage('assets/images/personnel.webp'),
-          context,
-        ),
-        precacheImage(
-          const AssetImage('assets/images/transport.webp'),
-          context,
-        ),
-        precacheImage(
-          const AssetImage('assets/images/servicing.webp'),
-          context,
-        ),
-      ]).then((value) {
-        FlutterNativeSplash.remove();
-      });
-    }
+  bool get _ready => _diReady && _splashAnimDone;
+
+  void _onSplashAnimationComplete() {
+    if (mounted) setState(() => _splashAnimDone = true);
   }
 
   @override
@@ -93,7 +81,36 @@ class _MyAppState extends State<MyApp> {
       splitScreenMode: true,
       designSize: const Size(360, 800),
       ensureScreenSize: true,
-      builder: (context, child) => MultiBlocProvider(
+      builder: (context, child) {
+        if (_ready) {
+          return const MyApp(skipSplash: true);
+        }
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.themeData.copyWith(
+            scaffoldBackgroundColor: const Color(0xFF0244AD),
+          ),
+          home: SplashScreen(onAnimationComplete: _onSplashAnimationComplete),
+        );
+      },
+    );
+  }
+}
+
+class MyApp extends StatefulWidget {
+  /// When true, opens onboarding directly (splash already shown in [BootstrapApp]).
+  final bool skipSplash;
+
+  const MyApp({super.key, this.skipSplash = false});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(create: ((context) => sl<AuthBloc>())),
           BlocProvider<NavigationCubit>(
@@ -106,8 +123,7 @@ class _MyAppState extends State<MyApp> {
             create: ((context) => sl<AddServiceBloc>()),
           ),
           BlocProvider<GetMarketplaceServicesBloc>(
-            create: ((context) =>
-                sl<GetMarketplaceServicesBloc>())
+            create: ((context) => sl<GetMarketplaceServicesBloc>()),
           ),
           BlocProvider<UpdateServiceBloc>(
             create: ((context) => sl<UpdateServiceBloc>()),
@@ -119,15 +135,19 @@ class _MyAppState extends State<MyApp> {
             create: (_) =>
                 ConnectivityBloc()..add(ConnectivityStartMonitoring()),
           ),
-          BlocProvider<CartBloc>(create: ((context) => sl<CartBloc>()..add( const GetCart()))),
-          BlocProvider<FavoriteBloc>(
-            create: ((context) => sl<FavoriteBloc>()),
+          BlocProvider<CartBloc>(
+            create: ((context) => sl<CartBloc>()..add(const GetCart())),
           ),
-          BlocProvider<OrderBloc>(create: ((context) => sl<OrderBloc>()..add(const GetOrders())),),
-          BlocProvider<ReviewBloc>(
-            create: ((context) => sl<ReviewBloc>()),
+          BlocProvider<FavoriteBloc>(create: ((context) => sl<FavoriteBloc>())),
+          BlocProvider<OrderBloc>(
+            create: ((context) => sl<OrderBloc>()..add(const GetOrders())),
           ),
-          BlocProvider<GetServiceCategoriesBloc>(create: ((context) => sl<GetServiceCategoriesBloc>()..add(const GetServiceCategories()))),
+          BlocProvider<ReviewBloc>(create: ((context) => sl<ReviewBloc>())),
+          BlocProvider<GetServiceCategoriesBloc>(
+            create: ((context) =>
+                sl<GetServiceCategoriesBloc>()
+                  ..add(const GetServiceCategories())),
+          ),
           BlocProvider<ClientNotificationsBloc>(
             create: ((context) => sl<ClientNotificationsBloc>()),
           ),
@@ -156,32 +176,37 @@ class _MyAppState extends State<MyApp> {
                   ..add(const GetProviderNotifications())
                   ..add(const GetProviderUnreadNotificationCount());
                 context.read<ProviderDashboardBloc>().add(
-                      const LoadProviderDashboard(),
-                    );
+                  const LoadProviderDashboard(),
+                );
               }
             } else if (state is AuthInitial) {
               favorites.add(const FavoriteReset());
               reviews.add(const ReviewReset());
               context.read<ClientNotificationsBloc>().add(
-                    const ClientNotificationsReset(),
-                  );
+                const ClientNotificationsReset(),
+              );
               context.read<ProviderNotificationsBloc>().add(
-                    const ProviderNotificationsReset(),
-                  );
+                const ProviderNotificationsReset(),
+              );
               context.read<ProviderDashboardBloc>().add(
-                    const ProviderDashboardReset(),
-                  );
+                const ProviderDashboardReset(),
+              );
             }
           },
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: AppTheme.themeData,
-            initialRoute: AppRoutes.splashScreen,
+            initialRoute: widget.skipSplash
+                ? AppRoutes.onboardingScreen
+                : AppRoutes.splashScreen,
             onGenerateRoute: AppRoutes.onGenerateRoute,
             navigatorObservers: [appRouteObserver],
+            builder: (context, child) => ColoredBox(
+              color: AppColours.verylightTeal,
+              child: child ?? const SizedBox.shrink(),
+            ),
           ),
         ),
-      ),
     );
   }
 }

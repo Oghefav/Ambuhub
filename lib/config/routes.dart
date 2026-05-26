@@ -70,6 +70,35 @@ class AppRoutes {
   static const hireCheckoutScreen = '/hireCheckoutScreen';
   static const orderReceiptScreen = '/orderReceiptScreen';
 
+  /// Fade into onboarding so the splash route stays visible underneath
+  /// until the transition finishes (avoids a black frame).
+  static Route<void> onboardingRoute() {
+    return fadeRoute<void>(
+      const OnboardingScreen(),
+      settings: const RouteSettings(name: onboardingScreen),
+    );
+  }
+
+  static Route<T> fadeRoute<T>(
+    Widget page, {
+    RouteSettings? settings,
+    Duration duration = const Duration(milliseconds: 400),
+  }) {
+    return PageRouteBuilder<T>(
+      settings: settings,
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: duration,
+      reverseTransitionDuration: duration,
+      opaque: true,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          child: child,
+        );
+      },
+    );
+  }
+
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case loginScreen:
@@ -84,7 +113,7 @@ class AppRoutes {
           builder: (_) => ServiceDetailScreen(service: service),
         );
       case onboardingScreen:
-        return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+        return onboardingRoute();
       case signUpScreen:
         final role = settings.arguments as String;
         return MaterialPageRoute(

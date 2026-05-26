@@ -11,6 +11,27 @@ class AppColours {
   static const Color vividOrange = Color.fromRGBO(202, 53, 0, 1.0);
   static const Color vividTeal = Color.fromRGBO(1, 106, 180, 1.0);
 
+  /// rgb(16, 91, 230) — primary brand color
+  static const Color primaryColor = Color.fromRGBO(16, 91, 230, 1.0);
+
+  /// rgb(0, 70, 182) — splash2.png illustration background (#0046b6)
+  static const Color splashBackgroundBlue = Color.fromRGBO(0, 70, 182, 1.0);
+
+  /// rgb(2, 68, 173) — splash2.png top edge (#0244ad), for seamless blend
+  static const Color splash2TopEdgeBlue = Color.fromRGBO(2, 68, 173, 1.0);
+
+  /// rgb(1, 67, 177) — splash2.png upper wall (#0143b1)
+  static const Color splash2UpperBlue = Color.fromRGBO(1, 67, 177, 1.0);
+
+  /// #d1e5fd — rgb(209, 229, 253) secondary brand blue
+  static const Color secondaryBlue = Color.fromRGBO(209, 229, 253, 1.0);
+
+  /// rgb(248, 251, 254) — card/UI white sampled from onboarding1–3.png
+  static const Color onboardingWhite = Color.fromRGBO(248, 251, 254, 1.0);
+
+  /// #FFFBF5 — warm, soft off-white
+  static const Color warmWhite = Color(0xFFFFFBF5);
+
   /// rgb(0, 106, 181) — primary brand blue
   static const Color brandBlue = Color.fromRGBO(0, 106, 181, 1.0);
 

@@ -64,10 +64,7 @@ class TextFieldBuilder extends HookWidget {
                   },
                   child: Text(
                     'Forget password?',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColours.vividTeal,
-                      fontSize: 12.sp,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColours.primaryColor),
                   ),
                 ),
             ],
@@ -83,7 +80,7 @@ class TextFieldBuilder extends HookWidget {
             decoration: InputDecoration(
               // fillColor: fillColor,
               // filled: fillable,
-              hintStyle: Theme.of(context).textTheme.bodySmall,
+              hintStyle: Theme.of(context).textTheme.bodyMedium,
               prefixIcon: prefixIcon != null
                   ? Icon(prefixIcon, color: AppColours.grey, size: 10.sp)
                   : null,

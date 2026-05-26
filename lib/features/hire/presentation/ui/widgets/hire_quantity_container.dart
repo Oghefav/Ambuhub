@@ -45,7 +45,7 @@ class HireQuantityContainer extends StatelessWidget {
       end: Alignment.bottomRight,
 
       topStops: const [0.0, 0.5, 1.0],
-      bodyStops: const [0.0, 0.2,],
+      bodyStops: const [0.0, 1.0],
       body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10.h,

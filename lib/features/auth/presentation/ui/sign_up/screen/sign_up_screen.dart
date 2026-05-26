@@ -16,20 +16,14 @@ class SignUpScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Stack(
-            children: [
-              const GradientBackground(),
-              Align(
-                alignment: Alignment.center,
+          child:Center(
                 child: Column(
                   children: [
-                    if (role == 'Client') ClientSignupFormCard(role: role) else ServiceProviderSignupFormCard(role: role),
+                    if (role == 'Client') ClientSignupBody(role: role) else ServiceProviderSignupBody(role: role),
                     const BottomText(),
                   ],
-                ),
+                ),  
               ),
-            ],
-          ),
         ),
       ),
     );

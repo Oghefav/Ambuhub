@@ -21,9 +21,8 @@ class NavigationText extends StatelessWidget {
             ),
             TextSpan(
               text: secondText,
-              style: textTheme.bodyMedium!.copyWith(
-                color: AppColours.blue,
-                fontWeight: FontWeight.w600,
+              style: textTheme.titleMedium!.copyWith(
+                color: AppColours.primaryColor,
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () =>
